@@ -13,9 +13,15 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-
+// Forward declaration of `CapturedImage` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `FlashMode` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 
 #include <string>
+#include "CapturedImage.hpp"
+#include <NitroModules/Promise.hpp>
+#include "FlashMode.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -50,6 +56,11 @@ namespace margelo::nitro::PharmaScannerCxx {
       // Methods
       virtual std::string ping() = 0;
       virtual std::string getVersion() = 0;
+      virtual void startCamera() = 0;
+      virtual void stopCamera() = 0;
+      virtual std::shared_ptr<Promise<CapturedImage>> capturePhoto() = 0;
+      virtual void setFlash(FlashMode mode) = 0;
+      virtual void setZoom(double factor) = 0;
 
     protected:
       // Hybrid Setup

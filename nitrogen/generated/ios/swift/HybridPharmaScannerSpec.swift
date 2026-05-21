@@ -15,6 +15,11 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   // Methods
   func ping() throws -> String
   func getVersion() throws -> String
+  func startCamera() throws -> Void
+  func stopCamera() throws -> Void
+  func capturePhoto() throws -> Promise<CapturedImage>
+  func setFlash(mode: FlashMode) throws -> Void
+  func setZoom(factor: Double) throws -> Void
 }
 
 public extension HybridPharmaScannerSpec_protocol {

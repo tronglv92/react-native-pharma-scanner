@@ -56,6 +56,11 @@ namespace margelo::nitro::PharmaScannerCxx {
     // Methods
     std::string ping() override;
     std::string getVersion() override;
+    void startCamera() override;
+    void stopCamera() override;
+    std::shared_ptr<Promise<CapturedImage>> capturePhoto() override;
+    void setFlash(FlashMode mode) override;
+    void setZoom(double factor) override;
 
   private:
     jni::global_ref<JHybridPharmaScannerSpec::JavaPart> _javaPart;
