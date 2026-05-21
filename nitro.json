@@ -1,0 +1,22 @@
+{
+  "cxxNamespace": ["PharmaScannerCxx"],
+  "ios": {
+    "iosModuleName": "ReactNativePharmaScanner"
+  },
+  "android": {
+    "androidNamespace": ["PharmaScanner"],
+    "androidCxxLibName": "PharmaScannerCxx"
+  },
+  "autolinking": {
+    "PharmaScanner": {
+      "ios": {
+        "language": "swift",
+        "implementationClassName": "HybridPharmaScanner"
+      },
+      "android": {
+        "language": "kotlin",
+        "implementationClassName": "HybridPharmaScanner"
+      }
+    }
+  }
+}
