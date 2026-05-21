@@ -1,5 +1,5 @@
 {
-  "name": "ReactNativePharmaScanner",
+  "name": "react-native-pharma-scanner",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,9 +10,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native/new-app-screen": "0.85.3",
     "react": "19.2.3",
     "react-native": "0.85.3",
-    "@react-native/new-app-screen": "0.85.3",
+    "react-native-nitro-modules": "^0.35.7",
     "react-native-safe-area-context": "^5.5.2"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@types/react-test-renderer": "^19.1.0",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
+    "nitrogen": "^0.35.7",
     "prettier": "2.8.8",
     "react-test-renderer": "19.2.3",
     "typescript": "^5.8.3"

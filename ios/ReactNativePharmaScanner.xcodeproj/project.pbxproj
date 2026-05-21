@@ -12,6 +12,20 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
+		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
+		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
+		FACDFC1D2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC012FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake */; };
+		FACDFC1E2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC022FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle */; };
+		FACDFC1F2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */; };
+		FACDFC202FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */; };
+		FACDFC212FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC112FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift */; };
+		FACDFC242FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */; };
+		FACDFC252FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC102FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm */; };
+		FACDFC262FBEF19000A271C5 /* HybridPharmaScannerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */; };
+		FACDFC272FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC0D2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp */; };
+		FACDFC282FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC072FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp */; };
+		FACDFC2A2FBEF2F700A271C5 /* HybridPharmaScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +39,28 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
+		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
+		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
+		FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = PharmaScannerCxxOnLoad.kt; sourceTree = "<group>"; };
+		FACDFC012FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PharmaScannerCxx+autolinking.cmake"; sourceTree = "<group>"; };
+		FACDFC022FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle */ = {isa = PBXFileReference; lastKnownFileType = text; path = "PharmaScannerCxx+autolinking.gradle"; sourceTree = "<group>"; };
+		FACDFC032FBEF19000A271C5 /* PharmaScannerCxxOnLoad.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PharmaScannerCxxOnLoad.hpp; sourceTree = "<group>"; };
+		FACDFC042FBEF19000A271C5 /* PharmaScannerCxxOnLoad.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PharmaScannerCxxOnLoad.cpp; sourceTree = "<group>"; };
+		FACDFC062FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HybridPharmaScannerSpecSwift.hpp; sourceTree = "<group>"; };
+		FACDFC072FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HybridPharmaScannerSpecSwift.cpp; sourceTree = "<group>"; };
+		FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridPharmaScannerSpec.swift; sourceTree = "<group>"; };
+		FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridPharmaScannerSpec_cxx.swift; sourceTree = "<group>"; };
+		FACDFC0C2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "ReactNativePharmaScanner-Swift-Cxx-Bridge.hpp"; sourceTree = "<group>"; };
+		FACDFC0D2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp"; sourceTree = "<group>"; };
+		FACDFC0E2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"; sourceTree = "<group>"; };
+		FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = "ReactNativePharmaScanner+autolinking.rb"; sourceTree = "<group>"; };
+		FACDFC102FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ReactNativePharmaScannerAutolinking.mm; sourceTree = "<group>"; };
+		FACDFC112FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactNativePharmaScannerAutolinking.swift; sourceTree = "<group>"; };
+		FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
+		FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
+		FACDFC172FBEF19000A271C5 /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
+		FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridPharmaScanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,11 +78,13 @@
 		13B07FAE1A68108700A75B9A /* ReactNativePharmaScanner */ = {
 			isa = PBXGroup;
 			children = (
+				FACDFC192FBEF19000A271C5 /* nitrogen */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -96,6 +134,138 @@
 				5709B34CF0A7D63546082F79 /* Pods-ReactNativePharmaScanner.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		FACDFBF92FBEF19000A271C5 /* c++ */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */,
+				FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */,
+			);
+			path = "c++";
+			sourceTree = "<group>";
+		};
+		FACDFBFC2FBEF19000A271C5 /* PharmaScanner */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */,
+				FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */,
+			);
+			path = PharmaScanner;
+			sourceTree = "<group>";
+		};
+		FACDFBFD2FBEF19000A271C5 /* nitro */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBFC2FBEF19000A271C5 /* PharmaScanner */,
+			);
+			path = nitro;
+			sourceTree = "<group>";
+		};
+		FACDFBFE2FBEF19000A271C5 /* margelo */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBFD2FBEF19000A271C5 /* nitro */,
+			);
+			path = margelo;
+			sourceTree = "<group>";
+		};
+		FACDFBFF2FBEF19000A271C5 /* com */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBFE2FBEF19000A271C5 /* margelo */,
+			);
+			path = com;
+			sourceTree = "<group>";
+		};
+		FACDFC002FBEF19000A271C5 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBFF2FBEF19000A271C5 /* com */,
+			);
+			path = kotlin;
+			sourceTree = "<group>";
+		};
+		FACDFC052FBEF19000A271C5 /* android */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFBF92FBEF19000A271C5 /* c++ */,
+				FACDFC002FBEF19000A271C5 /* kotlin */,
+				FACDFC012FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake */,
+				FACDFC022FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle */,
+				FACDFC032FBEF19000A271C5 /* PharmaScannerCxxOnLoad.hpp */,
+				FACDFC042FBEF19000A271C5 /* PharmaScannerCxxOnLoad.cpp */,
+			);
+			path = android;
+			sourceTree = "<group>";
+		};
+		FACDFC082FBEF19000A271C5 /* c++ */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC062FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.hpp */,
+				FACDFC072FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp */,
+			);
+			path = "c++";
+			sourceTree = "<group>";
+		};
+		FACDFC0B2FBEF19000A271C5 /* swift */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */,
+				FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */,
+			);
+			path = swift;
+			sourceTree = "<group>";
+		};
+		FACDFC122FBEF19000A271C5 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC082FBEF19000A271C5 /* c++ */,
+				FACDFC0B2FBEF19000A271C5 /* swift */,
+				FACDFC0C2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.hpp */,
+				FACDFC0D2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp */,
+				FACDFC0E2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp */,
+				FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */,
+				FACDFC102FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm */,
+				FACDFC112FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		FACDFC152FBEF19000A271C5 /* c++ */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */,
+				FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */,
+			);
+			path = "c++";
+			sourceTree = "<group>";
+		};
+		FACDFC162FBEF19000A271C5 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC152FBEF19000A271C5 /* c++ */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
+		FACDFC182FBEF19000A271C5 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC052FBEF19000A271C5 /* android */,
+				FACDFC122FBEF19000A271C5 /* ios */,
+				FACDFC162FBEF19000A271C5 /* shared */,
+				FACDFC172FBEF19000A271C5 /* .gitattributes */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
+		FACDFC192FBEF19000A271C5 /* nitrogen */ = {
+			isa = PBXGroup;
+			children = (
+				FACDFC182FBEF19000A271C5 /* generated */,
+			);
+			path = nitrogen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,6 +330,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */,
+				FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */,
+				FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */,
+				FACDFC1D2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake in Resources */,
+				FACDFC1E2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle in Resources */,
+				FACDFC1F2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt in Resources */,
 				837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,9 +367,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -230,9 +410,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -246,6 +430,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FACDFC202FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp in Sources */,
+				FACDFC212FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift in Sources */,
+				FACDFC242FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift in Sources */,
+				FACDFC252FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm in Sources */,
+				FACDFC262FBEF19000A271C5 /* HybridPharmaScannerSpec.swift in Sources */,
+				FACDFC2A2FBEF2F700A271C5 /* HybridPharmaScanner.swift in Sources */,
+				FACDFC272FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp in Sources */,
+				FACDFC282FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp in Sources */,
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,7 +452,88 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/NitroModules\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTDeprecation\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTSwiftUIWrapper\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core-prebuilt\"",
+					"\"${PODS_ROOT}/Headers/Public/React-CoreModules\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricComponents\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-ImageManager\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Mapbuffer\"",
+					"\"${PODS_ROOT}/Headers/Public/React-NativeModulesApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAppDelegate\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFBReactNativeSpec\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTRuntime\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTSettings\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTVibration\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeCore\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeHermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-debug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-defaultsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-domnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflags\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflagsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-graphics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-hermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-idlecallbacksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-intersectionobservernativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jserrorhandler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectorcdp\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectornetwork\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectortracing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsitooling\"",
+					"\"${PODS_ROOT}/Headers/Public/React-logger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-microtasksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-mutationobservernativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-networking\"",
+					"\"${PODS_ROOT}/Headers/Public/React-oscompat\"",
+					"\"${PODS_ROOT}/Headers/Public/React-perflogger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancecdpmetrics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancetimeline\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererconsistency\"",
+					"\"${PODS_ROOT}/Headers/Public/React-renderercss\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererdebug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimescheduler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-timing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-utils\"",
+					"\"${PODS_ROOT}/Headers/Public/React-webperformancenativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactAppDependencyProvider\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCodegen\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactNativeDependencies\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"${PODS_ROOT}/Headers/Public/react-native-safe-area-context\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"$(PODS_ROOT)/Headers/Private/Yoga\"",
+					"$(SRCROOT)/nitrogen/generated/ios",
+					"$(SRCROOT)/nitrogen/generated/shared/c++",
+					"${PODS_ROOT}/Headers/Private/NitroModules",
+				);
 				INFOPLIST_FILE = ReactNativePharmaScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -276,6 +549,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativepharmascanner;
 				PRODUCT_NAME = ReactNativePharmaScanner;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = ReactNativePharmaScanner/ReactNativePharmaScannerBridge.h;
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -290,6 +566,87 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/NitroModules\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTDeprecation\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTSwiftUIWrapper\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTTypeSafety\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core-prebuilt\"",
+					"\"${PODS_ROOT}/Headers/Public/React-CoreModules\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricComponents\"",
+					"\"${PODS_ROOT}/Headers/Public/React-FabricImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-ImageManager\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Mapbuffer\"",
+					"\"${PODS_ROOT}/Headers/Public/React-NativeModulesApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAppDelegate\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFBReactNativeSpec\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTFabric\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTRuntime\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTSettings\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTVibration\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeApple\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeCore\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RuntimeHermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-debug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-defaultsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-domnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflags\"",
+					"\"${PODS_ROOT}/Headers/Public/React-featureflagsnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-graphics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-hermes\"",
+					"\"${PODS_ROOT}/Headers/Public/React-idlecallbacksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-intersectionobservernativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jserrorhandler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectorcdp\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectornetwork\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspectortracing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsitooling\"",
+					"\"${PODS_ROOT}/Headers/Public/React-logger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-microtasksnativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-mutationobservernativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/React-networking\"",
+					"\"${PODS_ROOT}/Headers/Public/React-oscompat\"",
+					"\"${PODS_ROOT}/Headers/Public/React-perflogger\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancecdpmetrics\"",
+					"\"${PODS_ROOT}/Headers/Public/React-performancetimeline\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererconsistency\"",
+					"\"${PODS_ROOT}/Headers/Public/React-renderercss\"",
+					"\"${PODS_ROOT}/Headers/Public/React-rendererdebug\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimescheduler\"",
+					"\"${PODS_ROOT}/Headers/Public/React-timing\"",
+					"\"${PODS_ROOT}/Headers/Public/React-utils\"",
+					"\"${PODS_ROOT}/Headers/Public/React-webperformancenativemodule\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactAppDependencyProvider\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCodegen\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactCommon\"",
+					"\"${PODS_ROOT}/Headers/Public/ReactNativeDependencies\"",
+					"\"${PODS_ROOT}/Headers/Public/Yoga\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"${PODS_ROOT}/Headers/Public/react-native-safe-area-context\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+					"\"$(PODS_ROOT)/Headers/Private/Yoga\"",
+					"$(SRCROOT)/nitrogen/generated/ios",
+					"$(SRCROOT)/nitrogen/generated/shared/c++",
+					"${PODS_ROOT}/Headers/Private/NitroModules",
+				);
 				INFOPLIST_FILE = ReactNativePharmaScanner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -305,6 +662,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativepharmascanner;
 				PRODUCT_NAME = ReactNativePharmaScanner;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = ReactNativePharmaScanner/ReactNativePharmaScannerBridge.h;
+				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

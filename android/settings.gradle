@@ -13,6 +13,8 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
     }
     ex.autolinkLibrariesFromCommand([npxBinary, "@react-native-community/cli", "config"])
 }
-rootProject.name = 'ReactNativePharmaScanner'
+rootProject.name = 'react-native-pharma-scanner'
 include ':app'
+include ':pharmascanner'
+project(':pharmascanner').projectDir = new File('../pharmascanner')
 includeBuild('../node_modules/@react-native/gradle-plugin')
