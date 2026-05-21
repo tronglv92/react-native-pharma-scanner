@@ -1,6 +1,18 @@
 pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
 plugins { id("com.facebook.react.settings") }
-extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex ->
+    def home = System.getProperty("user.home")
+    def nvmDir = System.getenv("NVM_DIR") ?: "${home}/.nvm"
+    def defaultAliasFile = file("${nvmDir}/alias/default")
+    def npxBinary = "npx"
+    if (defaultAliasFile.exists()) {
+        def nodeVersion = defaultAliasFile.text.trim()
+        if (!nodeVersion.startsWith("v")) { nodeVersion = "v${nodeVersion}" }
+        def candidate = file("${nvmDir}/versions/node/${nodeVersion}/bin/npx")
+        if (candidate.exists()) { npxBinary = candidate.absolutePath }
+    }
+    ex.autolinkLibrariesFromCommand([npxBinary, "@react-native-community/cli", "config"])
+}
 rootProject.name = 'ReactNativePharmaScanner'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
