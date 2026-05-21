@@ -12,6 +12,12 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		FA000001200000000000AA01 /* CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB01 /* CapturedImage.swift */; };
+		FA000001200000000000AA02 /* FlashMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB02 /* FlashMode.swift */; };
+		FA000001200000000000AA03 /* Func_void_CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB03 /* Func_void_CapturedImage.swift */; };
+		FA000001200000000000AA04 /* Func_void_std__exception_ptr.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */; };
+		FA000001200000000000AA09 /* CapturedImage.kt in Resources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB09 /* CapturedImage.kt */; };
+		FA000001200000000000AA10 /* FlashMode.kt in Resources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB10 /* FlashMode.kt */; };
 		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
 		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
 		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
@@ -26,6 +32,10 @@
 		FACDFC272FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC0D2FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp */; };
 		FACDFC282FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC072FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp */; };
 		FACDFC2A2FBEF2F700A271C5 /* HybridPharmaScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */; };
+		FACDFC2C2FBF048300A271C5 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2B2FBF048300A271C5 /* CameraManager.swift */; };
+		FACDFC2E2FBF048C00A271C5 /* PharmaScannerCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */; };
+		FACDFC302FBF049600A271C5 /* PharmaScannerCameraViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */; };
+		FACDFC322FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +49,16 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FA000001200000000000BB01 /* CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImage.swift; sourceTree = "<group>"; };
+		FA000001200000000000BB02 /* FlashMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMode.swift; sourceTree = "<group>"; };
+		FA000001200000000000BB03 /* Func_void_CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_CapturedImage.swift; sourceTree = "<group>"; };
+		FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_std__exception_ptr.swift; sourceTree = "<group>"; };
+		FA000001200000000000BB05 /* CapturedImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CapturedImage.hpp; sourceTree = "<group>"; };
+		FA000001200000000000BB06 /* FlashMode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FlashMode.hpp; sourceTree = "<group>"; };
+		FA000001200000000000BB07 /* JCapturedImage.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JCapturedImage.hpp; sourceTree = "<group>"; };
+		FA000001200000000000BB08 /* JFlashMode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFlashMode.hpp; sourceTree = "<group>"; };
+		FA000001200000000000BB09 /* CapturedImage.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CapturedImage.kt; sourceTree = "<group>"; };
+		FA000001200000000000BB10 /* FlashMode.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FlashMode.kt; sourceTree = "<group>"; };
 		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
 		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
@@ -61,6 +81,10 @@
 		FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFC172FBEF19000A271C5 /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridPharmaScanner.swift; sourceTree = "<group>"; };
+		FACDFC2B2FBF048300A271C5 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraView.swift; sourceTree = "<group>"; };
+		FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PharmaScannerCameraViewManager.m; sourceTree = "<group>"; };
+		FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraViewManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +109,10 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				FACDFC292FBEF2F700A271C5 /* HybridPharmaScanner.swift */,
+				FACDFC2B2FBF048300A271C5 /* CameraManager.swift */,
+				FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */,
+				FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */,
+				FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -139,6 +167,8 @@
 		FACDFBF92FBEF19000A271C5 /* c++ */ = {
 			isa = PBXGroup;
 			children = (
+				FA000001200000000000BB07 /* JCapturedImage.hpp */,
+				FA000001200000000000BB08 /* JFlashMode.hpp */,
 				FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */,
 				FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */,
 			);
@@ -148,6 +178,8 @@
 		FACDFBFC2FBEF19000A271C5 /* PharmaScanner */ = {
 			isa = PBXGroup;
 			children = (
+				FA000001200000000000BB09 /* CapturedImage.kt */,
+				FA000001200000000000BB10 /* FlashMode.kt */,
 				FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */,
 				FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */,
 			);
@@ -211,6 +243,10 @@
 		FACDFC0B2FBEF19000A271C5 /* swift */ = {
 			isa = PBXGroup;
 			children = (
+				FA000001200000000000BB01 /* CapturedImage.swift */,
+				FA000001200000000000BB02 /* FlashMode.swift */,
+				FA000001200000000000BB03 /* Func_void_CapturedImage.swift */,
+				FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */,
 				FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */,
 				FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */,
 			);
@@ -235,6 +271,8 @@
 		FACDFC152FBEF19000A271C5 /* c++ */ = {
 			isa = PBXGroup;
 			children = (
+				FA000001200000000000BB05 /* CapturedImage.hpp */,
+				FA000001200000000000BB06 /* FlashMode.hpp */,
 				FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */,
 				FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */,
 			);
@@ -336,6 +374,8 @@
 				FACDFC1D2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.cmake in Resources */,
 				FACDFC1E2FBEF19000A271C5 /* PharmaScannerCxx+autolinking.gradle in Resources */,
 				FACDFC1F2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt in Resources */,
+				FA000001200000000000AA09 /* CapturedImage.kt in Resources */,
+				FA000001200000000000AA10 /* FlashMode.kt in Resources */,
 				837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,11 +474,19 @@
 				FACDFC212FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.swift in Sources */,
 				FACDFC242FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift in Sources */,
 				FACDFC252FBEF19000A271C5 /* ReactNativePharmaScannerAutolinking.mm in Sources */,
+				FACDFC2C2FBF048300A271C5 /* CameraManager.swift in Sources */,
+				FACDFC322FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift in Sources */,
 				FACDFC262FBEF19000A271C5 /* HybridPharmaScannerSpec.swift in Sources */,
+				FACDFC302FBF049600A271C5 /* PharmaScannerCameraViewManager.m in Sources */,
+				FACDFC2E2FBF048C00A271C5 /* PharmaScannerCameraView.swift in Sources */,
 				FACDFC2A2FBEF2F700A271C5 /* HybridPharmaScanner.swift in Sources */,
 				FACDFC272FBEF19000A271C5 /* ReactNativePharmaScanner-Swift-Cxx-Bridge.cpp in Sources */,
 				FACDFC282FBEF19000A271C5 /* HybridPharmaScannerSpecSwift.cpp in Sources */,
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				FA000001200000000000AA01 /* CapturedImage.swift in Sources */,
+				FA000001200000000000AA02 /* FlashMode.swift in Sources */,
+				FA000001200000000000AA03 /* Func_void_CapturedImage.swift in Sources */,
+				FA000001200000000000AA04 /* Func_void_std__exception_ptr.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -453,6 +501,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2UD3WQS2VS;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -567,6 +616,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2UD3WQS2VS;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",

@@ -16,6 +16,11 @@ namespace margelo::nitro::PharmaScannerCxx {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("ping", &HybridPharmaScannerSpec::ping);
       prototype.registerHybridMethod("getVersion", &HybridPharmaScannerSpec::getVersion);
+      prototype.registerHybridMethod("startCamera", &HybridPharmaScannerSpec::startCamera);
+      prototype.registerHybridMethod("stopCamera", &HybridPharmaScannerSpec::stopCamera);
+      prototype.registerHybridMethod("capturePhoto", &HybridPharmaScannerSpec::capturePhoto);
+      prototype.registerHybridMethod("setFlash", &HybridPharmaScannerSpec::setFlash);
+      prototype.registerHybridMethod("setZoom", &HybridPharmaScannerSpec::setZoom);
     });
   }
 

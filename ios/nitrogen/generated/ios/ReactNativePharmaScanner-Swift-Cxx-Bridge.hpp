@@ -8,6 +8,8 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `CapturedImage` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
 
@@ -16,10 +18,15 @@ namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
 namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 
 // Include C++ defined types
+#include "CapturedImage.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
+#include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 
 /**
@@ -28,6 +35,77 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
  */
 namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
 
+  // pragma MARK: std::optional<std::string>
+  /**
+   * Specialized version of `std::optional<std::string>`.
+   */
+  using std__optional_std__string_ = std::optional<std::string>;
+  inline std::optional<std::string> create_std__optional_std__string_(const std::string& value) noexcept {
+    return std::optional<std::string>(value);
+  }
+  inline bool has_value_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline std::string get_std__optional_std__string_(const std::optional<std::string>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<CapturedImage>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<CapturedImage>>`.
+   */
+  using std__shared_ptr_Promise_CapturedImage__ = std::shared_ptr<Promise<CapturedImage>>;
+  inline std::shared_ptr<Promise<CapturedImage>> create_std__shared_ptr_Promise_CapturedImage__() noexcept {
+    return Promise<CapturedImage>::create();
+  }
+  inline PromiseHolder<CapturedImage> wrap_std__shared_ptr_Promise_CapturedImage__(std::shared_ptr<Promise<CapturedImage>> promise) noexcept {
+    return PromiseHolder<CapturedImage>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const CapturedImage& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const CapturedImage&)>`.
+   */
+  using Func_void_CapturedImage = std::function<void(const CapturedImage& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const CapturedImage& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_CapturedImage_Wrapper final {
+  public:
+    explicit Func_void_CapturedImage_Wrapper(std::function<void(const CapturedImage& /* result */)>&& func): _function(std::make_unique<std::function<void(const CapturedImage& /* result */)>>(std::move(func))) {}
+    inline void call(CapturedImage result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const CapturedImage& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_CapturedImage create_Func_void_CapturedImage(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_CapturedImage_Wrapper wrap_Func_void_CapturedImage(Func_void_CapturedImage value) noexcept {
+    return Func_void_CapturedImage_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::function<void(const std::exception_ptr& /* error */)>
+  /**
+   * Specialized version of `std::function<void(const std::exception_ptr&)>`.
+   */
+  using Func_void_std__exception_ptr = std::function<void(const std::exception_ptr& /* error */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::exception_ptr& / * error * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__exception_ptr_Wrapper final {
+  public:
+    explicit Func_void_std__exception_ptr_Wrapper(std::function<void(const std::exception_ptr& /* error */)>&& func): _function(std::make_unique<std::function<void(const std::exception_ptr& /* error */)>>(std::move(func))) {}
+    inline void call(std::exception_ptr error) const noexcept {
+      _function->operator()(error);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::exception_ptr& /* error */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__exception_ptr create_Func_void_std__exception_ptr(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__exception_ptr_Wrapper wrap_Func_void_std__exception_ptr(Func_void_std__exception_ptr value) noexcept {
+    return Func_void_std__exception_ptr_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridPharmaScannerSpec>`.
@@ -47,6 +125,24 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
   }
   inline Result_std__string_ create_Result_std__string_(const std::exception_ptr& error) noexcept {
     return Result<std::string>::withError(error);
+  }
+  
+  // pragma MARK: Result<void>
+  using Result_void_ = Result<void>;
+  inline Result_void_ create_Result_void_() noexcept {
+    return Result<void>::withValue();
+  }
+  inline Result_void_ create_Result_void_(const std::exception_ptr& error) noexcept {
+    return Result<void>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<CapturedImage>>>
+  using Result_std__shared_ptr_Promise_CapturedImage___ = Result<std::shared_ptr<Promise<CapturedImage>>>;
+  inline Result_std__shared_ptr_Promise_CapturedImage___ create_Result_std__shared_ptr_Promise_CapturedImage___(const std::shared_ptr<Promise<CapturedImage>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<CapturedImage>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_CapturedImage___ create_Result_std__shared_ptr_Promise_CapturedImage___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<CapturedImage>>>::withError(error);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx::bridge::swift

@@ -7,9 +7,19 @@
 
 #include "JHybridPharmaScannerSpec.hpp"
 
-
+// Forward declaration of `CapturedImage` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `FlashMode` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 
 #include <string>
+#include "CapturedImage.hpp"
+#include <NitroModules/Promise.hpp>
+#include <NitroModules/JPromise.hpp>
+#include "JCapturedImage.hpp"
+#include <optional>
+#include "FlashMode.hpp"
+#include "JFlashMode.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -53,6 +63,38 @@ namespace margelo::nitro::PharmaScannerCxx {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JString>()>("getVersion");
     auto __result = method(_javaPart);
     return __result->toStdString();
+  }
+  void JHybridPharmaScannerSpec::startCamera() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("startCamera");
+    method(_javaPart);
+  }
+  void JHybridPharmaScannerSpec::stopCamera() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("stopCamera");
+    method(_javaPart);
+  }
+  std::shared_ptr<Promise<CapturedImage>> JHybridPharmaScannerSpec::capturePhoto() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("capturePhoto");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<CapturedImage>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JCapturedImage>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::setFlash(FlashMode mode) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFlashMode> /* mode */)>("setFlash");
+    method(_javaPart, JFlashMode::fromCpp(mode));
+  }
+  void JHybridPharmaScannerSpec::setZoom(double factor) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(double /* factor */)>("setZoom");
+    method(_javaPart, factor);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx

@@ -12,9 +12,16 @@
 // Forward declaration of `HybridPharmaScannerSpec_cxx` to properly resolve imports.
 namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 
-
+// Forward declaration of `CapturedImage` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `FlashMode` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 
 #include <string>
+#include "CapturedImage.hpp"
+#include <NitroModules/Promise.hpp>
+#include <optional>
+#include "FlashMode.hpp"
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -81,6 +88,38 @@ namespace margelo::nitro::PharmaScannerCxx {
       }
       auto __value = std::move(__result.value());
       return __value;
+    }
+    inline void startCamera() override {
+      auto __result = _swiftPart.startCamera();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void stopCamera() override {
+      auto __result = _swiftPart.stopCamera();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<CapturedImage>> capturePhoto() override {
+      auto __result = _swiftPart.capturePhoto();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void setFlash(FlashMode mode) override {
+      auto __result = _swiftPart.setFlash(static_cast<int>(mode));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void setZoom(double factor) override {
+      auto __result = _swiftPart.setZoom(std::forward<decltype(factor)>(factor));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
     }
 
   private:

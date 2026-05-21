@@ -147,4 +147,67 @@ open class HybridPharmaScannerSpec_cxx {
       return bridge.create_Result_std__string_(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func startCamera() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.startCamera()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func stopCamera() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.stopCamera()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func capturePhoto() -> bridge.Result_std__shared_ptr_Promise_CapturedImage___ {
+    do {
+      let __result = try self.__implementation.capturePhoto()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_CapturedImage__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_CapturedImage__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_CapturedImage__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_CapturedImage___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_CapturedImage___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setFlash(mode: Int32) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setFlash(mode: margelo.nitro.PharmaScannerCxx.FlashMode(rawValue: mode)!)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setZoom(factor: Double) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setZoom(factor: factor)
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }
