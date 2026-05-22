@@ -36,6 +36,12 @@
 		FACDFC2E2FBF048C00A271C5 /* PharmaScannerCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */; };
 		FACDFC302FBF049600A271C5 /* PharmaScannerCameraViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */; };
 		FACDFC322FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */; };
+		FA300001300000000000AA01 /* DocumentDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB01 /* DocumentDetector.swift */; };
+		FA300001300000000000AA02 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB02 /* ImageProcessor.swift */; };
+		FA300001300000000000AA03 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB03 /* Point.swift */; };
+		FA300001300000000000AA04 /* Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB04 /* Corners.swift */; };
+		FA300001300000000000AA05 /* DocumentDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB05 /* DocumentDetection.swift */; };
+		FA300001300000000000AA06 /* Func_void_DocumentDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB06 /* Func_void_DocumentDetection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +91,19 @@
 		FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraView.swift; sourceTree = "<group>"; };
 		FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PharmaScannerCameraViewManager.m; sourceTree = "<group>"; };
 		FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraViewManager.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB01 /* DocumentDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetector.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB02 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB03 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB04 /* Corners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Corners.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB05 /* DocumentDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetection.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB06 /* Func_void_DocumentDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_DocumentDetection.swift; sourceTree = "<group>"; };
+		FA300001300000000000BB11 /* Point.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Point.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB12 /* Corners.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Corners.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB13 /* DocumentDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DocumentDetection.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB14 /* JPoint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JPoint.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB15 /* JCorners.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JCorners.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB16 /* JDocumentDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JDocumentDetection.hpp; sourceTree = "<group>"; };
+		FA300001300000000000BB17 /* JFunc_void_DocumentDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFunc_void_DocumentDetection.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +132,8 @@
 				FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */,
 				FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */,
 				FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */,
+				FA300001300000000000BB01 /* DocumentDetector.swift */,
+				FA300001300000000000BB02 /* ImageProcessor.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -168,9 +189,13 @@
 			isa = PBXGroup;
 			children = (
 				FA000001200000000000BB07 /* JCapturedImage.hpp */,
+				FA300001300000000000BB15 /* JCorners.hpp */,
+				FA300001300000000000BB16 /* JDocumentDetection.hpp */,
 				FA000001200000000000BB08 /* JFlashMode.hpp */,
+				FA300001300000000000BB17 /* JFunc_void_DocumentDetection.hpp */,
 				FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */,
 				FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */,
+				FA300001300000000000BB14 /* JPoint.hpp */,
 			);
 			path = "c++";
 			sourceTree = "<group>";
@@ -244,11 +269,15 @@
 			isa = PBXGroup;
 			children = (
 				FA000001200000000000BB01 /* CapturedImage.swift */,
+				FA300001300000000000BB04 /* Corners.swift */,
+				FA300001300000000000BB05 /* DocumentDetection.swift */,
 				FA000001200000000000BB02 /* FlashMode.swift */,
 				FA000001200000000000BB03 /* Func_void_CapturedImage.swift */,
+				FA300001300000000000BB06 /* Func_void_DocumentDetection.swift */,
 				FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */,
 				FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */,
 				FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */,
+				FA300001300000000000BB03 /* Point.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -272,9 +301,12 @@
 			isa = PBXGroup;
 			children = (
 				FA000001200000000000BB05 /* CapturedImage.hpp */,
+				FA300001300000000000BB12 /* Corners.hpp */,
+				FA300001300000000000BB13 /* DocumentDetection.hpp */,
 				FA000001200000000000BB06 /* FlashMode.hpp */,
 				FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */,
 				FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */,
+				FA300001300000000000BB11 /* Point.hpp */,
 			);
 			path = "c++";
 			sourceTree = "<group>";
@@ -487,6 +519,12 @@
 				FA000001200000000000AA02 /* FlashMode.swift in Sources */,
 				FA000001200000000000AA03 /* Func_void_CapturedImage.swift in Sources */,
 				FA000001200000000000AA04 /* Func_void_std__exception_ptr.swift in Sources */,
+				FA300001300000000000AA01 /* DocumentDetector.swift in Sources */,
+				FA300001300000000000AA02 /* ImageProcessor.swift in Sources */,
+				FA300001300000000000AA03 /* Point.swift in Sources */,
+				FA300001300000000000AA04 /* Corners.swift in Sources */,
+				FA300001300000000000AA05 /* DocumentDetection.swift in Sources */,
+				FA300001300000000000AA06 /* Func_void_DocumentDetection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

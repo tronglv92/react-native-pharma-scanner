@@ -5,9 +5,7 @@
 /// Copyright © Marc Rousavy @ Margelo
 ///
 
-#import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-#import <React-RCTAppDelegate/RCTDefaultReactNativeFactoryDelegate.h>
 #import <NitroModules/HybridObjectRegistry.hpp>
 #import "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 #import <type_traits>

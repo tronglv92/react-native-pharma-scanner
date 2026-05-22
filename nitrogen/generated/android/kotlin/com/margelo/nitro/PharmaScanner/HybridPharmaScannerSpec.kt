@@ -56,6 +56,23 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun setZoom(factor: Double): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun detectDocument(imageUri: String): Promise<DocumentDetection>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun cropAndCorrect(imageUri: String, corners: Corners): Promise<CapturedImage>
+  
+  abstract fun setOnDocumentDetected(callback: (detection: DocumentDetection) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun setOnDocumentDetected_cxx(callback: Func_void_DocumentDetection): Unit {
+    val __result = setOnDocumentDetected(callback)
+    return __result
+  }
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

@@ -21,6 +21,9 @@ namespace margelo::nitro::PharmaScannerCxx {
       prototype.registerHybridMethod("capturePhoto", &HybridPharmaScannerSpec::capturePhoto);
       prototype.registerHybridMethod("setFlash", &HybridPharmaScannerSpec::setFlash);
       prototype.registerHybridMethod("setZoom", &HybridPharmaScannerSpec::setZoom);
+      prototype.registerHybridMethod("detectDocument", &HybridPharmaScannerSpec::detectDocument);
+      prototype.registerHybridMethod("cropAndCorrect", &HybridPharmaScannerSpec::cropAndCorrect);
+      prototype.registerHybridMethod("setOnDocumentDetected", &HybridPharmaScannerSpec::setOnDocumentDetected);
     });
   }
 

@@ -9,6 +9,12 @@
 
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `Point` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 
@@ -18,8 +24,17 @@ namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 #include <NitroModules/JPromise.hpp>
 #include "JCapturedImage.hpp"
 #include <optional>
+#include "DocumentDetection.hpp"
+#include "JDocumentDetection.hpp"
+#include "Corners.hpp"
+#include "JCorners.hpp"
+#include "Point.hpp"
+#include "JPoint.hpp"
 #include "FlashMode.hpp"
 #include "JFlashMode.hpp"
+#include <functional>
+#include "JFunc_void_DocumentDetection.hpp"
+#include <NitroModules/JNICallable.hpp>
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -95,6 +110,42 @@ namespace margelo::nitro::PharmaScannerCxx {
   void JHybridPharmaScannerSpec::setZoom(double factor) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(double /* factor */)>("setZoom");
     method(_javaPart, factor);
+  }
+  std::shared_ptr<Promise<DocumentDetection>> JHybridPharmaScannerSpec::detectDocument(const std::string& imageUri) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */)>("detectDocument");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri));
+    return [&]() {
+      auto __promise = Promise<DocumentDetection>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JDocumentDetection>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<CapturedImage>> JHybridPharmaScannerSpec::cropAndCorrect(const std::string& imageUri, const Corners& corners) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */, jni::alias_ref<JCorners> /* corners */)>("cropAndCorrect");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri), JCorners::fromCpp(corners));
+    return [&]() {
+      auto __promise = Promise<CapturedImage>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JCapturedImage>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_DocumentDetection::javaobject> /* callback */)>("setOnDocumentDetected_cxx");
+    method(_javaPart, JFunc_void_DocumentDetection_cxx::fromCpp(callback));
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx

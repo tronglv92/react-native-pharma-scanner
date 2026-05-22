@@ -6,3 +6,22 @@ export interface CapturedImage {
   height: number;
   base64?: string;
 }
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface Corners {
+  topLeft: Point;
+  topRight: Point;
+  bottomLeft: Point;
+  bottomRight: Point;
+}
+
+export interface DocumentDetection {
+  detected: boolean;
+  corners: Corners;
+  confidence: number;
+  isStable: boolean;
+}

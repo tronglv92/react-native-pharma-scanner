@@ -10,8 +10,14 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `Point` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridPharmaScannerSpec_cxx` to properly resolve imports.
@@ -19,7 +25,10 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 
 // Include C++ defined types
 #include "CapturedImage.hpp"
+#include "Corners.hpp"
+#include "DocumentDetection.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "Point.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -106,6 +115,40 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     return Func_void_std__exception_ptr_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::shared_ptr<Promise<DocumentDetection>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<DocumentDetection>>`.
+   */
+  using std__shared_ptr_Promise_DocumentDetection__ = std::shared_ptr<Promise<DocumentDetection>>;
+  inline std::shared_ptr<Promise<DocumentDetection>> create_std__shared_ptr_Promise_DocumentDetection__() noexcept {
+    return Promise<DocumentDetection>::create();
+  }
+  inline PromiseHolder<DocumentDetection> wrap_std__shared_ptr_Promise_DocumentDetection__(std::shared_ptr<Promise<DocumentDetection>> promise) noexcept {
+    return PromiseHolder<DocumentDetection>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const DocumentDetection& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const DocumentDetection&)>`.
+   */
+  using Func_void_DocumentDetection = std::function<void(const DocumentDetection& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const DocumentDetection& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_DocumentDetection_Wrapper final {
+  public:
+    explicit Func_void_DocumentDetection_Wrapper(std::function<void(const DocumentDetection& /* result */)>&& func): _function(std::make_unique<std::function<void(const DocumentDetection& /* result */)>>(std::move(func))) {}
+    inline void call(DocumentDetection result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const DocumentDetection& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_DocumentDetection create_Func_void_DocumentDetection(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_DocumentDetection_Wrapper wrap_Func_void_DocumentDetection(Func_void_DocumentDetection value) noexcept {
+    return Func_void_DocumentDetection_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridPharmaScannerSpec>`.
@@ -143,6 +186,15 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_CapturedImage___ create_Result_std__shared_ptr_Promise_CapturedImage___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<CapturedImage>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<DocumentDetection>>>
+  using Result_std__shared_ptr_Promise_DocumentDetection___ = Result<std::shared_ptr<Promise<DocumentDetection>>>;
+  inline Result_std__shared_ptr_Promise_DocumentDetection___ create_Result_std__shared_ptr_Promise_DocumentDetection___(const std::shared_ptr<Promise<DocumentDetection>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<DocumentDetection>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_DocumentDetection___ create_Result_std__shared_ptr_Promise_DocumentDetection___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<DocumentDetection>>>::withError(error);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx::bridge::swift

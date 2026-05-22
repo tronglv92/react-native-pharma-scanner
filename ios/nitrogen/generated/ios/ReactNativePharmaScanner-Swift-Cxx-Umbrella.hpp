@@ -10,18 +10,28 @@
 // Forward declarations of C++ defined types
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `Point` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 
 // Include C++ defined types
 #include "CapturedImage.hpp"
+#include "Corners.hpp"
+#include "DocumentDetection.hpp"
 #include "FlashMode.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "Point.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <string>

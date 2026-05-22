@@ -63,4 +63,33 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
   func setZoom(factor: Double) throws -> Void {
     cameraManager.setZoom(factor: factor)
   }
+
+  func detectDocument(imageUri: String) throws -> Promise<DocumentDetection> {
+    return Promise.async {
+      let detector = DocumentDetector()
+      return try await detector.detectDocument(imageUri: imageUri)
+    }
+  }
+
+  func cropAndCorrect(imageUri: String, corners: Corners) throws -> Promise<CapturedImage> {
+    return Promise.async {
+      let (data, width, height) = try ImageProcessor.cropAndCorrect(imageUri: imageUri, corners: corners)
+
+      let fileName = UUID().uuidString + ".jpg"
+      let tempDir = FileManager.default.temporaryDirectory
+      let fileURL = tempDir.appendingPathComponent(fileName)
+      try data.write(to: fileURL)
+
+      return CapturedImage(
+        uri: fileURL.absoluteString,
+        width: Double(width),
+        height: Double(height),
+        base64: nil
+      )
+    }
+  }
+
+  func setOnDocumentDetected(callback: @escaping (_ detection: DocumentDetection) -> Void) throws -> Void {
+    cameraManager.setOnDocumentDetected(callback)
+  }
 }
