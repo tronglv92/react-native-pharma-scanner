@@ -17,11 +17,18 @@
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 
 #include <string>
 #include "CapturedImage.hpp"
 #include <NitroModules/Promise.hpp>
 #include "FlashMode.hpp"
+#include "DocumentDetection.hpp"
+#include "Corners.hpp"
+#include <functional>
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -61,6 +68,9 @@ namespace margelo::nitro::PharmaScannerCxx {
       virtual std::shared_ptr<Promise<CapturedImage>> capturePhoto() = 0;
       virtual void setFlash(FlashMode mode) = 0;
       virtual void setZoom(double factor) = 0;
+      virtual std::shared_ptr<Promise<DocumentDetection>> detectDocument(const std::string& imageUri) = 0;
+      virtual std::shared_ptr<Promise<CapturedImage>> cropAndCorrect(const std::string& imageUri, const Corners& corners) = 0;
+      virtual void setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) = 0;
 
     protected:
       // Hybrid Setup

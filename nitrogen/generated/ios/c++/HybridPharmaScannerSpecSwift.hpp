@@ -16,12 +16,22 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `Point` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 
 #include <string>
 #include "CapturedImage.hpp"
 #include <NitroModules/Promise.hpp>
 #include <optional>
 #include "FlashMode.hpp"
+#include "DocumentDetection.hpp"
+#include "Corners.hpp"
+#include "Point.hpp"
+#include <functional>
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -117,6 +127,28 @@ namespace margelo::nitro::PharmaScannerCxx {
     }
     inline void setZoom(double factor) override {
       auto __result = _swiftPart.setZoom(std::forward<decltype(factor)>(factor));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<DocumentDetection>> detectDocument(const std::string& imageUri) override {
+      auto __result = _swiftPart.detectDocument(imageUri);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<CapturedImage>> cropAndCorrect(const std::string& imageUri, const Corners& corners) override {
+      auto __result = _swiftPart.cropAndCorrect(imageUri, std::forward<decltype(corners)>(corners));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) override {
+      auto __result = _swiftPart.setOnDocumentDetected(callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

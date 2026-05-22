@@ -1,15 +1,21 @@
 import AVFoundation
 import UIKit
+import NitroModules
 
 class CameraManager: NSObject {
   static let shared = CameraManager()
 
   let captureSession = AVCaptureSession()
   private let sessionQueue = DispatchQueue(label: "com.pharmascanner.sessionQueue")
+  private let videoProcessingQueue = DispatchQueue(label: "com.pharmascanner.videoProcessingQueue")
   private let photoOutput = AVCapturePhotoOutput()
+  private let videoOutput = AVCaptureVideoDataOutput()
   private var flashMode: AVCaptureDevice.FlashMode = .auto
   private var currentPhotoCaptureDelegate: PhotoCaptureDelegate?
   private(set) var isSessionRunning = false
+  private let documentDetector = DocumentDetector()
+  var onDocumentDetectedCallback: ((DocumentDetection) -> Void)?
+  private weak var overlayView: PharmaScannerCameraView?
 
   static var isSimulator: Bool {
     #if targetEnvironment(simulator)
@@ -21,6 +27,7 @@ class CameraManager: NSObject {
 
   private override init() {
     super.init()
+    documentDetector.delegate = self
   }
 
   func requestCameraPermission() async -> Bool {
@@ -68,6 +75,12 @@ class CameraManager: NSObject {
         self.captureSession.addOutput(self.photoOutput)
       }
 
+      self.videoOutput.alwaysDiscardsLateVideoFrames = true
+      self.videoOutput.setSampleBufferDelegate(self, queue: self.videoProcessingQueue)
+      if self.captureSession.canAddOutput(self.videoOutput) {
+        self.captureSession.addOutput(self.videoOutput)
+      }
+
       self.captureSession.commitConfiguration()
       self.captureSession.startRunning()
       self.isSessionRunning = true
@@ -91,7 +104,12 @@ class CameraManager: NSObject {
         self.captureSession.removeOutput(output)
       }
 
+      self.onDocumentDetectedCallback = nil
+      self.documentDetector.reset()
       self.isSessionRunning = false
+      DispatchQueue.main.async { [weak self] in
+        self?.overlayView?.updateDetection(nil)
+      }
     }
   }
 
@@ -147,6 +165,14 @@ class CameraManager: NSObject {
         self.photoOutput.capturePhoto(with: settings, delegate: delegate)
       }
     }
+  }
+
+  func setOnDocumentDetected(_ callback: ((DocumentDetection) -> Void)?) {
+    self.onDocumentDetectedCallback = callback
+  }
+
+  func bindOverlay(_ view: PharmaScannerCameraView) {
+    self.overlayView = view
   }
 
   // MARK: - Simulator Mock
@@ -224,5 +250,24 @@ class CameraManager: NSObject {
       continuation.resume(returning: (data, width, height))
       CameraManager.shared.currentPhotoCaptureDelegate = nil
     }
+  }
+}
+
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
+
+extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
+  func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    documentDetector.processFrame(sampleBuffer)
+  }
+}
+
+// MARK: - DocumentDetectorDelegate
+
+extension CameraManager: DocumentDetectorDelegate {
+  func documentDetector(_ detector: DocumentDetector, didDetect detection: DocumentDetection) {
+    DispatchQueue.main.async { [weak self] in
+      self?.overlayView?.updateDetection(detection)
+    }
+    onDocumentDetectedCallback?(detection)
   }
 }

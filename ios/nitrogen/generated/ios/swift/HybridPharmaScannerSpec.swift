@@ -20,6 +20,9 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func capturePhoto() throws -> Promise<CapturedImage>
   func setFlash(mode: FlashMode) throws -> Void
   func setZoom(factor: Double) throws -> Void
+  func detectDocument(imageUri: String) throws -> Promise<DocumentDetection>
+  func cropAndCorrect(imageUri: String, corners: Corners) throws -> Promise<CapturedImage>
+  func setOnDocumentDetected(callback: @escaping (_ detection: DocumentDetection) -> Void) throws -> Void
 }
 
 public extension HybridPharmaScannerSpec_protocol {
