@@ -22,6 +22,14 @@ namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
+// Forward declaration of `FrameRect` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
+// Forward declaration of `BarcodeScanOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -32,6 +40,11 @@ namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 #include "Corners.hpp"
 #include "Point.hpp"
 #include <functional>
+#include <vector>
+#include "BarcodeResult.hpp"
+#include "BarcodeFormat.hpp"
+#include "FrameRect.hpp"
+#include "BarcodeScanOptions.hpp"
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -149,6 +162,34 @@ namespace margelo::nitro::PharmaScannerCxx {
     }
     inline void setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) override {
       auto __result = _swiftPart.setOnDocumentDetected(callback);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<std::vector<CapturedImage>>> scanDocument() override {
+      auto __result = _swiftPart.scanDocument();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<std::vector<BarcodeResult>>> scanBarcodes(const BarcodeScanOptions& options) override {
+      auto __result = _swiftPart.scanBarcodes(std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void startContinuousScan(const std::vector<BarcodeFormat>& formats, const std::function<void(const std::vector<BarcodeResult>& /* codes */)>& onDetected) override {
+      auto __result = _swiftPart.startContinuousScan(formats, onDetected);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline void stopContinuousScan() override {
+      auto __result = _swiftPart.stopContinuousScan();
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

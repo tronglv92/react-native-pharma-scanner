@@ -6,19 +6,21 @@ import android.graphics.Canvas
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Shader
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -40,15 +42,14 @@ object CameraManager {
     private var imageAnalysis: ImageAnalysis? = null
     private var preview: Preview? = null
     private var previewView: PreviewView? = null
-    private var overlayView: DocumentOverlayView? = null
     private var currentFlashMode: Int = ImageCapture.FLASH_MODE_AUTO
     var isSessionRunning: Boolean = false
         private set
+    private var isContinuousScanActive: Boolean = false
+    private var continuousScanFormats: Array<BarcodeFormat> = emptyArray()
 
     private val backgroundExecutor = Executors.newSingleThreadExecutor()
-    private val mainHandler = Handler(Looper.getMainLooper())
-    private val documentDetector = DocumentDetector()
-    var onDocumentDetectedCallback: ((DocumentDetection) -> Unit)? = null
+    private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var startRequestId = 0
 
     fun startSession(context: Context, lifecycleOwner: LifecycleOwner) {
@@ -77,18 +78,7 @@ object CameraManager {
 
             imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build().also { analysis ->
-                    analysis.setAnalyzer(backgroundExecutor) { imageProxy ->
-                        documentDetector.processFrame(imageProxy)
-                    }
-                }
-
-            documentDetector.listener = object : DocumentDetectorListener {
-                override fun onDocumentDetected(detection: DocumentDetection, imageWidth: Int, imageHeight: Int) {
-                    mainHandler.post { overlayView?.updateDetection(detection, imageWidth, imageHeight) }
-                    onDocumentDetectedCallback?.invoke(detection)
-                }
-            }
+                .build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -114,15 +104,16 @@ object CameraManager {
         startRequestId++
 
         val provider = cameraProvider
-        onDocumentDetectedCallback = null
-        mainHandler.post { overlayView?.updateDetection(null, 0, 0) }
-        documentDetector.reset()
         cameraProvider = null
         camera = null
         imageCapture = null
         imageAnalysis = null
         preview = null
         isSessionRunning = false
+        isContinuousScanActive = false
+        continuousScanFormats = emptyArray()
+        BarcodeScannerManager.onBarcodesDetectedCallback = null
+        BarcodeScannerManager.activeFormats = emptyArray()
 
         if (provider != null) {
             mainHandler.post {
@@ -188,7 +179,7 @@ object CameraManager {
     }
 
     fun setZoom(factor: Double) {
-      
+
 
         val cam = camera ?: return
         val maxZoom = cam.cameraInfo.zoomState.value?.maxZoomRatio ?: 1f
@@ -197,17 +188,65 @@ object CameraManager {
         cam.cameraControl.setZoomRatio(clamped)
     }
 
-    fun setOnDocumentDetected(callback: ((DocumentDetection) -> Unit)?) {
-        onDocumentDetectedCallback = callback
+    fun startContinuousScan(formats: Array<BarcodeFormat>) {
+        val analysis = imageAnalysis ?: return
+        continuousScanFormats = formats
+
+        val mlKitFormats = formats.mapNotNull { BarcodeScannerManager.mapToMlKitFormat(it) }.toIntArray()
+        val scannerOptions = if (mlKitFormats.isNotEmpty()) {
+            BarcodeScannerOptions.Builder()
+                .setBarcodeFormats(mlKitFormats[0], *mlKitFormats.drop(1).toIntArray())
+                .build()
+        } else {
+            BarcodeScannerOptions.Builder().build()
+        }
+
+        val scanner = BarcodeScanning.getClient(scannerOptions)
+
+        analysis.setAnalyzer(backgroundExecutor) { imageProxy ->
+            processBarcode(imageProxy, scanner)
+        }
+        isContinuousScanActive = true
+    }
+
+    fun stopContinuousScan() {
+        imageAnalysis?.clearAnalyzer()
+        isContinuousScanActive = false
+        continuousScanFormats = emptyArray()
+        BarcodeScannerManager.onBarcodesDetectedCallback = null
+        BarcodeScannerManager.activeFormats = emptyArray()
+    }
+
+    @androidx.annotation.OptIn(ExperimentalGetImage::class)
+    private fun processBarcode(imageProxy: ImageProxy, scanner: com.google.mlkit.vision.barcode.BarcodeScanner) {
+        val mediaImage = imageProxy.image
+        if (mediaImage == null) {
+            imageProxy.close()
+            return
+        }
+
+        val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+
+        scanner.process(inputImage)
+            .addOnSuccessListener { barcodes ->
+                if (barcodes.isNotEmpty()) {
+                    val results = barcodes.mapNotNull { BarcodeScannerManager.mapBarcodeToResult(it) }.toTypedArray()
+                    if (results.isNotEmpty()) {
+                        BarcodeScannerManager.onBarcodesDetectedCallback?.invoke(results)
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Continuous barcode scan failed", e)
+            }
+            .addOnCompleteListener {
+                imageProxy.close()
+            }
     }
 
     fun bindPreview(view: PreviewView) {
         previewView = view
         preview?.surfaceProvider = view.surfaceProvider
-    }
-
-    fun bindOverlay(view: DocumentOverlayView) {
-        overlayView = view
     }
 
     private fun generateMockPhoto(context: Context): Triple<String, Int, Int> {

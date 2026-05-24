@@ -1,0 +1,49 @@
+diff --git a/node_modules/react-native/.DS_Store b/node_modules/react-native/.DS_Store
+new file mode 100644
+index 0000000..80485c2
+Binary files /dev/null and b/node_modules/react-native/.DS_Store differ
+diff --git a/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.cpp b/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.cpp
+index ba7447b..6e6a4d1 100644
+--- a/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.cpp
++++ b/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.cpp
+@@ -33,7 +33,7 @@ static constexpr std::array kTextMIMETypePrefixes{
+     "application/javascript" // Not in Chromium but emitted by Metro
+ };
+ 
+-namespace {
++namespace detail {
+ 
+ struct InitStreamResult {
+   uint32_t httpStatusCode;
+@@ -257,7 +257,11 @@ class Stream : public NetworkRequestListener,
+   std::vector<std::tuple<long /* bytesToRead */, IOReadCallback>>
+       pendingReadRequests_;
+ };
+-} // namespace
++} // namespace detail
++using detail::InitStreamResult;
++using detail::InitStreamError;
++using detail::StreamInitCallback;
++using detail::IOReadCallback;
+ 
+ NetworkIOAgent::~NetworkIOAgent() {
+   if (networkAgentId_) {
+diff --git a/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.h b/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.h
+index c0561f5..29958ee 100644
+--- a/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.h
++++ b/node_modules/react-native/ReactCommon/jsinspector-modern/NetworkIOAgent.h
+@@ -23,10 +23,12 @@ using StreamID = const std::string;
+ using Headers = std::map<std::string, std::string>;
+ using IOReadError = const std::string;
+ 
+-namespace {
++namespace detail {
+ class Stream; // Defined in NetworkIOAgent.cpp
+ using StreamsMap = std::unordered_map<std::string, std::shared_ptr<Stream>>;
+-} // namespace
++} // namespace detail
++using detail::Stream;
++using detail::StreamsMap;
+ 
+ struct LoadNetworkResourceRequest {
+   std::string url;

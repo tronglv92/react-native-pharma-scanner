@@ -7,8 +7,6 @@ import androidx.camera.view.PreviewView
 
 class PharmaScannerCameraView(context: Context) : FrameLayout(context) {
 
-    private val overlayView: DocumentOverlayView
-
     init {
         setBackgroundColor(Color.BLACK)
 
@@ -18,10 +16,6 @@ class PharmaScannerCameraView(context: Context) : FrameLayout(context) {
         }
         addView(previewView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         CameraManager.bindPreview(previewView)
-
-        overlayView = DocumentOverlayView(context)
-        addView(overlayView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-        CameraManager.bindOverlay(overlayView)
     }
 
     private val measureAndLayout = Runnable {

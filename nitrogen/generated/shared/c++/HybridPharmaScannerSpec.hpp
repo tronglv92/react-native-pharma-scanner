@@ -21,6 +21,12 @@ namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `Corners` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
+// Forward declaration of `BarcodeScanOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -29,6 +35,10 @@ namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 #include "DocumentDetection.hpp"
 #include "Corners.hpp"
 #include <functional>
+#include <vector>
+#include "BarcodeResult.hpp"
+#include "BarcodeScanOptions.hpp"
+#include "BarcodeFormat.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -71,6 +81,10 @@ namespace margelo::nitro::PharmaScannerCxx {
       virtual std::shared_ptr<Promise<DocumentDetection>> detectDocument(const std::string& imageUri) = 0;
       virtual std::shared_ptr<Promise<CapturedImage>> cropAndCorrect(const std::string& imageUri, const Corners& corners) = 0;
       virtual void setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) = 0;
+      virtual std::shared_ptr<Promise<std::vector<CapturedImage>>> scanDocument() = 0;
+      virtual std::shared_ptr<Promise<std::vector<BarcodeResult>>> scanBarcodes(const BarcodeScanOptions& options) = 0;
+      virtual void startContinuousScan(const std::vector<BarcodeFormat>& formats, const std::function<void(const std::vector<BarcodeResult>& /* codes */)>& onDetected) = 0;
+      virtual void stopContinuousScan() = 0;
 
     protected:
       // Hybrid Setup

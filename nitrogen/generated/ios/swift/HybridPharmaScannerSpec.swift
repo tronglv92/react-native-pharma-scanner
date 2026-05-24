@@ -23,6 +23,10 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func detectDocument(imageUri: String) throws -> Promise<DocumentDetection>
   func cropAndCorrect(imageUri: String, corners: Corners) throws -> Promise<CapturedImage>
   func setOnDocumentDetected(callback: @escaping (_ detection: DocumentDetection) -> Void) throws -> Void
+  func scanDocument() throws -> Promise<[CapturedImage]>
+  func scanBarcodes(options: BarcodeScanOptions) throws -> Promise<[BarcodeResult]>
+  func startContinuousScan(formats: [BarcodeFormat], onDetected: @escaping (_ codes: [BarcodeResult]) -> Void) throws -> Void
+  func stopContinuousScan() throws -> Void
 }
 
 public extension HybridPharmaScannerSpec_protocol {

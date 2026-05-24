@@ -92,4 +92,30 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
   func setOnDocumentDetected(callback: @escaping (_ detection: DocumentDetection) -> Void) throws -> Void {
     cameraManager.setOnDocumentDetected(callback)
   }
+
+  func scanDocument() throws -> Promise<[CapturedImage]> {
+    return Promise.async {
+      throw NSError(
+        domain: "PharmaScanner",
+        code: 1,
+        userInfo: [NSLocalizedDescriptionKey: "scanDocument() is not available on iOS. Use detectDocument() + cropAndCorrect() instead."]
+      )
+    }
+  }
+
+  func scanBarcodes(options: BarcodeScanOptions) throws -> Promise<[BarcodeResult]> {
+    return Promise.async {
+      let scanner = BarcodeScanner()
+      return try await scanner.scanBarcodes(imageUri: options.imageUri, formats: options.formats)
+    }
+  }
+
+  func startContinuousScan(formats: [BarcodeFormat], onDetected: @escaping (_ codes: [BarcodeResult]) -> Void) throws -> Void {
+    cameraManager.onBarcodesDetectedCallback = onDetected
+    cameraManager.startContinuousScan(formats: formats)
+  }
+
+  func stopContinuousScan() throws -> Void {
+    cameraManager.stopContinuousScan()
+  }
 }
