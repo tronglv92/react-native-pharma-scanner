@@ -15,7 +15,7 @@ import {
 import { scanner, PharmaScannerCameraView } from './src';
 import type { CapturedImage, DocumentDetection, BarcodeResult, BarcodeFormat } from './src';
 
-type AppMode = 'home' | 'document' | 'barcode';
+type AppMode = 'home' | 'document' | 'barcode-capture' | 'barcode-auto';
 
 const ALL_BARCODE_FORMATS: BarcodeFormat[] = [
   'QR_CODE',
@@ -127,6 +127,35 @@ function App(): React.JSX.Element {
     };
   }, [cameraActive, autoCapture, captureAndCorrect, appMode]);
 
+  // Auto-start continuous barcode scanning in auto mode
+  useEffect(() => {
+    if (!cameraActive || appMode !== 'barcode-auto') {
+      return;
+    }
+
+    // Small delay to ensure the camera session is ready
+    const timer = setTimeout(() => {
+      setContinuousResults([]);
+      setScanCount(0);
+      scanCountRef.current = 0;
+      scanner.startContinuousScan(ALL_BARCODE_FORMATS, (codes: BarcodeResult[]) => {
+        scanCountRef.current += 1;
+        setScanCount(scanCountRef.current);
+        setContinuousResults(codes);
+      });
+      setContinuousScanActive(true);
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      if (continuousScanActive) {
+        scanner.stopContinuousScan();
+        setContinuousScanActive(false);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cameraActive, appMode]);
+
   const handleStartCamera = (mode: AppMode) => {
     try {
       scanner.startCamera();
@@ -230,24 +259,6 @@ function App(): React.JSX.Element {
     }
   };
 
-  // Continuous scan: start/stop
-  const handleToggleContinuousScan = () => {
-    if (continuousScanActive) {
-      scanner.stopContinuousScan();
-      setContinuousScanActive(false);
-    } else {
-      setContinuousResults([]);
-      setScanCount(0);
-      scanCountRef.current = 0;
-      scanner.startContinuousScan(ALL_BARCODE_FORMATS, (codes: BarcodeResult[]) => {
-        scanCountRef.current += 1;
-        setScanCount(scanCountRef.current);
-        setContinuousResults(codes);
-      });
-      setContinuousScanActive(true);
-    }
-  };
-
   const handleFlash = (mode: 'on' | 'off') => {
     try {
       scanner.setFlash(mode);
@@ -334,8 +345,11 @@ function App(): React.JSX.Element {
                 <Text style={styles.buttonText}>Scan Document</Text>
               </TouchableOpacity>
             )}
-            <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode')}>
-              <Text style={styles.buttonText}>Scan Barcode / QR</Text>
+            <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-capture')}>
+              <Text style={styles.buttonText}>Capture & Scan Barcode</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-auto')}>
+              <Text style={styles.buttonText}>Auto Scan Barcode</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -400,18 +414,13 @@ function App(): React.JSX.Element {
           </View>
         )}
 
-        {/* Camera active — Barcode mode */}
-        {cameraActive && appMode === 'barcode' && (
+        {/* Camera active — Barcode Capture & Scan mode */}
+        {cameraActive && appMode === 'barcode-capture' && (
           <View style={styles.cameraContainer}>
             <PharmaScannerCameraView style={styles.cameraPreview} />
 
-            {/* Continuous scan status bar */}
             <View style={styles.detectionBar}>
-              <Text style={styles.detectionText}>
-                {continuousScanActive
-                  ? `Live scanning... (${scanCount} callbacks)`
-                  : 'Camera ready'}
-              </Text>
+              <Text style={styles.detectionText}>Capture & Scan mode</Text>
             </View>
 
             {isCapturing && (
@@ -420,17 +429,9 @@ function App(): React.JSX.Element {
               </View>
             )}
 
-            {/* Barcode controls */}
             <View style={styles.controls}>
               <TouchableOpacity style={styles.captureButton} onPress={handleCaptureAndScanBarcode}>
                 <Text style={styles.captureButtonText}>Capture & Scan</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.controlButton, continuousScanActive && styles.activeButton]}
-                onPress={handleToggleContinuousScan}>
-                <Text style={styles.controlText}>
-                  {continuousScanActive ? 'Stop Live' : 'Start Live'}
-                </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.controlButton} onPress={handleStopCamera}>
                 <Text style={styles.controlText}>Stop</Text>
@@ -451,12 +452,49 @@ function App(): React.JSX.Element {
                 <Text style={styles.controlText}>2x</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        )}
 
-            {/* Continuous scan results (live) */}
-            {continuousScanActive && continuousResults.length > 0 && (
+        {/* Camera active — Barcode Auto Scan mode */}
+        {cameraActive && appMode === 'barcode-auto' && (
+          <View style={styles.cameraContainer}>
+            <PharmaScannerCameraView
+              style={styles.cameraPreview}
+              overlayColor="#9C27B0"
+              overlayFillColor="#9C27B026"
+              overlayLineWidth={2}
+            />
+
+            <View style={styles.detectionBar}>
+              <Text style={styles.detectionText}>
+                {continuousResults.length > 0
+                  ? `Detected ${continuousResults.length} code${continuousResults.length > 1 ? 's' : ''}`
+                  : 'Point at a barcode...'}
+              </Text>
+            </View>
+
+            <View style={styles.controls}>
+              <TouchableOpacity style={styles.controlButton} onPress={handleStopCamera}>
+                <Text style={styles.controlText}>Stop</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleFlash('on')}>
+                <Text style={styles.controlText}>Flash On</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleFlash('off')}>
+                <Text style={styles.controlText}>Flash Off</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleZoom(1.0)}>
+                <Text style={styles.controlText}>1x</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleZoom(2.0)}>
+                <Text style={styles.controlText}>2x</Text>
+              </TouchableOpacity>
+            </View>
+
+            {continuousResults.length > 0 && (
               <View style={styles.continuousResultsContainer}>
-                <Text style={[styles.sectionTitle, { color: '#E91E63' }]}>
-                  Live Results ({continuousResults.length} codes)
+                <Text style={[styles.sectionTitle, { color: '#9C27B0' }]}>
+                  Detected ({continuousResults.length} codes)
                 </Text>
                 {continuousResults.map(renderBarcodeResult)}
               </View>
@@ -469,7 +507,7 @@ function App(): React.JSX.Element {
           <View style={styles.processingContainer}>
             <ActivityIndicator size="large" color="#007AFF" />
             <Text style={styles.processingText}>
-              {appMode === 'barcode' ? 'Scanning barcodes...' : 'Detecting & correcting...'}
+              {appMode.startsWith('barcode') ? 'Scanning barcodes...' : 'Detecting & correcting...'}
             </Text>
           </View>
         )}
@@ -537,8 +575,13 @@ function App(): React.JSX.Element {
         {/* Back / restart buttons */}
         {(showingResults || (appMode !== 'home' && !cameraActive)) && !isProcessing && !isScanning && (
           <View style={styles.buttonGroup}>
-            {appMode === 'barcode' && !cameraActive && (
-              <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode')}>
+            {appMode === 'barcode-capture' && !cameraActive && (
+              <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-capture')}>
+                <Text style={styles.buttonText}>Scan Again</Text>
+              </TouchableOpacity>
+            )}
+            {appMode === 'barcode-auto' && !cameraActive && (
+              <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-auto')}>
                 <Text style={styles.buttonText}>Scan Again</Text>
               </TouchableOpacity>
             )}

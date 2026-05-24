@@ -117,7 +117,7 @@ class CameraManager: NSObject {
       self.documentDetector.reset()
       self.isSessionRunning = false
       DispatchQueue.main.async { [weak self] in
-        self?.overlayView?.updateDetection(nil)
+        self?.overlayView?.clearAllOverlays()
       }
     }
   }
@@ -227,6 +227,9 @@ class CameraManager: NSObject {
       }
       self.onBarcodesDetectedCallback = nil
       self.continuousScanFormats = []
+      DispatchQueue.main.async { [weak self] in
+        self?.overlayView?.updateBarcodeDetections(nil)
+      }
     }
   }
 
@@ -324,8 +327,6 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
 
 extension CameraManager: AVCaptureMetadataOutputObjectsDelegate {
   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-    guard let callback = onBarcodesDetectedCallback, !metadataObjects.isEmpty else { return }
-
     let results: [BarcodeResult] = metadataObjects.compactMap { metadata in
       guard let readable = metadata as? AVMetadataMachineReadableCodeObject,
             let format = BarcodeScanner.avMetadataObjectTypeToBarcodeFormat(readable.type) else {
@@ -342,7 +343,16 @@ extension CameraManager: AVCaptureMetadataOutputObjectsDelegate {
       return BarcodeResult(format: format, value: payload, rawValue: payload, boundingBox: boundingBox)
     }
 
-    if !results.isEmpty {
+    // Push bounding boxes to overlay on main thread
+    DispatchQueue.main.async { [weak self] in
+      if results.isEmpty {
+        self?.overlayView?.updateBarcodeDetections(nil)
+      } else {
+        self?.overlayView?.updateBarcodeDetections(results)
+      }
+    }
+
+    if !results.isEmpty, let callback = onBarcodesDetectedCallback {
       callback(results)
     }
   }
