@@ -74,28 +74,40 @@ class HybridPharmaScanner : HybridPharmaScannerSpec() {
 
     override fun detectDocument(imageUri: String): Promise<DocumentDetection> {
         return Promise.async {
-            val detector = DocumentDetector()
-            detector.detectDocument(imageUri)
+            throw UnsupportedOperationException("Use scanDocument() on Android")
         }
     }
 
     override fun cropAndCorrect(imageUri: String, corners: Corners): Promise<CapturedImage> {
         return Promise.async {
-            val activity = ActivityProvider.currentActivity
-                ?: throw IllegalStateException("Activity not available")
-
-            val (uri, width, height) = ImageProcessor.cropAndCorrect(activity, imageUri, corners)
-
-            CapturedImage(
-                uri = uri,
-                width = width.toDouble(),
-                height = height.toDouble(),
-                base64 = null
-            )
+            throw UnsupportedOperationException("Use scanDocument() on Android")
         }
     }
 
     override fun setOnDocumentDetected(callback: (detection: DocumentDetection) -> Unit): Unit {
-        CameraManager.setOnDocumentDetected(callback)
+        Log.d(TAG, "setOnDocumentDetected is a no-op on Android. Use scanDocument() instead.")
+    }
+
+    override fun scanDocument(): Promise<Array<CapturedImage>> {
+        return Promise.async {
+            val result = DocumentScannerManager.scanDocument()
+            result.toTypedArray()
+        }
+    }
+
+    override fun scanBarcodes(options: BarcodeScanOptions): Promise<Array<BarcodeResult>> {
+        return Promise.async {
+            BarcodeScannerManager.scanBarcodes(options)
+        }
+    }
+
+    override fun startContinuousScan(formats: Array<BarcodeFormat>, onDetected: (codes: Array<BarcodeResult>) -> Unit): Unit {
+        BarcodeScannerManager.onBarcodesDetectedCallback = onDetected
+        BarcodeScannerManager.activeFormats = formats
+        CameraManager.startContinuousScan(formats)
+    }
+
+    override fun stopContinuousScan(): Unit {
+        CameraManager.stopContinuousScan()
     }
 }

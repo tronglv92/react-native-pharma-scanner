@@ -8,6 +8,12 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
+// Forward declaration of `BarcodeScanOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `Corners` to properly resolve imports.
@@ -16,16 +22,22 @@ namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
+// Forward declaration of `FrameRect` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 
 // Include C++ defined types
+#include "BarcodeFormat.hpp"
+#include "BarcodeResult.hpp"
+#include "BarcodeScanOptions.hpp"
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
 #include "DocumentDetection.hpp"
 #include "FlashMode.hpp"
+#include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
 #include "Point.hpp"
 #include <NitroModules/Promise.hpp>
@@ -35,6 +47,7 @@ namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 // C++ helpers for Swift
 #include "ReactNativePharmaScanner-Swift-Cxx-Bridge.hpp"

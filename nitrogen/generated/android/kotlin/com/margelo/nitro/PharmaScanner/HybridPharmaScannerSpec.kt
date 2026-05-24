@@ -73,6 +73,27 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
     val __result = setOnDocumentDetected(callback)
     return __result
   }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun scanDocument(): Promise<Array<CapturedImage>>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun scanBarcodes(options: BarcodeScanOptions): Promise<Array<BarcodeResult>>
+  
+  abstract fun startContinuousScan(formats: Array<BarcodeFormat>, onDetected: (codes: Array<BarcodeResult>) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun startContinuousScan_cxx(formats: Array<BarcodeFormat>, onDetected: Func_void_std__vector_BarcodeResult_): Unit {
+    val __result = startContinuousScan(formats, onDetected)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun stopContinuousScan(): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

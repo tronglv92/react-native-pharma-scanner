@@ -17,6 +17,12 @@ class CameraManager: NSObject {
   var onDocumentDetectedCallback: ((DocumentDetection) -> Void)?
   private weak var overlayView: PharmaScannerCameraView?
 
+  // Barcode scanning
+  private var metadataOutput: AVCaptureMetadataOutput?
+  private let metadataProcessingQueue = DispatchQueue(label: "com.pharmascanner.metadataQueue")
+  var onBarcodesDetectedCallback: (([BarcodeResult]) -> Void)?
+  private var continuousScanFormats: [BarcodeFormat] = []
+
   static var isSimulator: Bool {
     #if targetEnvironment(simulator)
     return true
@@ -31,7 +37,7 @@ class CameraManager: NSObject {
   }
 
   func requestCameraPermission() async -> Bool {
-    // if CameraManager.isSimulator { return true }
+     if CameraManager.isSimulator { return true }
 
     let status = AVCaptureDevice.authorizationStatus(for: .video)
     switch status {
@@ -45,10 +51,10 @@ class CameraManager: NSObject {
   }
 
   func startSession() throws {
-    // if CameraManager.isSimulator {
-    //   isSessionRunning = true
-    //   return
-    // }
+     if CameraManager.isSimulator {
+       isSessionRunning = true
+       return
+     }
 
     sessionQueue.sync {
       guard !self.isSessionRunning else { return }
@@ -88,10 +94,10 @@ class CameraManager: NSObject {
   }
 
   func stopSession() {
-    // if CameraManager.isSimulator {
-    //   isSessionRunning = false
-    //   return
-    // }
+     if CameraManager.isSimulator {
+       isSessionRunning = false
+       return
+     }
 
     sessionQueue.sync {
       guard self.isSessionRunning else { return }
@@ -105,6 +111,9 @@ class CameraManager: NSObject {
       }
 
       self.onDocumentDetectedCallback = nil
+      self.onBarcodesDetectedCallback = nil
+      self.metadataOutput = nil
+      self.continuousScanFormats = []
       self.documentDetector.reset()
       self.isSessionRunning = false
       DispatchQueue.main.async { [weak self] in
@@ -118,7 +127,7 @@ class CameraManager: NSObject {
   }
 
   func setZoom(factor: Double) {
-    // if CameraManager.isSimulator { return }
+     if CameraManager.isSimulator { return }
 
     sessionQueue.sync {
       guard let device = (self.captureSession.inputs.first as? AVCaptureDeviceInput)?.device else {
@@ -136,9 +145,9 @@ class CameraManager: NSObject {
   }
 
   func capturePhoto() async throws -> (Data, CGFloat, CGFloat) {
-    // if CameraManager.isSimulator {
-    //   return generateMockPhoto()
-    // }
+     if CameraManager.isSimulator {
+       return generateMockPhoto()
+     }
 
     guard isSessionRunning else {
       throw NSError(domain: "CameraManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "Camera session is not running."])
@@ -169,6 +178,56 @@ class CameraManager: NSObject {
 
   func setOnDocumentDetected(_ callback: ((DocumentDetection) -> Void)?) {
     self.onDocumentDetectedCallback = callback
+  }
+
+  // MARK: - Continuous Barcode Scanning
+
+  func startContinuousScan(formats: [BarcodeFormat]) {
+    #if targetEnvironment(simulator)
+    return
+    #else
+    sessionQueue.async { [weak self] in
+      guard let self = self, self.isSessionRunning else { return }
+
+      // Remove any existing metadata output
+      if let existing = self.metadataOutput {
+        self.captureSession.removeOutput(existing)
+      }
+
+      let output = AVCaptureMetadataOutput()
+      guard self.captureSession.canAddOutput(output) else { return }
+
+      self.captureSession.addOutput(output)
+      output.setMetadataObjectsDelegate(self, queue: self.metadataProcessingQueue)
+
+      let requestedTypes = formats.compactMap { BarcodeScanner.barcodeFormatToAVMetadataObjectType($0) }
+      let supportedTypes = output.availableMetadataObjectTypes
+      let filteredTypes = requestedTypes.filter { supportedTypes.contains($0) }
+
+      if filteredTypes.isEmpty {
+        output.metadataObjectTypes = supportedTypes.filter { type in
+          BarcodeScanner.avMetadataObjectTypeToBarcodeFormat(type) != nil
+        }
+      } else {
+        output.metadataObjectTypes = filteredTypes
+      }
+
+      self.metadataOutput = output
+      self.continuousScanFormats = formats
+    }
+    #endif
+  }
+
+  func stopContinuousScan() {
+    sessionQueue.async { [weak self] in
+      guard let self = self else { return }
+      if let output = self.metadataOutput {
+        self.captureSession.removeOutput(output)
+        self.metadataOutput = nil
+      }
+      self.onBarcodesDetectedCallback = nil
+      self.continuousScanFormats = []
+    }
   }
 
   func bindOverlay(_ view: PharmaScannerCameraView) {
@@ -258,6 +317,34 @@ class CameraManager: NSObject {
 extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
   func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     documentDetector.processFrame(sampleBuffer)
+  }
+}
+
+// MARK: - AVCaptureMetadataOutputObjectsDelegate
+
+extension CameraManager: AVCaptureMetadataOutputObjectsDelegate {
+  func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    guard let callback = onBarcodesDetectedCallback, !metadataObjects.isEmpty else { return }
+
+    let results: [BarcodeResult] = metadataObjects.compactMap { metadata in
+      guard let readable = metadata as? AVMetadataMachineReadableCodeObject,
+            let format = BarcodeScanner.avMetadataObjectTypeToBarcodeFormat(readable.type) else {
+        return nil
+      }
+      let payload = readable.stringValue ?? ""
+      let bounds = readable.bounds
+      let boundingBox = FrameRect(
+        x: bounds.origin.x,
+        y: bounds.origin.y,
+        width: bounds.width,
+        height: bounds.height
+      )
+      return BarcodeResult(format: format, value: payload, rawValue: payload, boundingBox: boundingBox)
+    }
+
+    if !results.isEmpty {
+      callback(results)
+    }
   }
 }
 

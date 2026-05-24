@@ -64,6 +64,10 @@ namespace margelo::nitro::PharmaScannerCxx {
     std::shared_ptr<Promise<DocumentDetection>> detectDocument(const std::string& imageUri) override;
     std::shared_ptr<Promise<CapturedImage>> cropAndCorrect(const std::string& imageUri, const Corners& corners) override;
     void setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) override;
+    std::shared_ptr<Promise<std::vector<CapturedImage>>> scanDocument() override;
+    std::shared_ptr<Promise<std::vector<BarcodeResult>>> scanBarcodes(const BarcodeScanOptions& options) override;
+    void startContinuousScan(const std::vector<BarcodeFormat>& formats, const std::function<void(const std::vector<BarcodeResult>& /* codes */)>& onDetected) override;
+    void stopContinuousScan() override;
 
   private:
     jni::global_ref<JHybridPharmaScannerSpec::JavaPart> _javaPart;
