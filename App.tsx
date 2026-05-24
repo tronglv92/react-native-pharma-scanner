@@ -458,12 +458,7 @@ function App(): React.JSX.Element {
         {/* Camera active — Barcode Auto Scan mode */}
         {cameraActive && appMode === 'barcode-auto' && (
           <View style={styles.cameraContainer}>
-            <PharmaScannerCameraView
-              style={styles.cameraPreview}
-              overlayColor="#9C27B0"
-              overlayFillColor="#9C27B026"
-              overlayLineWidth={2}
-            />
+            <PharmaScannerCameraView style={styles.cameraPreview} />
 
             <View style={styles.detectionBar}>
               <Text style={styles.detectionText}>
