@@ -227,9 +227,6 @@ class CameraManager: NSObject {
       }
       self.onBarcodesDetectedCallback = nil
       self.continuousScanFormats = []
-      DispatchQueue.main.async { [weak self] in
-        self?.overlayView?.updateBarcodeDetections(nil)
-      }
     }
   }
 
@@ -341,15 +338,6 @@ extension CameraManager: AVCaptureMetadataOutputObjectsDelegate {
         height: bounds.height
       )
       return BarcodeResult(format: format, value: payload, rawValue: payload, boundingBox: boundingBox)
-    }
-
-    // Push bounding boxes to overlay on main thread
-    DispatchQueue.main.async { [weak self] in
-      if results.isEmpty {
-        self?.overlayView?.updateBarcodeDetections(nil)
-      } else {
-        self?.overlayView?.updateBarcodeDetections(results)
-      }
     }
 
     if !results.isEmpty, let callback = onBarcodesDetectedCallback {

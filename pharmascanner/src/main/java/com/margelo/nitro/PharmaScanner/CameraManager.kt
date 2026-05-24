@@ -43,7 +43,6 @@ object CameraManager {
     private var imageAnalysis: ImageAnalysis? = null
     private var preview: Preview? = null
     private var previewView: PreviewView? = null
-    private var overlayView: PharmaScannerCameraView? = null
     private var currentFlashMode: Int = ImageCapture.FLASH_MODE_AUTO
     var isSessionRunning: Boolean = false
         private set
@@ -123,10 +122,6 @@ object CameraManager {
         BarcodeScannerManager.activeFormats = emptyArray()
         activeBarcodeScanner?.close()
         activeBarcodeScanner = null
-
-        mainHandler.post {
-            overlayView?.clearAllOverlays()
-        }
 
         if (provider != null) {
             mainHandler.post {
@@ -241,9 +236,6 @@ object CameraManager {
         BarcodeScannerManager.activeFormats = emptyArray()
         activeBarcodeScanner?.close()
         activeBarcodeScanner = null
-        mainHandler.post {
-            overlayView?.clearAllOverlays()
-        }
     }
 
     @androidx.annotation.OptIn(ExperimentalGetImage::class)
@@ -254,10 +246,7 @@ object CameraManager {
             return
         }
 
-        val rotation = imageProxy.imageInfo.rotationDegrees
-        val imageWidth = mediaImage.width
-        val imageHeight = mediaImage.height
-        val inputImage = InputImage.fromMediaImage(mediaImage, rotation)
+        val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
         scanner.process(inputImage)
             .addOnSuccessListener { barcodes ->
@@ -265,19 +254,6 @@ object CameraManager {
                     val results = barcodes.mapNotNull { BarcodeScannerManager.mapBarcodeToResult(it) }.toTypedArray()
                     if (results.isNotEmpty()) {
                         BarcodeScannerManager.onBarcodesDetectedCallback?.invoke(results)
-                    }
-
-                    // Normalize bounding boxes and push to overlay
-                    val normalizedRects = barcodes.mapNotNull { barcode ->
-                        val rect = barcode.boundingBox ?: return@mapNotNull null
-                        normalizeBarcodeRect(rect, imageWidth, imageHeight, rotation)
-                    }
-                    mainHandler.post {
-                        overlayView?.updateBarcodeDetections(normalizedRects)
-                    }
-                } else {
-                    mainHandler.post {
-                        overlayView?.updateBarcodeDetections(emptyList())
                     }
                 }
             }
@@ -289,47 +265,9 @@ object CameraManager {
             }
     }
 
-    private fun normalizeBarcodeRect(
-        rect: android.graphics.Rect,
-        imageWidth: Int,
-        imageHeight: Int,
-        rotation: Int
-    ): FrameRect {
-        return when (rotation) {
-            90 -> FrameRect(
-                x = rect.top.toDouble() / imageHeight,
-                y = (imageWidth - rect.right).toDouble() / imageWidth,
-                width = rect.height().toDouble() / imageHeight,
-                height = rect.width().toDouble() / imageWidth
-            )
-            180 -> FrameRect(
-                x = (imageWidth - rect.right).toDouble() / imageWidth,
-                y = (imageHeight - rect.bottom).toDouble() / imageHeight,
-                width = rect.width().toDouble() / imageWidth,
-                height = rect.height().toDouble() / imageHeight
-            )
-            270 -> FrameRect(
-                x = (imageHeight - rect.bottom).toDouble() / imageHeight,
-                y = rect.left.toDouble() / imageWidth,
-                width = rect.height().toDouble() / imageHeight,
-                height = rect.width().toDouble() / imageWidth
-            )
-            else -> FrameRect(
-                x = rect.left.toDouble() / imageWidth,
-                y = rect.top.toDouble() / imageHeight,
-                width = rect.width().toDouble() / imageWidth,
-                height = rect.height().toDouble() / imageHeight
-            )
-        }
-    }
-
     fun bindPreview(view: PreviewView) {
         previewView = view
         preview?.surfaceProvider = view.surfaceProvider
-    }
-
-    fun bindOverlay(view: PharmaScannerCameraView) {
-        overlayView = view
     }
 
     private fun generateMockPhoto(context: Context): Triple<String, Int, Int> {
