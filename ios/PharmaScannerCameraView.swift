@@ -4,7 +4,8 @@ import UIKit
 class PharmaScannerCameraView: UIView {
   private var previewLayer: AVCaptureVideoPreviewLayer?
 
-  private let overlayLayer: CAShapeLayer = {
+  // Document detection overlay (quad shape)
+  private let documentOverlayLayer: CAShapeLayer = {
     let layer = CAShapeLayer()
     layer.strokeColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0).cgColor // #4CAF50
     layer.fillColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 0.15).cgColor
@@ -13,6 +14,15 @@ class PharmaScannerCameraView: UIView {
     layer.lineCap = .round
     return layer
   }()
+
+  // Barcode detection overlay (container for rect sublayers)
+  private let barcodeOverlayLayer = CALayer()
+
+  // Overlay style properties
+  private var overlayStrokeColor: UIColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0) // #4CAF50
+  private var overlayFillColorValue: UIColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 0.15)
+  private var overlayLineWidthValue: CGFloat = 3.0
+  private var showOverlayValue: Bool = true
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -33,7 +43,8 @@ class PharmaScannerCameraView: UIView {
     self.layer.addSublayer(layer)
     previewLayer = layer
 
-    self.layer.addSublayer(overlayLayer)
+    self.layer.addSublayer(documentOverlayLayer)
+    self.layer.addSublayer(barcodeOverlayLayer)
 
     CameraManager.shared.bindOverlay(self)
   }
@@ -41,12 +52,48 @@ class PharmaScannerCameraView: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
     previewLayer?.frame = bounds
-    overlayLayer.frame = bounds
+    documentOverlayLayer.frame = bounds
+    barcodeOverlayLayer.frame = bounds
   }
 
+  // MARK: - React Native prop setters
+
+  @objc func setOverlayColor(_ hexString: NSString?) {
+    guard let hex = hexString as String?, let color = UIColor(hexString: hex) else { return }
+    overlayStrokeColor = color
+    documentOverlayLayer.strokeColor = color.cgColor
+  }
+
+  @objc func setOverlayLineWidth(_ width: NSNumber?) {
+    guard let w = width else { return }
+    overlayLineWidthValue = CGFloat(w.doubleValue)
+    documentOverlayLayer.lineWidth = overlayLineWidthValue
+  }
+
+  @objc func setOverlayFillColor(_ hexString: NSString?) {
+    guard let hex = hexString as String?, let color = UIColor(hexString: hex) else { return }
+    overlayFillColorValue = color
+    documentOverlayLayer.fillColor = color.cgColor
+  }
+
+  @objc func setShowOverlay(_ show: Bool) {
+    showOverlayValue = show
+    documentOverlayLayer.isHidden = !show
+    barcodeOverlayLayer.isHidden = !show
+  }
+
+  // MARK: - Document detection overlay
+
   func updateDetection(_ detection: DocumentDetection?) {
+    clearBarcodeOverlays()
+
+    guard showOverlayValue else {
+      documentOverlayLayer.path = nil
+      return
+    }
+
     guard let detection = detection, detection.detected else {
-      overlayLayer.path = nil
+      documentOverlayLayer.path = nil
       return
     }
 
@@ -61,6 +108,82 @@ class PharmaScannerCameraView: UIView {
     path.addLine(to: CGPoint(x: c.bottomLeft.x * w, y: c.bottomLeft.y * h))
     path.close()
 
-    overlayLayer.path = path.cgPath
+    documentOverlayLayer.path = path.cgPath
+  }
+
+  // MARK: - Barcode detection overlay
+
+  func updateBarcodeDetections(_ results: [BarcodeResult]?) {
+    // Clear document overlay when showing barcodes
+    documentOverlayLayer.path = nil
+
+    clearBarcodeOverlays()
+
+    guard showOverlayValue else { return }
+
+    guard let results = results, !results.isEmpty else { return }
+
+    let w = bounds.width
+    let h = bounds.height
+
+    for result in results {
+      guard let box = result.boundingBox else { continue }
+
+      let rect = CGRect(
+        x: box.x * w,
+        y: box.y * h,
+        width: box.width * w,
+        height: box.height * h
+      )
+
+      let shapeLayer = CAShapeLayer()
+      shapeLayer.strokeColor = overlayStrokeColor.cgColor
+      shapeLayer.fillColor = overlayFillColorValue.cgColor
+      shapeLayer.lineWidth = overlayLineWidthValue
+      shapeLayer.lineJoin = .round
+      shapeLayer.lineCap = .round
+      shapeLayer.path = UIBezierPath(roundedRect: rect, cornerRadius: 4.0).cgPath
+
+      barcodeOverlayLayer.addSublayer(shapeLayer)
+    }
+  }
+
+  func clearBarcodeOverlays() {
+    barcodeOverlayLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
+  }
+
+  func clearAllOverlays() {
+    documentOverlayLayer.path = nil
+    clearBarcodeOverlays()
+  }
+}
+
+// MARK: - UIColor hex string extension
+
+extension UIColor {
+  convenience init?(hexString: String) {
+    var hex = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+    if hex.hasPrefix("#") {
+      hex.removeFirst()
+    }
+
+    var rgbValue: UInt64 = 0
+    guard Scanner(string: hex).scanHexInt64(&rgbValue) else { return nil }
+
+    switch hex.count {
+    case 6: // #RRGGBB
+      let r = CGFloat((rgbValue >> 16) & 0xFF) / 255.0
+      let g = CGFloat((rgbValue >> 8) & 0xFF) / 255.0
+      let b = CGFloat(rgbValue & 0xFF) / 255.0
+      self.init(red: r, green: g, blue: b, alpha: 1.0)
+    case 8: // #RRGGBBAA
+      let r = CGFloat((rgbValue >> 24) & 0xFF) / 255.0
+      let g = CGFloat((rgbValue >> 16) & 0xFF) / 255.0
+      let b = CGFloat((rgbValue >> 8) & 0xFF) / 255.0
+      let a = CGFloat(rgbValue & 0xFF) / 255.0
+      self.init(red: r, green: g, blue: b, alpha: a)
+    default:
+      return nil
+    }
   }
 }

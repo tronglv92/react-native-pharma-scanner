@@ -1,7 +1,15 @@
 import { requireNativeComponent, type ViewProps } from 'react-native';
 
-const NativeView = requireNativeComponent<ViewProps>('PharmaScannerCameraView');
+export interface PharmaScannerCameraViewProps extends ViewProps {
+  overlayColor?: string;
+  overlayLineWidth?: number;
+  overlayFillColor?: string;
+  showOverlay?: boolean;
+}
 
-export function PharmaScannerCameraView(props: ViewProps) {
+const NativeView =
+  requireNativeComponent<PharmaScannerCameraViewProps>('PharmaScannerCameraView');
+
+export function PharmaScannerCameraView(props: PharmaScannerCameraViewProps) {
   return <NativeView {...props} />;
 }

@@ -74,8 +74,10 @@ object BarcodeScannerManager {
 
     fun mapBarcodeToResult(barcode: Barcode): BarcodeResult? {
         val format = mapMlKitFormatToBarcode(barcode.format) ?: return null
-        val value = barcode.displayValue ?: barcode.rawValue ?: ""
-        val rawValue = barcode.rawValue ?: ""
+        val value = barcode.displayValue ?: barcode.rawValue
+            ?: barcode.rawBytes?.let { String(it) } ?: ""
+        val rawValue = barcode.rawValue
+            ?: barcode.rawBytes?.let { String(it) } ?: ""
         val rect = barcode.boundingBox
         val boundingBox = if (rect != null) {
             FrameRect(

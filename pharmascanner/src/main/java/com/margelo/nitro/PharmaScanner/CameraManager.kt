@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
+import android.util.Size
 import androidx.camera.core.Camera
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
@@ -42,6 +43,7 @@ object CameraManager {
     private var imageAnalysis: ImageAnalysis? = null
     private var preview: Preview? = null
     private var previewView: PreviewView? = null
+    private var overlayView: PharmaScannerCameraView? = null
     private var currentFlashMode: Int = ImageCapture.FLASH_MODE_AUTO
     var isSessionRunning: Boolean = false
         private set
@@ -51,6 +53,9 @@ object CameraManager {
     private val backgroundExecutor = Executors.newSingleThreadExecutor()
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var startRequestId = 0
+    private var lastAnalysisTimestamp = 0L
+    private var activeBarcodeScanner: com.google.mlkit.vision.barcode.BarcodeScanner? = null
+    private const val SCAN_INTERVAL_MS = 250L // Only process a frame every 250ms
 
     fun startSession(context: Context, lifecycleOwner: LifecycleOwner) {
         val requestId = ++startRequestId
@@ -76,8 +81,10 @@ object CameraManager {
                 .setFlashMode(currentFlashMode)
                 .build()
 
+            @Suppress("DEPRECATION")
             imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setTargetResolution(Size(960, 540))
                 .build()
 
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -114,6 +121,12 @@ object CameraManager {
         continuousScanFormats = emptyArray()
         BarcodeScannerManager.onBarcodesDetectedCallback = null
         BarcodeScannerManager.activeFormats = emptyArray()
+        activeBarcodeScanner?.close()
+        activeBarcodeScanner = null
+
+        mainHandler.post {
+            overlayView?.clearAllOverlays()
+        }
 
         if (provider != null) {
             mainHandler.post {
@@ -201,9 +214,20 @@ object CameraManager {
             BarcodeScannerOptions.Builder().build()
         }
 
+        // Close previous scanner if any
+        activeBarcodeScanner?.close()
         val scanner = BarcodeScanning.getClient(scannerOptions)
+        activeBarcodeScanner = scanner
+        lastAnalysisTimestamp = 0L
 
         analysis.setAnalyzer(backgroundExecutor) { imageProxy ->
+            val now = System.currentTimeMillis()
+            if (now - lastAnalysisTimestamp < SCAN_INTERVAL_MS) {
+                // Skip this frame — throttle to reduce CPU/battery usage
+                imageProxy.close()
+                return@setAnalyzer
+            }
+            lastAnalysisTimestamp = now
             processBarcode(imageProxy, scanner)
         }
         isContinuousScanActive = true
@@ -215,6 +239,11 @@ object CameraManager {
         continuousScanFormats = emptyArray()
         BarcodeScannerManager.onBarcodesDetectedCallback = null
         BarcodeScannerManager.activeFormats = emptyArray()
+        activeBarcodeScanner?.close()
+        activeBarcodeScanner = null
+        mainHandler.post {
+            overlayView?.clearAllOverlays()
+        }
     }
 
     @androidx.annotation.OptIn(ExperimentalGetImage::class)
@@ -225,7 +254,10 @@ object CameraManager {
             return
         }
 
-        val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+        val rotation = imageProxy.imageInfo.rotationDegrees
+        val imageWidth = mediaImage.width
+        val imageHeight = mediaImage.height
+        val inputImage = InputImage.fromMediaImage(mediaImage, rotation)
 
         scanner.process(inputImage)
             .addOnSuccessListener { barcodes ->
@@ -233,6 +265,19 @@ object CameraManager {
                     val results = barcodes.mapNotNull { BarcodeScannerManager.mapBarcodeToResult(it) }.toTypedArray()
                     if (results.isNotEmpty()) {
                         BarcodeScannerManager.onBarcodesDetectedCallback?.invoke(results)
+                    }
+
+                    // Normalize bounding boxes and push to overlay
+                    val normalizedRects = barcodes.mapNotNull { barcode ->
+                        val rect = barcode.boundingBox ?: return@mapNotNull null
+                        normalizeBarcodeRect(rect, imageWidth, imageHeight, rotation)
+                    }
+                    mainHandler.post {
+                        overlayView?.updateBarcodeDetections(normalizedRects)
+                    }
+                } else {
+                    mainHandler.post {
+                        overlayView?.updateBarcodeDetections(emptyList())
                     }
                 }
             }
@@ -244,9 +289,47 @@ object CameraManager {
             }
     }
 
+    private fun normalizeBarcodeRect(
+        rect: android.graphics.Rect,
+        imageWidth: Int,
+        imageHeight: Int,
+        rotation: Int
+    ): FrameRect {
+        return when (rotation) {
+            90 -> FrameRect(
+                x = rect.top.toDouble() / imageHeight,
+                y = (imageWidth - rect.right).toDouble() / imageWidth,
+                width = rect.height().toDouble() / imageHeight,
+                height = rect.width().toDouble() / imageWidth
+            )
+            180 -> FrameRect(
+                x = (imageWidth - rect.right).toDouble() / imageWidth,
+                y = (imageHeight - rect.bottom).toDouble() / imageHeight,
+                width = rect.width().toDouble() / imageWidth,
+                height = rect.height().toDouble() / imageHeight
+            )
+            270 -> FrameRect(
+                x = (imageHeight - rect.bottom).toDouble() / imageHeight,
+                y = rect.left.toDouble() / imageWidth,
+                width = rect.height().toDouble() / imageHeight,
+                height = rect.width().toDouble() / imageWidth
+            )
+            else -> FrameRect(
+                x = rect.left.toDouble() / imageWidth,
+                y = rect.top.toDouble() / imageHeight,
+                width = rect.width().toDouble() / imageWidth,
+                height = rect.height().toDouble() / imageHeight
+            )
+        }
+    }
+
     fun bindPreview(view: PreviewView) {
         previewView = view
         preview?.surfaceProvider = view.surfaceProvider
+    }
+
+    fun bindOverlay(view: PharmaScannerCameraView) {
+        overlayView = view
     }
 
     private fun generateMockPhoto(context: Context): Triple<String, Int, Int> {
