@@ -10,14 +10,13 @@ import {
   ScrollView,
   ActivityIndicator,
   Vibration,
-  Platform,
 } from 'react-native';
 import { scanner, PharmaScannerCameraView } from './src';
 import { QRScannerScreenWithRef } from './src/QRScannerScreen';
 import type { QRScannerScreenHandle } from './src/QRScannerScreen';
-import type { CapturedImage, DocumentDetection, BarcodeResult, BarcodeFormat } from './src';
+import type { CapturedImage, DocumentDetection, BarcodeResult, BarcodeFormat, OcrResult } from './src';
 
-type AppMode = 'home' | 'document' | 'barcode-capture' | 'barcode-auto';
+type AppMode = 'home' | 'document' | 'barcode-capture' | 'barcode-auto' | 'ocr';
 
 const ALL_BARCODE_FORMATS: BarcodeFormat[] = [
   'QR_CODE',
@@ -47,6 +46,9 @@ function App(): React.JSX.Element {
   const [continuousScanActive, setContinuousScanActive] = useState(false);
   const [continuousResults, setContinuousResults] = useState<BarcodeResult[]>([]);
   const [scanCount, setScanCount] = useState(0);
+
+  // OCR state
+  const [ocrResult, setOcrResult] = useState<OcrResult | null>(null);
 
   const stableStartRef = useRef<number | null>(null);
   const isCapturingRef = useRef(false);
@@ -175,6 +177,7 @@ function App(): React.JSX.Element {
       setContinuousResults([]);
       setScanCount(0);
       scanCountRef.current = 0;
+      setOcrResult(null);
       stableStartRef.current = null;
     } catch (e) {
       Alert.alert('Error', String(e));
@@ -266,6 +269,34 @@ function App(): React.JSX.Element {
     }
   };
 
+  // OCR: capture photo then recognize text
+  const handleCaptureAndOcr = async () => {
+    if (isCapturingRef.current) return;
+    isCapturingRef.current = true;
+    setIsCapturing(true);
+
+    try {
+      try { Vibration.vibrate(100); } catch (_) {}
+
+      const photo = await scanner.capturePhoto();
+      setCapturedImage(photo);
+
+      setIsProcessing(true);
+      const result = await scanner.recognizeText(photo.uri);
+      setOcrResult(result);
+
+      if (!result.text) {
+        Alert.alert('No Text Found', 'No text detected in the captured photo.');
+      }
+    } catch (e) {
+      Alert.alert('OCR Error', String(e));
+    } finally {
+      setIsProcessing(false);
+      setIsCapturing(false);
+      isCapturingRef.current = false;
+    }
+  };
+
   const handleFlash = (mode: 'on' | 'off') => {
     try {
       scanner.setFlash(mode);
@@ -290,6 +321,7 @@ function App(): React.JSX.Element {
     setContinuousResults([]);
     setScanCount(0);
     scanCountRef.current = 0;
+    setOcrResult(null);
     setAppMode('home');
   };
 
@@ -304,8 +336,7 @@ function App(): React.JSX.Element {
     ? `${Math.round((detection.confidence ?? 0) * 100)}%`
     : '--';
 
-  const isAndroid = Platform.OS === 'android';
-  const showingResults = capturedImage || scannedImages.length > 0 || barcodeResults.length > 0;
+  const showingResults = capturedImage || scannedImages.length > 0 || barcodeResults.length > 0 || ocrResult !== null;
 
   const renderBarcodeResult = (result: BarcodeResult, index: number) => (
     <View key={index} style={styles.barcodeResultItem}>
@@ -344,20 +375,20 @@ function App(): React.JSX.Element {
         {/* Home screen buttons */}
         {appMode === 'home' && !cameraActive && !showingResults ? (
           <View style={styles.homeButtons}>
-            {isAndroid ? (
-              <TouchableOpacity style={styles.button} onPress={handleScanDocument}>
-                <Text style={styles.buttonText}>Scan Document</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={styles.button} onPress={() => handleStartCamera('document')}>
-                <Text style={styles.buttonText}>Scan Document</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity style={styles.button} onPress={handleScanDocument}>
+              <Text style={styles.buttonText}>Scan Document</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.customScanButton]} onPress={() => handleStartCamera('document')}>
+              <Text style={styles.buttonText}>Custom Scan</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-capture')}>
               <Text style={styles.buttonText}>Capture & Scan Barcode</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, styles.barcodeButton]} onPress={() => handleStartCamera('barcode-auto')}>
               <Text style={styles.buttonText}>Auto Scan Barcode</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.ocrButton]} onPress={() => handleStartCamera('ocr')}>
+              <Text style={styles.buttonText}>OCR Test</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -463,6 +494,47 @@ function App(): React.JSX.Element {
           </View>
         )}
 
+        {/* Camera active — OCR mode */}
+        {cameraActive && appMode === 'ocr' && (
+          <View style={styles.cameraContainer}>
+            <PharmaScannerCameraView style={styles.cameraPreview} />
+
+            <View style={styles.detectionBar}>
+              <Text style={styles.detectionText}>OCR mode</Text>
+            </View>
+
+            {isCapturing && (
+              <View style={styles.capturingOverlay}>
+                <Text style={styles.capturingText}>Recognizing...</Text>
+              </View>
+            )}
+
+            <View style={styles.controls}>
+              <TouchableOpacity style={styles.captureButton} onPress={handleCaptureAndOcr}>
+                <Text style={styles.captureButtonText}>Capture & OCR</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={handleStopCamera}>
+                <Text style={styles.controlText}>Stop</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.controls}>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleFlash('on')}>
+                <Text style={styles.controlText}>Flash On</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleFlash('off')}>
+                <Text style={styles.controlText}>Flash Off</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleZoom(1.0)}>
+                <Text style={styles.controlText}>1x</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.controlButton} onPress={() => handleZoom(2.0)}>
+                <Text style={styles.controlText}>2x</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         {/* Camera active — Barcode Auto Scan mode (handled by fullscreen QRScannerScreen) */}
 
         {/* Processing indicator */}
@@ -535,6 +607,46 @@ function App(): React.JSX.Element {
           </View>
         )}
 
+        {/* OCR results */}
+        {ocrResult && !isProcessing && (
+          <View style={styles.resultContainer}>
+            <Text style={[styles.sectionTitle, { color: '#FF5722' }]}>
+              OCR Result ({ocrResult.blocks.length} blocks, {Math.round(ocrResult.processingTimeMs)}ms)
+            </Text>
+            {capturedImage && (
+              <>
+                <Image source={{ uri: capturedImage.uri }} style={styles.capturedImage} />
+                <Text style={styles.label}>
+                  {capturedImage.width} x {capturedImage.height}
+                </Text>
+              </>
+            )}
+            {ocrResult.text ? (
+              <View style={styles.ocrTextContainer}>
+                <Text style={styles.ocrFullText}>{ocrResult.text}</Text>
+              </View>
+            ) : (
+              <Text style={styles.label}>No text detected</Text>
+            )}
+            {ocrResult.blocks.map((block, index) => (
+              <View key={index} style={styles.ocrBlockItem}>
+                <View style={styles.ocrBlockBadge}>
+                  <Text style={styles.barcodeFormatText}>Block {index + 1}</Text>
+                </View>
+                <Text style={styles.barcodeValue} numberOfLines={5}>{block.text}</Text>
+                {block.lines.length > 0 && block.lines[0].confidence > 0 && (
+                  <Text style={styles.barcodeBounds}>
+                    Confidence: {Math.round(block.lines[0].confidence * 100)}%
+                  </Text>
+                )}
+                <Text style={styles.barcodeBounds}>
+                  Box: ({Math.round(block.boundingBox.x)}, {Math.round(block.boundingBox.y)}) {Math.round(block.boundingBox.width)}x{Math.round(block.boundingBox.height)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
         {/* Back / restart buttons */}
         {(showingResults || (appMode !== 'home' && !cameraActive)) && !isProcessing && !isScanning && (
           <View style={styles.buttonGroup}>
@@ -548,16 +660,15 @@ function App(): React.JSX.Element {
                 <Text style={styles.buttonText}>Scan Again</Text>
               </TouchableOpacity>
             )}
+            {appMode === 'ocr' && !cameraActive && (
+              <TouchableOpacity style={[styles.button, styles.ocrButton]} onPress={() => handleStartCamera('ocr')}>
+                <Text style={styles.buttonText}>Scan Again</Text>
+              </TouchableOpacity>
+            )}
             {appMode === 'document' && !cameraActive && (
-              isAndroid ? (
-                <TouchableOpacity style={styles.button} onPress={handleScanDocument}>
-                  <Text style={styles.buttonText}>Scan Again</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity style={styles.button} onPress={() => handleStartCamera('document')}>
-                  <Text style={styles.buttonText}>Scan Again</Text>
-                </TouchableOpacity>
-              )
+              <TouchableOpacity style={styles.button} onPress={handleScanDocument}>
+                <Text style={styles.buttonText}>Scan Again</Text>
+              </TouchableOpacity>
             )}
             <TouchableOpacity style={[styles.button, styles.resetButton]} onPress={handleBackToHome}>
               <Text style={styles.buttonText}>Home</Text>
@@ -660,6 +771,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 24,
+  },
+  customScanButton: {
+    backgroundColor: '#FF9800',
   },
   barcodeButton: {
     backgroundColor: '#9C27B0',
@@ -848,6 +962,38 @@ const styles = StyleSheet.create({
   barcodeBounds: {
     fontSize: 11,
     color: '#aaa',
+  },
+  ocrButton: {
+    backgroundColor: '#FF5722',
+  },
+  ocrTextContainer: {
+    width: '100%',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 6,
+  },
+  ocrFullText: {
+    fontSize: 14,
+    color: '#333',
+    lineHeight: 20,
+  },
+  ocrBlockItem: {
+    width: '100%',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 6,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FF5722',
+  },
+  ocrBlockBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#FF5722',
+    borderRadius: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    marginBottom: 4,
   },
 });
 

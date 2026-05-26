@@ -22,8 +22,16 @@ namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridPharmaScannerSpec_cxx` to properly resolve imports.
@@ -37,7 +45,11 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 #include "DocumentDetection.hpp"
 #include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "OcrResult.hpp"
 #include "Point.hpp"
+#include "TextBlock.hpp"
+#include "TextElement.hpp"
+#include "TextLine.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -275,6 +287,73 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     return vector;
   }
   
+  // pragma MARK: std::vector<TextElement>
+  /**
+   * Specialized version of `std::vector<TextElement>`.
+   */
+  using std__vector_TextElement_ = std::vector<TextElement>;
+  inline std::vector<TextElement> create_std__vector_TextElement_(size_t size) noexcept {
+    std::vector<TextElement> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TextLine>
+  /**
+   * Specialized version of `std::vector<TextLine>`.
+   */
+  using std__vector_TextLine_ = std::vector<TextLine>;
+  inline std::vector<TextLine> create_std__vector_TextLine_(size_t size) noexcept {
+    std::vector<TextLine> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TextBlock>
+  /**
+   * Specialized version of `std::vector<TextBlock>`.
+   */
+  using std__vector_TextBlock_ = std::vector<TextBlock>;
+  inline std::vector<TextBlock> create_std__vector_TextBlock_(size_t size) noexcept {
+    std::vector<TextBlock> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<OcrResult>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<OcrResult>>`.
+   */
+  using std__shared_ptr_Promise_OcrResult__ = std::shared_ptr<Promise<OcrResult>>;
+  inline std::shared_ptr<Promise<OcrResult>> create_std__shared_ptr_Promise_OcrResult__() noexcept {
+    return Promise<OcrResult>::create();
+  }
+  inline PromiseHolder<OcrResult> wrap_std__shared_ptr_Promise_OcrResult__(std::shared_ptr<Promise<OcrResult>> promise) noexcept {
+    return PromiseHolder<OcrResult>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const OcrResult& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const OcrResult&)>`.
+   */
+  using Func_void_OcrResult = std::function<void(const OcrResult& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const OcrResult& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_OcrResult_Wrapper final {
+  public:
+    explicit Func_void_OcrResult_Wrapper(std::function<void(const OcrResult& /* result */)>&& func): _function(std::make_unique<std::function<void(const OcrResult& /* result */)>>(std::move(func))) {}
+    inline void call(OcrResult result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const OcrResult& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_OcrResult create_Func_void_OcrResult(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_OcrResult_Wrapper wrap_Func_void_OcrResult(Func_void_OcrResult value) noexcept {
+    return Func_void_OcrResult_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridPharmaScannerSpec>`.
@@ -339,6 +418,15 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_std__vector_BarcodeResult____ create_Result_std__shared_ptr_Promise_std__vector_BarcodeResult____(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<std::vector<BarcodeResult>>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<OcrResult>>>
+  using Result_std__shared_ptr_Promise_OcrResult___ = Result<std::shared_ptr<Promise<OcrResult>>>;
+  inline Result_std__shared_ptr_Promise_OcrResult___ create_Result_std__shared_ptr_Promise_OcrResult___(const std::shared_ptr<Promise<OcrResult>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<OcrResult>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_OcrResult___ create_Result_std__shared_ptr_Promise_OcrResult___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<OcrResult>>>::withError(error);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx::bridge::swift

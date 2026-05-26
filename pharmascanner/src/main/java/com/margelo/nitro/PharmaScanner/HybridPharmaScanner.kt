@@ -110,4 +110,15 @@ class HybridPharmaScanner : HybridPharmaScannerSpec() {
     override fun stopContinuousScan(): Unit {
         CameraManager.stopContinuousScan()
     }
+
+    override fun recognizeText(imageUri: String): Promise<OcrResult> {
+        return Promise.async {
+            OcrManager.recognizeText(imageUri)
+        }
+    }
+
+    override fun setOnTextRecognized(callback: (result: OcrResult) -> Unit): Unit {
+        OcrManager.onTextRecognizedCallback = callback
+        Log.d(TAG, "setOnTextRecognized: registered callback. Use recognizeText() with image URI on Android.")
+    }
 }

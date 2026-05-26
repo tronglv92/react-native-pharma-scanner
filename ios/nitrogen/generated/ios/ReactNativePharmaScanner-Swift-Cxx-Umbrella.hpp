@@ -8,6 +8,12 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
+// Forward declaration of `BarcodeScanOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `Corners` to properly resolve imports.
@@ -16,18 +22,36 @@ namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
+// Forward declaration of `FrameRect` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 
 // Include C++ defined types
+#include "BarcodeFormat.hpp"
+#include "BarcodeResult.hpp"
+#include "BarcodeScanOptions.hpp"
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
 #include "DocumentDetection.hpp"
 #include "FlashMode.hpp"
+#include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "OcrResult.hpp"
 #include "Point.hpp"
+#include "TextBlock.hpp"
+#include "TextElement.hpp"
+#include "TextLine.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>
@@ -35,6 +59,7 @@ namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 // C++ helpers for Swift
 #include "ReactNativePharmaScanner-Swift-Cxx-Bridge.hpp"

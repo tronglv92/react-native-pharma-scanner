@@ -27,6 +27,8 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func scanBarcodes(options: BarcodeScanOptions) throws -> Promise<[BarcodeResult]>
   func startContinuousScan(formats: [BarcodeFormat], onDetected: @escaping (_ codes: [BarcodeResult]) -> Void) throws -> Void
   func stopContinuousScan() throws -> Void
+  func recognizeText(imageUri: String) throws -> Promise<OcrResult>
+  func setOnTextRecognized(callback: @escaping (_ result: OcrResult) -> Void) throws -> Void
 }
 
 public extension HybridPharmaScannerSpec_protocol {

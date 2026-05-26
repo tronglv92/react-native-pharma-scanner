@@ -9,9 +9,12 @@ protocol DocumentDetectorDelegate: AnyObject {
 class DocumentDetector {
   weak var delegate: DocumentDetectorDelegate?
 
-  private let stabilityFrameCount = 10
-  private let stabilityThreshold: Double = 0.02
+  private let stabilityFrameCount = 6
+  private let stabilityThreshold: Double = 0.03
   private var recentCorners: [Corners] = []
+
+  private var frameCounter: Int = 0
+  private let frameSkip: Int = 3
 
   // MARK: - One-shot detection
 
@@ -23,20 +26,23 @@ class DocumentDetector {
     }
 
     let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-    let request = makeRectangleRequest()
+    let request = makeDocumentRequest()
 
     try handler.perform([request])
 
-    return processResults(request.results, imageSize: nil)
+    return processResults(request.results as? [VNRectangleObservation], imageSize: nil)
   }
 
   // MARK: - Continuous detection (camera frames)
 
   func processFrame(_ sampleBuffer: CMSampleBuffer) {
+    frameCounter += 1
+    guard frameCounter % frameSkip == 0 else { return }
+
     guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
 
     let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up, options: [:])
-    let request = makeRectangleRequest()
+    let request = makeDocumentRequest()
 
     do {
       try handler.perform([request])
@@ -44,31 +50,28 @@ class DocumentDetector {
       return
     }
 
-    let detection = processResults(request.results, imageSize: nil)
+    let detection = processResults(request.results as? [VNRectangleObservation], imageSize: nil)
     delegate?.documentDetector(self, didDetect: detection)
   }
 
   func reset() {
     recentCorners.removeAll()
+    frameCounter = 0
   }
 
   // MARK: - Private
 
-  private func makeRectangleRequest() -> VNDetectRectanglesRequest {
-    let request = VNDetectRectanglesRequest()
-    request.minimumConfidence = 0.5
-    request.maximumObservations = 1
-    request.minimumAspectRatio = 0.3
-    request.maximumAspectRatio = 1.0
+  private func makeDocumentRequest() -> VNDetectDocumentSegmentationRequest {
+    let request = VNDetectDocumentSegmentationRequest()
     return request
   }
 
-  private func processResults(_ results: [Any]?, imageSize: CGSize?) -> DocumentDetection {
+  private func processResults(_ results: [VNRectangleObservation]?, imageSize: CGSize?) -> DocumentDetection {
     let zeroPoint = Point(x: 0, y: 0)
     let zeroCorners = Corners(topLeft: zeroPoint, topRight: zeroPoint,
                               bottomLeft: zeroPoint, bottomRight: zeroPoint)
 
-    guard let observations = results as? [VNRectangleObservation],
+    guard let observations = results,
           let observation = observations.first else {
       recentCorners.removeAll()
       return DocumentDetection(detected: false, corners: zeroCorners, confidence: 0, isStable: false)

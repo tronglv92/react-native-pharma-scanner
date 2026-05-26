@@ -9,8 +9,30 @@
 
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
+// Forward declaration of `DocumentDetection` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `Corners` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `Point` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
+// Forward declaration of `FrameRect` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
+// Forward declaration of `BarcodeScanOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -18,8 +40,36 @@ namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 #include <NitroModules/JPromise.hpp>
 #include "JCapturedImage.hpp"
 #include <optional>
+#include "DocumentDetection.hpp"
+#include "JDocumentDetection.hpp"
+#include "Corners.hpp"
+#include "JCorners.hpp"
+#include "Point.hpp"
+#include "JPoint.hpp"
+#include <vector>
+#include "BarcodeResult.hpp"
+#include "JBarcodeResult.hpp"
+#include "BarcodeFormat.hpp"
+#include "JBarcodeFormat.hpp"
+#include "FrameRect.hpp"
+#include "JFrameRect.hpp"
+#include "OcrResult.hpp"
+#include "JOcrResult.hpp"
+#include "TextBlock.hpp"
+#include "JTextBlock.hpp"
+#include "TextLine.hpp"
+#include "JTextLine.hpp"
+#include "TextElement.hpp"
+#include "JTextElement.hpp"
 #include "FlashMode.hpp"
 #include "JFlashMode.hpp"
+#include <functional>
+#include "JFunc_void_DocumentDetection.hpp"
+#include <NitroModules/JNICallable.hpp>
+#include "BarcodeScanOptions.hpp"
+#include "JBarcodeScanOptions.hpp"
+#include "JFunc_void_std__vector_BarcodeResult_.hpp"
+#include "JFunc_void_OcrResult.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -95,6 +145,129 @@ namespace margelo::nitro::PharmaScannerCxx {
   void JHybridPharmaScannerSpec::setZoom(double factor) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(double /* factor */)>("setZoom");
     method(_javaPart, factor);
+  }
+  std::shared_ptr<Promise<DocumentDetection>> JHybridPharmaScannerSpec::detectDocument(const std::string& imageUri) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */)>("detectDocument");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri));
+    return [&]() {
+      auto __promise = Promise<DocumentDetection>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JDocumentDetection>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<CapturedImage>> JHybridPharmaScannerSpec::cropAndCorrect(const std::string& imageUri, const Corners& corners) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */, jni::alias_ref<JCorners> /* corners */)>("cropAndCorrect");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri), JCorners::fromCpp(corners));
+    return [&]() {
+      auto __promise = Promise<CapturedImage>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JCapturedImage>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::setOnDocumentDetected(const std::function<void(const DocumentDetection& /* detection */)>& callback) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_DocumentDetection::javaobject> /* callback */)>("setOnDocumentDetected_cxx");
+    method(_javaPart, JFunc_void_DocumentDetection_cxx::fromCpp(callback));
+  }
+  std::shared_ptr<Promise<std::vector<CapturedImage>>> JHybridPharmaScannerSpec::scanDocument() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>()>("scanDocument");
+    auto __result = method(_javaPart);
+    return [&]() {
+      auto __promise = Promise<std::vector<CapturedImage>>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JArrayClass<JCapturedImage>>(__boxedResult);
+        __promise->resolve([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<CapturedImage> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }(__result));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<std::vector<BarcodeResult>>> JHybridPharmaScannerSpec::scanBarcodes(const BarcodeScanOptions& options) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JBarcodeScanOptions> /* options */)>("scanBarcodes");
+    auto __result = method(_javaPart, JBarcodeScanOptions::fromCpp(options));
+    return [&]() {
+      auto __promise = Promise<std::vector<BarcodeResult>>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<jni::JArrayClass<JBarcodeResult>>(__boxedResult);
+        __promise->resolve([&](auto&& __input) {
+          size_t __size = __input->size();
+          std::vector<BarcodeResult> __vector;
+          __vector.reserve(__size);
+          for (size_t __i = 0; __i < __size; __i++) {
+            auto __element = __input->getElement(__i);
+            __vector.push_back(__element->toCpp());
+          }
+          return __vector;
+        }(__result));
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::startContinuousScan(const std::vector<BarcodeFormat>& formats, const std::function<void(const std::vector<BarcodeResult>& /* codes */)>& onDetected) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JArrayClass<JBarcodeFormat>> /* formats */, jni::alias_ref<JFunc_void_std__vector_BarcodeResult_::javaobject> /* onDetected */)>("startContinuousScan_cxx");
+    method(_javaPart, [&](auto&& __input) {
+      size_t __size = __input.size();
+      jni::local_ref<jni::JArrayClass<JBarcodeFormat>> __array = jni::JArrayClass<JBarcodeFormat>::newArray(__size);
+      for (size_t __i = 0; __i < __size; __i++) {
+        const auto& __element = __input[__i];
+        auto __elementJni = JBarcodeFormat::fromCpp(__element);
+        __array->setElement(__i, *__elementJni);
+      }
+      return __array;
+    }(formats), JFunc_void_std__vector_BarcodeResult__cxx::fromCpp(onDetected));
+  }
+  void JHybridPharmaScannerSpec::stopContinuousScan() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("stopContinuousScan");
+    method(_javaPart);
+  }
+  std::shared_ptr<Promise<OcrResult>> JHybridPharmaScannerSpec::recognizeText(const std::string& imageUri) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */)>("recognizeText");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri));
+    return [&]() {
+      auto __promise = Promise<OcrResult>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JOcrResult>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_OcrResult::javaobject> /* callback */)>("setOnTextRecognized_cxx");
+    method(_javaPart, JFunc_void_OcrResult_cxx::fromCpp(callback));
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx

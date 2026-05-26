@@ -264,4 +264,122 @@ open class HybridPharmaScannerSpec_cxx {
       return bridge.create_Result_void_(__exceptionPtr)
     }
   }
+  
+  @inline(__always)
+  public final func scanDocument() -> bridge.Result_std__shared_ptr_Promise_std__vector_CapturedImage____ {
+    do {
+      let __result = try self.__implementation.scanDocument()
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_CapturedImage___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__vector_CapturedImage___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_CapturedImage___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__vector_CapturedImage_ in
+              var __vector = bridge.create_std__vector_CapturedImage_(__result.count)
+              for __item in __result {
+                __vector.push_back(__item)
+              }
+              return __vector
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_CapturedImage____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_CapturedImage____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func scanBarcodes(options: BarcodeScanOptions) -> bridge.Result_std__shared_ptr_Promise_std__vector_BarcodeResult____ {
+    do {
+      let __result = try self.__implementation.scanBarcodes(options: options)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_std__vector_BarcodeResult___ in
+        let __promise = bridge.create_std__shared_ptr_Promise_std__vector_BarcodeResult___()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_std__vector_BarcodeResult___(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve({ () -> bridge.std__vector_BarcodeResult_ in
+              var __vector = bridge.create_std__vector_BarcodeResult_(__result.count)
+              for __item in __result {
+                __vector.push_back(__item)
+              }
+              return __vector
+            }()) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_BarcodeResult____(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_std__vector_BarcodeResult____(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func startContinuousScan(formats: bridge.std__vector_BarcodeFormat_, onDetected: bridge.Func_void_std__vector_BarcodeResult_) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.startContinuousScan(formats: formats.map({ __item in __item }), onDetected: { () -> ([BarcodeResult]) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_std__vector_BarcodeResult_(onDetected)
+        return { (__codes: [BarcodeResult]) -> Void in
+          __wrappedFunction.call({ () -> bridge.std__vector_BarcodeResult_ in
+            var __vector = bridge.create_std__vector_BarcodeResult_(__codes.count)
+            for __item in __codes {
+              __vector.push_back(__item)
+            }
+            return __vector
+          }())
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func stopContinuousScan() -> bridge.Result_void_ {
+    do {
+      try self.__implementation.stopContinuousScan()
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func recognizeText(imageUri: std.string) -> bridge.Result_std__shared_ptr_Promise_OcrResult___ {
+    do {
+      let __result = try self.__implementation.recognizeText(imageUri: String(imageUri))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_OcrResult__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_OcrResult__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_OcrResult__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_OcrResult___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_OcrResult___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func setOnTextRecognized(callback: bridge.Func_void_OcrResult) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.setOnTextRecognized(callback: { () -> (OcrResult) -> Void in
+        let __wrappedFunction = bridge.wrap_Func_void_OcrResult(callback)
+        return { (__result: OcrResult) -> Void in
+          __wrappedFunction.call(__result)
+        }
+      }())
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
 }

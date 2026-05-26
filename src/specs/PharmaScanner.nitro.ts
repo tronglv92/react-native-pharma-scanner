@@ -1,5 +1,5 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { FlashMode, CapturedImage, Corners, DocumentDetection, BarcodeScanOptions, BarcodeResult, BarcodeFormat } from './types.nitro';
+import type { FlashMode, CapturedImage, Corners, DocumentDetection, BarcodeScanOptions, BarcodeResult, BarcodeFormat, OcrResult } from './types.nitro';
 
 export interface PharmaScanner
   extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
@@ -17,4 +17,6 @@ export interface PharmaScanner
   scanBarcodes(options: BarcodeScanOptions): Promise<BarcodeResult[]>;
   startContinuousScan(formats: BarcodeFormat[], onDetected: (codes: BarcodeResult[]) => void): void;
   stopContinuousScan(): void;
+  recognizeText(imageUri: string): Promise<OcrResult>;
+  setOnTextRecognized(callback: (result: OcrResult) => void): void;
 }

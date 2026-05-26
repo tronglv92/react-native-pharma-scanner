@@ -4,6 +4,7 @@ import UIKit
 
 class HybridPharmaScanner: HybridPharmaScannerSpec {
   private let cameraManager = CameraManager.shared
+  private let documentScannerManager = DocumentScannerManager()
 
   func ping() throws -> String {
     return "pong"
@@ -95,11 +96,7 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
 
   func scanDocument() throws -> Promise<[CapturedImage]> {
     return Promise.async {
-      throw NSError(
-        domain: "PharmaScanner",
-        code: 1,
-        userInfo: [NSLocalizedDescriptionKey: "scanDocument() is not available on iOS. Use detectDocument() + cropAndCorrect() instead."]
-      )
+      return try await self.documentScannerManager.scanDocument()
     }
   }
 
@@ -117,5 +114,16 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
 
   func stopContinuousScan() throws -> Void {
     cameraManager.stopContinuousScan()
+  }
+
+  func recognizeText(imageUri: String) throws -> Promise<OcrResult> {
+    return Promise.async {
+      let processor = OcrProcessor()
+      return try await processor.recognizeText(imageUri: imageUri)
+    }
+  }
+
+  func setOnTextRecognized(callback: @escaping (_ result: OcrResult) -> Void) throws -> Void {
+    cameraManager.onTextRecognizedCallback = callback
   }
 }

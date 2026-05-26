@@ -23,6 +23,11 @@ class CameraManager: NSObject {
   var onBarcodesDetectedCallback: (([BarcodeResult]) -> Void)?
   private var continuousScanFormats: [BarcodeFormat] = []
 
+  // OCR
+  var onTextRecognizedCallback: ((OcrResult) -> Void)?
+  private let ocrProcessor = OcrProcessor()
+  private var isOcrBusy = false
+
   static var isSimulator: Bool {
     #if targetEnvironment(simulator)
     return true
@@ -112,6 +117,7 @@ class CameraManager: NSObject {
 
       self.onDocumentDetectedCallback = nil
       self.onBarcodesDetectedCallback = nil
+      self.onTextRecognizedCallback = nil
       self.metadataOutput = nil
       self.continuousScanFormats = []
       self.documentDetector.reset()
@@ -317,6 +323,15 @@ class CameraManager: NSObject {
 extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
   func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
     documentDetector.processFrame(sampleBuffer)
+
+    // OCR processing (throttled — skip if busy)
+    if onTextRecognizedCallback != nil && !isOcrBusy {
+      isOcrBusy = true
+      if let result = ocrProcessor.processFrame(sampleBuffer, imageWidth: 1920, imageHeight: 1080) {
+        onTextRecognizedCallback?(result)
+      }
+      isOcrBusy = false
+    }
   }
 }
 

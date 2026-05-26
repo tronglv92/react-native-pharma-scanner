@@ -24,6 +24,12 @@ namespace margelo::nitro::PharmaScannerCxx {
       prototype.registerHybridMethod("detectDocument", &HybridPharmaScannerSpec::detectDocument);
       prototype.registerHybridMethod("cropAndCorrect", &HybridPharmaScannerSpec::cropAndCorrect);
       prototype.registerHybridMethod("setOnDocumentDetected", &HybridPharmaScannerSpec::setOnDocumentDetected);
+      prototype.registerHybridMethod("scanDocument", &HybridPharmaScannerSpec::scanDocument);
+      prototype.registerHybridMethod("scanBarcodes", &HybridPharmaScannerSpec::scanBarcodes);
+      prototype.registerHybridMethod("startContinuousScan", &HybridPharmaScannerSpec::startContinuousScan);
+      prototype.registerHybridMethod("stopContinuousScan", &HybridPharmaScannerSpec::stopContinuousScan);
+      prototype.registerHybridMethod("recognizeText", &HybridPharmaScannerSpec::recognizeText);
+      prototype.registerHybridMethod("setOnTextRecognized", &HybridPharmaScannerSpec::setOnTextRecognized);
     });
   }
 
