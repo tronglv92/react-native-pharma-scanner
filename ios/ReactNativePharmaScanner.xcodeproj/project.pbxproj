@@ -736,6 +736,8 @@
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
+					"-framework",
+					VisionKit,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativepharmascanner;
 				PRODUCT_NAME = ReactNativePharmaScanner;
@@ -850,6 +852,8 @@
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
+					"-framework",
+					VisionKit,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.reactnativepharmascanner;
 				PRODUCT_NAME = ReactNativePharmaScanner;
