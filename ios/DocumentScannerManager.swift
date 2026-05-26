@@ -1,16 +1,17 @@
 import VisionKit
 import UIKit
 
-class DocumentScannerManager: NSObject, VNDocumentCameraViewControllerDelegate {
-  private var continuation: CheckedContinuation<[CapturedImage], Error>?
+class DocumentScannerManager {
+  private var delegate: ScannerDelegate?
 
   func scanDocument() async throws -> [CapturedImage] {
     return try await withCheckedThrowingContinuation { continuation in
-      self.continuation = continuation
+      let scannerDelegate = ScannerDelegate(continuation: continuation)
+      self.delegate = scannerDelegate
 
       DispatchQueue.main.async {
         let scanner = VNDocumentCameraViewController()
-        scanner.delegate = self
+        scanner.delegate = scannerDelegate
 
         guard let scene = UIApplication.shared.connectedScenes
           .compactMap({ $0 as? UIWindowScene })
@@ -21,11 +22,10 @@ class DocumentScannerManager: NSObject, VNDocumentCameraViewControllerDelegate {
             code: -1,
             userInfo: [NSLocalizedDescriptionKey: "Could not find root view controller to present scanner"]
           ))
-          self.continuation = nil
+          self.delegate = nil
           return
         }
 
-        // Find the topmost presented view controller
         var presenter = rootVC
         while let presented = presenter.presentedViewController {
           presenter = presented
@@ -35,8 +35,14 @@ class DocumentScannerManager: NSObject, VNDocumentCameraViewControllerDelegate {
       }
     }
   }
+}
 
-  // MARK: - VNDocumentCameraViewControllerDelegate
+private class ScannerDelegate: NSObject, VNDocumentCameraViewControllerDelegate {
+  private var continuation: CheckedContinuation<[CapturedImage], Error>?
+
+  init(continuation: CheckedContinuation<[CapturedImage], Error>) {
+    self.continuation = continuation
+  }
 
   func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
     controller.dismiss(animated: true)
