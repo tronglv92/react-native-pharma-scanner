@@ -24,6 +24,20 @@
 		FA300001300000000000AA04 /* Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB04 /* Corners.swift */; };
 		FA300001300000000000AA05 /* DocumentDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB05 /* DocumentDetection.swift */; };
 		FA300001300000000000AA06 /* Func_void_DocumentDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA300001300000000000BB06 /* Func_void_DocumentDetection.swift */; };
+		FA400001400000000000AA01 /* BarcodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB01 /* BarcodeScanner.swift */; };
+		FA400001400000000000AA02 /* BarcodeFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB02 /* BarcodeFormat.swift */; };
+		FA400001400000000000AA03 /* BarcodeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB03 /* BarcodeResult.swift */; };
+		FA400001400000000000AA04 /* BarcodeScanOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB04 /* BarcodeScanOptions.swift */; };
+		FA400001400000000000AA05 /* FrameRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB05 /* FrameRect.swift */; };
+		FA400001400000000000AA06 /* Func_void_std__vector_BarcodeResult_.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB06 /* Func_void_std__vector_BarcodeResult_.swift */; };
+		FA400001400000000000AA07 /* Func_void_std__vector_CapturedImage_.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */; };
+		FA500001500000000000AA01 /* OcrProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB01 /* OcrProcessor.swift */; };
+		FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA600001600000000000BB01 /* DocumentScannerManager.swift */; };
+		FA500001500000000000AA02 /* OcrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB02 /* OcrResult.swift */; };
+		FA500001500000000000AA03 /* TextBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB03 /* TextBlock.swift */; };
+		FA500001500000000000AA04 /* TextLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB04 /* TextLine.swift */; };
+		FA500001500000000000AA05 /* TextElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB05 /* TextElement.swift */; };
+		FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB06 /* Func_void_OcrResult.swift */; };
 		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
 		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
 		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
@@ -42,13 +56,6 @@
 		FACDFC2E2FBF048C00A271C5 /* PharmaScannerCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */; };
 		FACDFC302FBF049600A271C5 /* PharmaScannerCameraViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */; };
 		FACDFC322FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */; };
-		FA400001400000000000AA01 /* BarcodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB01 /* BarcodeScanner.swift */; };
-		FA400001400000000000AA02 /* BarcodeFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB02 /* BarcodeFormat.swift */; };
-		FA400001400000000000AA03 /* BarcodeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB03 /* BarcodeResult.swift */; };
-		FA400001400000000000AA04 /* BarcodeScanOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB04 /* BarcodeScanOptions.swift */; };
-		FA400001400000000000AA05 /* FrameRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB05 /* FrameRect.swift */; };
-		FA400001400000000000AA06 /* Func_void_std__vector_BarcodeResult_.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB06 /* Func_void_std__vector_BarcodeResult_.swift */; };
-		FA400001400000000000AA07 /* Func_void_std__vector_CapturedImage_.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +92,48 @@
 		FA300001300000000000BB15 /* JCorners.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JCorners.hpp; sourceTree = "<group>"; };
 		FA300001300000000000BB16 /* JDocumentDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JDocumentDetection.hpp; sourceTree = "<group>"; };
 		FA300001300000000000BB17 /* JFunc_void_DocumentDetection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFunc_void_DocumentDetection.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB01 /* BarcodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeScanner.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB02 /* BarcodeFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeFormat.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB03 /* BarcodeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeResult.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB04 /* BarcodeScanOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeScanOptions.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB05 /* FrameRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRect.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB06 /* Func_void_std__vector_BarcodeResult_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_std__vector_BarcodeResult_.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_std__vector_CapturedImage_.swift; sourceTree = "<group>"; };
+		FA400001400000000000BB08 /* BarcodeFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeFormat.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB09 /* BarcodeResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeResult.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB10 /* BarcodeScanOptions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeScanOptions.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB11 /* FrameRect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FrameRect.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB12 /* JBarcodeFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeFormat.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB13 /* JBarcodeResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeResult.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB14 /* JBarcodeScanOptions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeScanOptions.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB15 /* JFrameRect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFrameRect.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB16 /* JFunc_void_std__vector_BarcodeResult_.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFunc_void_std__vector_BarcodeResult_.hpp; sourceTree = "<group>"; };
+		FA400001400000000000BB17 /* BarcodeFormat.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeFormat.kt; sourceTree = "<group>"; };
+		FA400001400000000000BB18 /* BarcodeResult.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeResult.kt; sourceTree = "<group>"; };
+		FA400001400000000000BB19 /* BarcodeScanOptions.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeScanOptions.kt; sourceTree = "<group>"; };
+		FA400001400000000000BB20 /* FrameRect.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FrameRect.kt; sourceTree = "<group>"; };
+		FA400001400000000000BB21 /* Func_void_std__vector_BarcodeResult_.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Func_void_std__vector_BarcodeResult_.kt; sourceTree = "<group>"; };
+		FA500001500000000000BB01 /* OcrProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcrProcessor.swift; sourceTree = "<group>"; };
+		FA600001600000000000BB01 /* DocumentScannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerManager.swift; sourceTree = "<group>"; };
+		FA500001500000000000CC01 /* OcrResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OcrResult.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC02 /* TextBlock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextBlock.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC03 /* TextElement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextElement.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC04 /* TextLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TextLine.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC05 /* JOcrResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JOcrResult.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC06 /* JTextBlock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JTextBlock.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC07 /* JTextElement.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JTextElement.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC08 /* JTextLine.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JTextLine.hpp; sourceTree = "<group>"; };
+		FA500001500000000000CC09 /* JFunc_void_OcrResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFunc_void_OcrResult.hpp; sourceTree = "<group>"; };
+		FA500001500000000000DD01 /* Func_void_OcrResult.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Func_void_OcrResult.kt; sourceTree = "<group>"; };
+		FA500001500000000000DD02 /* OcrResult.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OcrResult.kt; sourceTree = "<group>"; };
+		FA500001500000000000DD03 /* TextBlock.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextBlock.kt; sourceTree = "<group>"; };
+		FA500001500000000000DD04 /* TextElement.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextElement.kt; sourceTree = "<group>"; };
+		FA500001500000000000DD05 /* TextLine.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextLine.kt; sourceTree = "<group>"; };
+		FA500001500000000000BB02 /* OcrResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OcrResult.swift; sourceTree = "<group>"; };
+		FA500001500000000000BB03 /* TextBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextBlock.swift; sourceTree = "<group>"; };
+		FA500001500000000000BB04 /* TextLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextLine.swift; sourceTree = "<group>"; };
+		FA500001500000000000BB05 /* TextElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextElement.swift; sourceTree = "<group>"; };
+		FA500001500000000000BB06 /* Func_void_OcrResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_OcrResult.swift; sourceTree = "<group>"; };
 		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
 		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
@@ -111,27 +160,6 @@
 		FACDFC2D2FBF048C00A271C5 /* PharmaScannerCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraView.swift; sourceTree = "<group>"; };
 		FACDFC2F2FBF049600A271C5 /* PharmaScannerCameraViewManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PharmaScannerCameraViewManager.m; sourceTree = "<group>"; };
 		FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PharmaScannerCameraViewManager.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB01 /* BarcodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeScanner.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB02 /* BarcodeFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeFormat.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB03 /* BarcodeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeResult.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB04 /* BarcodeScanOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeScanOptions.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB05 /* FrameRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRect.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB06 /* Func_void_std__vector_BarcodeResult_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_std__vector_BarcodeResult_.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_std__vector_CapturedImage_.swift; sourceTree = "<group>"; };
-		FA400001400000000000BB08 /* BarcodeFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeFormat.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB09 /* BarcodeResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeResult.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB10 /* BarcodeScanOptions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BarcodeScanOptions.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB11 /* FrameRect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FrameRect.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB12 /* JBarcodeFormat.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeFormat.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB13 /* JBarcodeResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeResult.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB14 /* JBarcodeScanOptions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JBarcodeScanOptions.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB15 /* JFrameRect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFrameRect.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB16 /* JFunc_void_std__vector_BarcodeResult_.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JFunc_void_std__vector_BarcodeResult_.hpp; sourceTree = "<group>"; };
-		FA400001400000000000BB17 /* BarcodeFormat.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeFormat.kt; sourceTree = "<group>"; };
-		FA400001400000000000BB18 /* BarcodeResult.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeResult.kt; sourceTree = "<group>"; };
-		FA400001400000000000BB19 /* BarcodeScanOptions.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = BarcodeScanOptions.kt; sourceTree = "<group>"; };
-		FA400001400000000000BB20 /* FrameRect.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = FrameRect.kt; sourceTree = "<group>"; };
-		FA400001400000000000BB21 /* Func_void_std__vector_BarcodeResult_.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Func_void_std__vector_BarcodeResult_.kt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +191,8 @@
 				FA300001300000000000BB01 /* DocumentDetector.swift */,
 				FA300001300000000000BB02 /* ImageProcessor.swift */,
 				FA400001400000000000BB01 /* BarcodeScanner.swift */,
+				FA500001500000000000BB01 /* OcrProcessor.swift */,
+				FA600001600000000000BB01 /* DocumentScannerManager.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -227,9 +257,14 @@
 				FA400001400000000000BB15 /* JFrameRect.hpp */,
 				FA300001300000000000BB17 /* JFunc_void_DocumentDetection.hpp */,
 				FA400001400000000000BB16 /* JFunc_void_std__vector_BarcodeResult_.hpp */,
+				FA500001500000000000CC09 /* JFunc_void_OcrResult.hpp */,
 				FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */,
 				FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */,
+				FA500001500000000000CC05 /* JOcrResult.hpp */,
 				FA300001300000000000BB14 /* JPoint.hpp */,
+				FA500001500000000000CC06 /* JTextBlock.hpp */,
+				FA500001500000000000CC07 /* JTextElement.hpp */,
+				FA500001500000000000CC08 /* JTextLine.hpp */,
 			);
 			path = "c++";
 			sourceTree = "<group>";
@@ -244,8 +279,13 @@
 				FA000001200000000000BB10 /* FlashMode.kt */,
 				FA400001400000000000BB20 /* FrameRect.kt */,
 				FA400001400000000000BB21 /* Func_void_std__vector_BarcodeResult_.kt */,
+				FA500001500000000000DD01 /* Func_void_OcrResult.kt */,
 				FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */,
+				FA500001500000000000DD02 /* OcrResult.kt */,
 				FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */,
+				FA500001500000000000DD03 /* TextBlock.kt */,
+				FA500001500000000000DD04 /* TextElement.kt */,
+				FA500001500000000000DD05 /* TextLine.kt */,
 			);
 			path = PharmaScanner;
 			sourceTree = "<group>";
@@ -320,9 +360,14 @@
 				FA400001400000000000BB06 /* Func_void_std__vector_BarcodeResult_.swift */,
 				FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */,
 				FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */,
+				FA500001500000000000BB06 /* Func_void_OcrResult.swift */,
 				FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */,
 				FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */,
+				FA500001500000000000BB02 /* OcrResult.swift */,
 				FA300001300000000000BB03 /* Point.swift */,
+				FA500001500000000000BB03 /* TextBlock.swift */,
+				FA500001500000000000BB05 /* TextElement.swift */,
+				FA500001500000000000BB04 /* TextLine.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -355,7 +400,11 @@
 				FA400001400000000000BB11 /* FrameRect.hpp */,
 				FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */,
 				FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */,
+				FA500001500000000000CC01 /* OcrResult.hpp */,
 				FA300001300000000000BB11 /* Point.hpp */,
+				FA500001500000000000CC02 /* TextBlock.hpp */,
+				FA500001500000000000CC03 /* TextElement.hpp */,
+				FA500001500000000000CC04 /* TextLine.hpp */,
 			);
 			path = "c++";
 			sourceTree = "<group>";
@@ -573,6 +622,13 @@
 				FA400001400000000000AA05 /* FrameRect.swift in Sources */,
 				FA400001400000000000AA06 /* Func_void_std__vector_BarcodeResult_.swift in Sources */,
 				FA400001400000000000AA07 /* Func_void_std__vector_CapturedImage_.swift in Sources */,
+				FA500001500000000000AA01 /* OcrProcessor.swift in Sources */,
+				FA500001500000000000AA02 /* OcrResult.swift in Sources */,
+				FA500001500000000000AA03 /* TextBlock.swift in Sources */,
+				FA500001500000000000AA04 /* TextLine.swift in Sources */,
+				FA500001500000000000AA05 /* TextElement.swift in Sources */,
+				FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */,
+				FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

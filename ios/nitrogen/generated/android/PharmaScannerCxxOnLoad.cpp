@@ -16,6 +16,9 @@
 #include <NitroModules/HybridObjectRegistry.hpp>
 
 #include "JHybridPharmaScannerSpec.hpp"
+#include "JFunc_void_DocumentDetection.hpp"
+#include "JFunc_void_std__vector_BarcodeResult_.hpp"
+#include "JFunc_void_OcrResult.hpp"
 #include <NitroModules/DefaultConstructableObject.hpp>
 
 namespace margelo::nitro::PharmaScannerCxx {
@@ -41,6 +44,9 @@ void registerAllNatives() {
 
   // Register native JNI methods
   margelo::nitro::PharmaScannerCxx::JHybridPharmaScannerSpec::CxxPart::registerNatives();
+  margelo::nitro::PharmaScannerCxx::JFunc_void_DocumentDetection_cxx::registerNatives();
+  margelo::nitro::PharmaScannerCxx::JFunc_void_std__vector_BarcodeResult__cxx::registerNatives();
+  margelo::nitro::PharmaScannerCxx::JFunc_void_OcrResult_cxx::registerNatives();
 
   // Register Nitro Hybrid Objects
   HybridObjectRegistry::registerHybridObjectConstructor(

@@ -94,6 +94,19 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun stopContinuousScan(): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun recognizeText(imageUri: String): Promise<OcrResult>
+  
+  abstract fun setOnTextRecognized(callback: (result: OcrResult) -> Unit): Unit
+  
+  @DoNotStrip
+  @Keep
+  private fun setOnTextRecognized_cxx(callback: Func_void_OcrResult): Unit {
+    val __result = setOnTextRecognized(callback)
+    return __result
+  }
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

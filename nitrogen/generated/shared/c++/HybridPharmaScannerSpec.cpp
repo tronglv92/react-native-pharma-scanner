@@ -28,6 +28,8 @@ namespace margelo::nitro::PharmaScannerCxx {
       prototype.registerHybridMethod("scanBarcodes", &HybridPharmaScannerSpec::scanBarcodes);
       prototype.registerHybridMethod("startContinuousScan", &HybridPharmaScannerSpec::startContinuousScan);
       prototype.registerHybridMethod("stopContinuousScan", &HybridPharmaScannerSpec::stopContinuousScan);
+      prototype.registerHybridMethod("recognizeText", &HybridPharmaScannerSpec::recognizeText);
+      prototype.registerHybridMethod("setOnTextRecognized", &HybridPharmaScannerSpec::setOnTextRecognized);
     });
   }
 

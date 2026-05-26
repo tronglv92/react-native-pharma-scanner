@@ -2,6 +2,7 @@ import CoreImage
 import UIKit
 
 class ImageProcessor {
+  private static let ciContext = CIContext()
 
   static func cropAndCorrect(imageUri: String, corners: Corners) throws -> (Data, Int, Int) {
     guard let url = URL(string: imageUri),
@@ -39,8 +40,7 @@ class ImageProcessor {
                     userInfo: [NSLocalizedDescriptionKey: "Failed to apply perspective correction"])
     }
 
-    let context = CIContext()
-    guard let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+    guard let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) else {
       throw NSError(domain: "ImageProcessor", code: -4,
                     userInfo: [NSLocalizedDescriptionKey: "Failed to render corrected image"])
     }

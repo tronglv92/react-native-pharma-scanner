@@ -120,6 +120,7 @@ object CameraManager {
         continuousScanFormats = emptyArray()
         BarcodeScannerManager.onBarcodesDetectedCallback = null
         BarcodeScannerManager.activeFormats = emptyArray()
+        OcrManager.onTextRecognizedCallback = null
         activeBarcodeScanner?.close()
         activeBarcodeScanner = null
 

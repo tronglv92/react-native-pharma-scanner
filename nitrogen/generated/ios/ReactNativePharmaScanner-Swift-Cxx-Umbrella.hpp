@@ -26,8 +26,16 @@ namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 
 // Include C++ defined types
 #include "BarcodeFormat.hpp"
@@ -39,7 +47,11 @@ namespace margelo::nitro::PharmaScannerCxx { struct Point; }
 #include "FlashMode.hpp"
 #include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "OcrResult.hpp"
 #include "Point.hpp"
+#include "TextBlock.hpp"
+#include "TextElement.hpp"
+#include "TextLine.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>
 #include <exception>

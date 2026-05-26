@@ -38,6 +38,30 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const std::vector<CapturedImage>& /* result */)>
+  Func_void_std__vector_CapturedImage_ create_Func_void_std__vector_CapturedImage_(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativePharmaScanner::Func_void_std__vector_CapturedImage_::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::vector<CapturedImage>& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const std::vector<BarcodeResult>& /* result */)>
+  Func_void_std__vector_BarcodeResult_ create_Func_void_std__vector_BarcodeResult_(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativePharmaScanner::Func_void_std__vector_BarcodeResult_::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const std::vector<BarcodeResult>& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const OcrResult& /* result */)>
+  Func_void_OcrResult create_Func_void_OcrResult(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativePharmaScanner::Func_void_OcrResult::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const OcrResult& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   std::shared_ptr<HybridPharmaScannerSpec> create_std__shared_ptr_HybridPharmaScannerSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx swiftPart = ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx::fromUnsafe(swiftUnsafePointer);

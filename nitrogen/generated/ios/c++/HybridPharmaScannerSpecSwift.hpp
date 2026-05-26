@@ -30,6 +30,14 @@ namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
 namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `BarcodeScanOptions` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -45,6 +53,10 @@ namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 #include "BarcodeFormat.hpp"
 #include "FrameRect.hpp"
 #include "BarcodeScanOptions.hpp"
+#include "OcrResult.hpp"
+#include "TextBlock.hpp"
+#include "TextLine.hpp"
+#include "TextElement.hpp"
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -190,6 +202,20 @@ namespace margelo::nitro::PharmaScannerCxx {
     }
     inline void stopContinuousScan() override {
       auto __result = _swiftPart.stopContinuousScan();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<OcrResult>> recognizeText(const std::string& imageUri) override {
+      auto __result = _swiftPart.recognizeText(imageUri);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) override {
+      auto __result = _swiftPart.setOnTextRecognized(callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

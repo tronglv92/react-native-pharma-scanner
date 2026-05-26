@@ -46,3 +46,27 @@ export interface BarcodeScanOptions {
   imageUri: string;
   formats: BarcodeFormat[];
 }
+
+export interface TextElement {
+  text: string;
+  boundingBox: FrameRect;
+}
+
+export interface TextLine {
+  text: string;
+  boundingBox: FrameRect;
+  confidence: number;
+  elements: TextElement[];
+}
+
+export interface TextBlock {
+  text: string;
+  boundingBox: FrameRect;
+  lines: TextLine[];
+}
+
+export interface OcrResult {
+  text: string;
+  blocks: TextBlock[];
+  processingTimeMs: number;
+}

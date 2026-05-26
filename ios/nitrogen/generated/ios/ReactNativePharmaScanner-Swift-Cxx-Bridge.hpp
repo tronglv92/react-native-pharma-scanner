@@ -8,27 +8,48 @@
 #pragma once
 
 // Forward declarations of C++ defined types
+// Forward declaration of `BarcodeFormat` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
+// Forward declaration of `BarcodeResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct BarcodeResult; }
 // Forward declaration of `CapturedImage` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `Corners` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 // Forward declaration of `DocumentDetection` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `FrameRect` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `OcrResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `TextBlock` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
+// Forward declaration of `TextElement` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
+// Forward declaration of `TextLine` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridPharmaScannerSpec_cxx` to properly resolve imports.
 namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 
 // Include C++ defined types
+#include "BarcodeFormat.hpp"
+#include "BarcodeResult.hpp"
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
 #include "DocumentDetection.hpp"
+#include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "OcrResult.hpp"
 #include "Point.hpp"
+#include "TextBlock.hpp"
+#include "TextElement.hpp"
+#include "TextLine.hpp"
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
 #include <NitroModules/Result.hpp>
@@ -37,6 +58,7 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 /**
  * Contains specialized versions of C++ templated types so they can be accessed from Swift,
@@ -149,6 +171,189 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     return Func_void_DocumentDetection_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::vector<CapturedImage>
+  /**
+   * Specialized version of `std::vector<CapturedImage>`.
+   */
+  using std__vector_CapturedImage_ = std::vector<CapturedImage>;
+  inline std::vector<CapturedImage> create_std__vector_CapturedImage_(size_t size) noexcept {
+    std::vector<CapturedImage> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<std::vector<CapturedImage>>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<std::vector<CapturedImage>>>`.
+   */
+  using std__shared_ptr_Promise_std__vector_CapturedImage___ = std::shared_ptr<Promise<std::vector<CapturedImage>>>;
+  inline std::shared_ptr<Promise<std::vector<CapturedImage>>> create_std__shared_ptr_Promise_std__vector_CapturedImage___() noexcept {
+    return Promise<std::vector<CapturedImage>>::create();
+  }
+  inline PromiseHolder<std::vector<CapturedImage>> wrap_std__shared_ptr_Promise_std__vector_CapturedImage___(std::shared_ptr<Promise<std::vector<CapturedImage>>> promise) noexcept {
+    return PromiseHolder<std::vector<CapturedImage>>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const std::vector<CapturedImage>& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const std::vector<CapturedImage>&)>`.
+   */
+  using Func_void_std__vector_CapturedImage_ = std::function<void(const std::vector<CapturedImage>& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::vector<CapturedImage>& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__vector_CapturedImage__Wrapper final {
+  public:
+    explicit Func_void_std__vector_CapturedImage__Wrapper(std::function<void(const std::vector<CapturedImage>& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::vector<CapturedImage>& /* result */)>>(std::move(func))) {}
+    inline void call(std::vector<CapturedImage> result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::vector<CapturedImage>& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__vector_CapturedImage_ create_Func_void_std__vector_CapturedImage_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__vector_CapturedImage__Wrapper wrap_Func_void_std__vector_CapturedImage_(Func_void_std__vector_CapturedImage_ value) noexcept {
+    return Func_void_std__vector_CapturedImage__Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<FrameRect>
+  /**
+   * Specialized version of `std::optional<FrameRect>`.
+   */
+  using std__optional_FrameRect_ = std::optional<FrameRect>;
+  inline std::optional<FrameRect> create_std__optional_FrameRect_(const FrameRect& value) noexcept {
+    return std::optional<FrameRect>(value);
+  }
+  inline bool has_value_std__optional_FrameRect_(const std::optional<FrameRect>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline FrameRect get_std__optional_FrameRect_(const std::optional<FrameRect>& optional) noexcept {
+    return optional.value();
+  }
+  
+  // pragma MARK: std::vector<BarcodeResult>
+  /**
+   * Specialized version of `std::vector<BarcodeResult>`.
+   */
+  using std__vector_BarcodeResult_ = std::vector<BarcodeResult>;
+  inline std::vector<BarcodeResult> create_std__vector_BarcodeResult_(size_t size) noexcept {
+    std::vector<BarcodeResult> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<std::vector<BarcodeResult>>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<std::vector<BarcodeResult>>>`.
+   */
+  using std__shared_ptr_Promise_std__vector_BarcodeResult___ = std::shared_ptr<Promise<std::vector<BarcodeResult>>>;
+  inline std::shared_ptr<Promise<std::vector<BarcodeResult>>> create_std__shared_ptr_Promise_std__vector_BarcodeResult___() noexcept {
+    return Promise<std::vector<BarcodeResult>>::create();
+  }
+  inline PromiseHolder<std::vector<BarcodeResult>> wrap_std__shared_ptr_Promise_std__vector_BarcodeResult___(std::shared_ptr<Promise<std::vector<BarcodeResult>>> promise) noexcept {
+    return PromiseHolder<std::vector<BarcodeResult>>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const std::vector<BarcodeResult>& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const std::vector<BarcodeResult>&)>`.
+   */
+  using Func_void_std__vector_BarcodeResult_ = std::function<void(const std::vector<BarcodeResult>& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const std::vector<BarcodeResult>& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_std__vector_BarcodeResult__Wrapper final {
+  public:
+    explicit Func_void_std__vector_BarcodeResult__Wrapper(std::function<void(const std::vector<BarcodeResult>& /* result */)>&& func): _function(std::make_unique<std::function<void(const std::vector<BarcodeResult>& /* result */)>>(std::move(func))) {}
+    inline void call(std::vector<BarcodeResult> result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const std::vector<BarcodeResult>& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_std__vector_BarcodeResult_ create_Func_void_std__vector_BarcodeResult_(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_std__vector_BarcodeResult__Wrapper wrap_Func_void_std__vector_BarcodeResult_(Func_void_std__vector_BarcodeResult_ value) noexcept {
+    return Func_void_std__vector_BarcodeResult__Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::vector<BarcodeFormat>
+  /**
+   * Specialized version of `std::vector<BarcodeFormat>`.
+   */
+  using std__vector_BarcodeFormat_ = std::vector<BarcodeFormat>;
+  inline std::vector<BarcodeFormat> create_std__vector_BarcodeFormat_(size_t size) noexcept {
+    std::vector<BarcodeFormat> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TextElement>
+  /**
+   * Specialized version of `std::vector<TextElement>`.
+   */
+  using std__vector_TextElement_ = std::vector<TextElement>;
+  inline std::vector<TextElement> create_std__vector_TextElement_(size_t size) noexcept {
+    std::vector<TextElement> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TextLine>
+  /**
+   * Specialized version of `std::vector<TextLine>`.
+   */
+  using std__vector_TextLine_ = std::vector<TextLine>;
+  inline std::vector<TextLine> create_std__vector_TextLine_(size_t size) noexcept {
+    std::vector<TextLine> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<TextBlock>
+  /**
+   * Specialized version of `std::vector<TextBlock>`.
+   */
+  using std__vector_TextBlock_ = std::vector<TextBlock>;
+  inline std::vector<TextBlock> create_std__vector_TextBlock_(size_t size) noexcept {
+    std::vector<TextBlock> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<OcrResult>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<OcrResult>>`.
+   */
+  using std__shared_ptr_Promise_OcrResult__ = std::shared_ptr<Promise<OcrResult>>;
+  inline std::shared_ptr<Promise<OcrResult>> create_std__shared_ptr_Promise_OcrResult__() noexcept {
+    return Promise<OcrResult>::create();
+  }
+  inline PromiseHolder<OcrResult> wrap_std__shared_ptr_Promise_OcrResult__(std::shared_ptr<Promise<OcrResult>> promise) noexcept {
+    return PromiseHolder<OcrResult>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const OcrResult& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const OcrResult&)>`.
+   */
+  using Func_void_OcrResult = std::function<void(const OcrResult& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const OcrResult& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_OcrResult_Wrapper final {
+  public:
+    explicit Func_void_OcrResult_Wrapper(std::function<void(const OcrResult& /* result */)>&& func): _function(std::make_unique<std::function<void(const OcrResult& /* result */)>>(std::move(func))) {}
+    inline void call(OcrResult result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const OcrResult& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_OcrResult create_Func_void_OcrResult(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_OcrResult_Wrapper wrap_Func_void_OcrResult(Func_void_OcrResult value) noexcept {
+    return Func_void_OcrResult_Wrapper(std::move(value));
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridPharmaScannerSpec>`.
@@ -195,6 +400,33 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_DocumentDetection___ create_Result_std__shared_ptr_Promise_DocumentDetection___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<DocumentDetection>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<std::vector<CapturedImage>>>>
+  using Result_std__shared_ptr_Promise_std__vector_CapturedImage____ = Result<std::shared_ptr<Promise<std::vector<CapturedImage>>>>;
+  inline Result_std__shared_ptr_Promise_std__vector_CapturedImage____ create_Result_std__shared_ptr_Promise_std__vector_CapturedImage____(const std::shared_ptr<Promise<std::vector<CapturedImage>>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<std::vector<CapturedImage>>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_std__vector_CapturedImage____ create_Result_std__shared_ptr_Promise_std__vector_CapturedImage____(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<std::vector<CapturedImage>>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<std::vector<BarcodeResult>>>>
+  using Result_std__shared_ptr_Promise_std__vector_BarcodeResult____ = Result<std::shared_ptr<Promise<std::vector<BarcodeResult>>>>;
+  inline Result_std__shared_ptr_Promise_std__vector_BarcodeResult____ create_Result_std__shared_ptr_Promise_std__vector_BarcodeResult____(const std::shared_ptr<Promise<std::vector<BarcodeResult>>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<std::vector<BarcodeResult>>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_std__vector_BarcodeResult____ create_Result_std__shared_ptr_Promise_std__vector_BarcodeResult____(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<std::vector<BarcodeResult>>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<OcrResult>>>
+  using Result_std__shared_ptr_Promise_OcrResult___ = Result<std::shared_ptr<Promise<OcrResult>>>;
+  inline Result_std__shared_ptr_Promise_OcrResult___ create_Result_std__shared_ptr_Promise_OcrResult___(const std::shared_ptr<Promise<OcrResult>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<OcrResult>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_OcrResult___ create_Result_std__shared_ptr_Promise_OcrResult___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<OcrResult>>>::withError(error);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx::bridge::swift
