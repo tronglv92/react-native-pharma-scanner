@@ -28,6 +28,7 @@ import type {
   InvoiceResult,
   DocumentExtractionResult,
 } from './src';
+import Config from 'react-native-config';
 
 type AppMode =
   | 'home'
@@ -39,8 +40,8 @@ type AppMode =
   | 'extract-pick'
   | 'extract';
 
-const API_KEY = 'YOUR_API_KEY_HERE'; // Set your Google Gemini API key here (free at https://aistudio.google.com)
-const BASE_URL = 'https://generativelanguage.googleapis.com';
+const API_KEY = Config.API_KEY ?? '';
+const BASE_URL = Config.BASE_URL ?? 'https://generativelanguage.googleapis.com';
 
 const ALL_BARCODE_FORMATS: BarcodeFormat[] = [
   'QR_CODE',
