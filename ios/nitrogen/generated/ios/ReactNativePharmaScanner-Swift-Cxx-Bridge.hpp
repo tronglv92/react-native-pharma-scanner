@@ -18,10 +18,24 @@ namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 // Forward declaration of `DocumentDetection` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `DocumentExtractionResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
 // Forward declaration of `FrameRect` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `InvoiceBuyer` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceBuyer; }
+// Forward declaration of `InvoiceLineItem` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
+// Forward declaration of `InvoiceMetadata` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceMetadata; }
+// Forward declaration of `InvoiceResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
+// Forward declaration of `InvoiceSeller` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
+// Forward declaration of `InvoiceTotals` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
 // Forward declaration of `OcrResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -43,8 +57,15 @@ namespace ReactNativePharmaScanner { class HybridPharmaScannerSpec_cxx; }
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
 #include "DocumentDetection.hpp"
+#include "DocumentExtractionResult.hpp"
 #include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "InvoiceBuyer.hpp"
+#include "InvoiceLineItem.hpp"
+#include "InvoiceMetadata.hpp"
+#include "InvoiceResult.hpp"
+#include "InvoiceSeller.hpp"
+#include "InvoiceTotals.hpp"
 #include "OcrResult.hpp"
 #include "Point.hpp"
 #include "TextBlock.hpp"
@@ -354,6 +375,111 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     return Func_void_OcrResult_Wrapper(std::move(value));
   }
   
+  // pragma MARK: std::vector<InvoiceLineItem>
+  /**
+   * Specialized version of `std::vector<InvoiceLineItem>`.
+   */
+  using std__vector_InvoiceLineItem_ = std::vector<InvoiceLineItem>;
+  inline std::vector<InvoiceLineItem> create_std__vector_InvoiceLineItem_(size_t size) noexcept {
+    std::vector<InvoiceLineItem> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::vector<std::string>
+  /**
+   * Specialized version of `std::vector<std::string>`.
+   */
+  using std__vector_std__string_ = std::vector<std::string>;
+  inline std::vector<std::string> create_std__vector_std__string_(size_t size) noexcept {
+    std::vector<std::string> vector;
+    vector.reserve(size);
+    return vector;
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<InvoiceResult>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<InvoiceResult>>`.
+   */
+  using std__shared_ptr_Promise_InvoiceResult__ = std::shared_ptr<Promise<InvoiceResult>>;
+  inline std::shared_ptr<Promise<InvoiceResult>> create_std__shared_ptr_Promise_InvoiceResult__() noexcept {
+    return Promise<InvoiceResult>::create();
+  }
+  inline PromiseHolder<InvoiceResult> wrap_std__shared_ptr_Promise_InvoiceResult__(std::shared_ptr<Promise<InvoiceResult>> promise) noexcept {
+    return PromiseHolder<InvoiceResult>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const InvoiceResult& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const InvoiceResult&)>`.
+   */
+  using Func_void_InvoiceResult = std::function<void(const InvoiceResult& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const InvoiceResult& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_InvoiceResult_Wrapper final {
+  public:
+    explicit Func_void_InvoiceResult_Wrapper(std::function<void(const InvoiceResult& /* result */)>&& func): _function(std::make_unique<std::function<void(const InvoiceResult& /* result */)>>(std::move(func))) {}
+    inline void call(InvoiceResult result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const InvoiceResult& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_InvoiceResult create_Func_void_InvoiceResult(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_InvoiceResult_Wrapper wrap_Func_void_InvoiceResult(Func_void_InvoiceResult value) noexcept {
+    return Func_void_InvoiceResult_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::shared_ptr<Promise<DocumentExtractionResult>>
+  /**
+   * Specialized version of `std::shared_ptr<Promise<DocumentExtractionResult>>`.
+   */
+  using std__shared_ptr_Promise_DocumentExtractionResult__ = std::shared_ptr<Promise<DocumentExtractionResult>>;
+  inline std::shared_ptr<Promise<DocumentExtractionResult>> create_std__shared_ptr_Promise_DocumentExtractionResult__() noexcept {
+    return Promise<DocumentExtractionResult>::create();
+  }
+  inline PromiseHolder<DocumentExtractionResult> wrap_std__shared_ptr_Promise_DocumentExtractionResult__(std::shared_ptr<Promise<DocumentExtractionResult>> promise) noexcept {
+    return PromiseHolder<DocumentExtractionResult>(std::move(promise));
+  }
+  
+  // pragma MARK: std::function<void(const DocumentExtractionResult& /* result */)>
+  /**
+   * Specialized version of `std::function<void(const DocumentExtractionResult&)>`.
+   */
+  using Func_void_DocumentExtractionResult = std::function<void(const DocumentExtractionResult& /* result */)>;
+  /**
+   * Wrapper class for a `std::function<void(const DocumentExtractionResult& / * result * /)>`, this can be used from Swift.
+   */
+  class Func_void_DocumentExtractionResult_Wrapper final {
+  public:
+    explicit Func_void_DocumentExtractionResult_Wrapper(std::function<void(const DocumentExtractionResult& /* result */)>&& func): _function(std::make_unique<std::function<void(const DocumentExtractionResult& /* result */)>>(std::move(func))) {}
+    inline void call(DocumentExtractionResult result) const noexcept {
+      _function->operator()(result);
+    }
+  private:
+    std::unique_ptr<std::function<void(const DocumentExtractionResult& /* result */)>> _function;
+  } SWIFT_NONCOPYABLE;
+  Func_void_DocumentExtractionResult create_Func_void_DocumentExtractionResult(void* NON_NULL swiftClosureWrapper) noexcept;
+  inline Func_void_DocumentExtractionResult_Wrapper wrap_Func_void_DocumentExtractionResult(Func_void_DocumentExtractionResult value) noexcept {
+    return Func_void_DocumentExtractionResult_Wrapper(std::move(value));
+  }
+  
+  // pragma MARK: std::optional<bool>
+  /**
+   * Specialized version of `std::optional<bool>`.
+   */
+  using std__optional_bool_ = std::optional<bool>;
+  inline std::optional<bool> create_std__optional_bool_(const bool& value) noexcept {
+    return std::optional<bool>(value);
+  }
+  inline bool has_value_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.has_value();
+  }
+  inline bool get_std__optional_bool_(const std::optional<bool>& optional) noexcept {
+    return optional.value();
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   /**
    * Specialized version of `std::shared_ptr<HybridPharmaScannerSpec>`.
@@ -427,6 +553,24 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
   }
   inline Result_std__shared_ptr_Promise_OcrResult___ create_Result_std__shared_ptr_Promise_OcrResult___(const std::exception_ptr& error) noexcept {
     return Result<std::shared_ptr<Promise<OcrResult>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<InvoiceResult>>>
+  using Result_std__shared_ptr_Promise_InvoiceResult___ = Result<std::shared_ptr<Promise<InvoiceResult>>>;
+  inline Result_std__shared_ptr_Promise_InvoiceResult___ create_Result_std__shared_ptr_Promise_InvoiceResult___(const std::shared_ptr<Promise<InvoiceResult>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<InvoiceResult>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_InvoiceResult___ create_Result_std__shared_ptr_Promise_InvoiceResult___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<InvoiceResult>>>::withError(error);
+  }
+  
+  // pragma MARK: Result<std::shared_ptr<Promise<DocumentExtractionResult>>>
+  using Result_std__shared_ptr_Promise_DocumentExtractionResult___ = Result<std::shared_ptr<Promise<DocumentExtractionResult>>>;
+  inline Result_std__shared_ptr_Promise_DocumentExtractionResult___ create_Result_std__shared_ptr_Promise_DocumentExtractionResult___(const std::shared_ptr<Promise<DocumentExtractionResult>>& value) noexcept {
+    return Result<std::shared_ptr<Promise<DocumentExtractionResult>>>::withValue(value);
+  }
+  inline Result_std__shared_ptr_Promise_DocumentExtractionResult___ create_Result_std__shared_ptr_Promise_DocumentExtractionResult___(const std::exception_ptr& error) noexcept {
+    return Result<std::shared_ptr<Promise<DocumentExtractionResult>>>::withError(error);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx::bridge::swift

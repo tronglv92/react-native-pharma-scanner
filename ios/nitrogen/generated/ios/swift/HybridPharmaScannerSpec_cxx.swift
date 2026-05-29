@@ -368,6 +368,25 @@ open class HybridPharmaScannerSpec_cxx {
   }
   
   @inline(__always)
+  public final func recognizeDocument(imageUri: std.string) -> bridge.Result_std__shared_ptr_Promise_OcrResult___ {
+    do {
+      let __result = try self.__implementation.recognizeDocument(imageUri: String(imageUri))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_OcrResult__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_OcrResult__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_OcrResult__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_OcrResult___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_OcrResult___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
   public final func setOnTextRecognized(callback: bridge.Func_void_OcrResult) -> bridge.Result_void_ {
     do {
       try self.__implementation.setOnTextRecognized(callback: { () -> (OcrResult) -> Void in
@@ -380,6 +399,55 @@ open class HybridPharmaScannerSpec_cxx {
     } catch (let __error) {
       let __exceptionPtr = __error.toCpp()
       return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func scanInvoice(imageUri: std.string) -> bridge.Result_std__shared_ptr_Promise_InvoiceResult___ {
+    do {
+      let __result = try self.__implementation.scanInvoice(imageUri: String(imageUri))
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_InvoiceResult__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_InvoiceResult__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_InvoiceResult__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_InvoiceResult___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_InvoiceResult___(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func configure(apiKey: std.string, baseUrl: std.string) -> bridge.Result_void_ {
+    do {
+      try self.__implementation.configure(apiKey: String(apiKey), baseUrl: String(baseUrl))
+      return bridge.create_Result_void_()
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_void_(__exceptionPtr)
+    }
+  }
+  
+  @inline(__always)
+  public final func extractDocument(imageUri: std.string, options: ExtractionOptions) -> bridge.Result_std__shared_ptr_Promise_DocumentExtractionResult___ {
+    do {
+      let __result = try self.__implementation.extractDocument(imageUri: String(imageUri), options: options)
+      let __resultCpp = { () -> bridge.std__shared_ptr_Promise_DocumentExtractionResult__ in
+        let __promise = bridge.create_std__shared_ptr_Promise_DocumentExtractionResult__()
+        let __promiseHolder = bridge.wrap_std__shared_ptr_Promise_DocumentExtractionResult__(__promise)
+        __result
+          .then({ __result in __promiseHolder.resolve(__result) })
+          .catch({ __error in __promiseHolder.reject(__error.toCpp()) })
+        return __promise
+      }()
+      return bridge.create_Result_std__shared_ptr_Promise_DocumentExtractionResult___(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_Promise_DocumentExtractionResult___(__exceptionPtr)
     }
   }
 }

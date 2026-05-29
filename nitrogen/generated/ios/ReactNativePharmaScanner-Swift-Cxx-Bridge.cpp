@@ -62,6 +62,22 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void(const InvoiceResult& /* result */)>
+  Func_void_InvoiceResult create_Func_void_InvoiceResult(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativePharmaScanner::Func_void_InvoiceResult::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const InvoiceResult& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
+  // pragma MARK: std::function<void(const DocumentExtractionResult& /* result */)>
+  Func_void_DocumentExtractionResult create_Func_void_DocumentExtractionResult(void* NON_NULL swiftClosureWrapper) noexcept {
+    auto swiftClosure = ReactNativePharmaScanner::Func_void_DocumentExtractionResult::fromUnsafe(swiftClosureWrapper);
+    return [swiftClosure = std::move(swiftClosure)](const DocumentExtractionResult& result) mutable -> void {
+      swiftClosure.call(result);
+    };
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   std::shared_ptr<HybridPharmaScannerSpec> create_std__shared_ptr_HybridPharmaScannerSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx swiftPart = ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx::fromUnsafe(swiftUnsafePointer);

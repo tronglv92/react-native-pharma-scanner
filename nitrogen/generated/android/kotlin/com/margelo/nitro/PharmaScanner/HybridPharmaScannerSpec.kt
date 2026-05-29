@@ -99,6 +99,10 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   @Keep
   abstract fun recognizeText(imageUri: String): Promise<OcrResult>
   
+  @DoNotStrip
+  @Keep
+  abstract fun recognizeDocument(imageUri: String): Promise<OcrResult>
+  
   abstract fun setOnTextRecognized(callback: (result: OcrResult) -> Unit): Unit
   
   @DoNotStrip
@@ -107,6 +111,18 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
     val __result = setOnTextRecognized(callback)
     return __result
   }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun scanInvoice(imageUri: String): Promise<InvoiceResult>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun configure(apiKey: String, baseUrl: String): Unit
+  
+  @DoNotStrip
+  @Keep
+  abstract fun extractDocument(imageUri: String, options: ExtractionOptions): Promise<DocumentExtractionResult>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

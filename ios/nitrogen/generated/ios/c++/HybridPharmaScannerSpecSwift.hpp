@@ -38,6 +38,22 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
 namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 // Forward declaration of `TextElement` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
+// Forward declaration of `InvoiceResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
+// Forward declaration of `InvoiceSeller` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
+// Forward declaration of `InvoiceBuyer` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceBuyer; }
+// Forward declaration of `InvoiceMetadata` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceMetadata; }
+// Forward declaration of `InvoiceLineItem` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
+// Forward declaration of `InvoiceTotals` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
+// Forward declaration of `DocumentExtractionResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
+// Forward declaration of `ExtractionOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -57,6 +73,14 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
 #include "TextBlock.hpp"
 #include "TextLine.hpp"
 #include "TextElement.hpp"
+#include "InvoiceResult.hpp"
+#include "InvoiceSeller.hpp"
+#include "InvoiceBuyer.hpp"
+#include "InvoiceMetadata.hpp"
+#include "InvoiceLineItem.hpp"
+#include "InvoiceTotals.hpp"
+#include "DocumentExtractionResult.hpp"
+#include "ExtractionOptions.hpp"
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -214,11 +238,41 @@ namespace margelo::nitro::PharmaScannerCxx {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline std::shared_ptr<Promise<OcrResult>> recognizeDocument(const std::string& imageUri) override {
+      auto __result = _swiftPart.recognizeDocument(imageUri);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
     inline void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) override {
       auto __result = _swiftPart.setOnTextRecognized(callback);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }
+    }
+    inline std::shared_ptr<Promise<InvoiceResult>> scanInvoice(const std::string& imageUri) override {
+      auto __result = _swiftPart.scanInvoice(imageUri);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void configure(const std::string& apiKey, const std::string& baseUrl) override {
+      auto __result = _swiftPart.configure(apiKey, baseUrl);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
+    inline std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) override {
+      auto __result = _swiftPart.extractDocument(imageUri, std::forward<decltype(options)>(options));
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
     }
 
   private:
