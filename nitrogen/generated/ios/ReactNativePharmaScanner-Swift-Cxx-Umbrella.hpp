@@ -20,12 +20,28 @@ namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
 // Forward declaration of `DocumentDetection` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
+// Forward declaration of `DocumentExtractionResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
+// Forward declaration of `ExtractionOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 // Forward declaration of `FrameRect` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct FrameRect; }
 // Forward declaration of `HybridPharmaScannerSpec` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { class HybridPharmaScannerSpec; }
+// Forward declaration of `InvoiceBuyer` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceBuyer; }
+// Forward declaration of `InvoiceLineItem` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
+// Forward declaration of `InvoiceMetadata` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceMetadata; }
+// Forward declaration of `InvoiceResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
+// Forward declaration of `InvoiceSeller` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
+// Forward declaration of `InvoiceTotals` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
 // Forward declaration of `OcrResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
@@ -44,9 +60,17 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
 #include "DocumentDetection.hpp"
+#include "DocumentExtractionResult.hpp"
+#include "ExtractionOptions.hpp"
 #include "FlashMode.hpp"
 #include "FrameRect.hpp"
 #include "HybridPharmaScannerSpec.hpp"
+#include "InvoiceBuyer.hpp"
+#include "InvoiceLineItem.hpp"
+#include "InvoiceMetadata.hpp"
+#include "InvoiceResult.hpp"
+#include "InvoiceSeller.hpp"
+#include "InvoiceTotals.hpp"
 #include "OcrResult.hpp"
 #include "Point.hpp"
 #include "TextBlock.hpp"

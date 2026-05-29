@@ -123,7 +123,40 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
     }
   }
 
+  func recognizeDocument(imageUri: String) throws -> Promise<OcrResult> {
+    return Promise.async {
+      let processor = DocumentOcrProcessor()
+      return try await processor.recognizeDocument(imageUri: imageUri)
+    }
+  }
+
   func setOnTextRecognized(callback: @escaping (_ result: OcrResult) -> Void) throws -> Void {
     cameraManager.onTextRecognizedCallback = callback
+  }
+
+  func scanInvoice(imageUri: String) throws -> Promise<InvoiceResult> {
+    return Promise.async {
+      let processor = OcrProcessor()
+      let ocrResult = try await processor.recognizeText(imageUri: imageUri)
+      let parser = InvoiceParser()
+      return parser.parse(ocrResult: ocrResult)
+    }
+  }
+
+  func configure(apiKey: String, baseUrl: String) throws -> Void {
+    DocumentExtractor.shared.configure(apiKey: apiKey, baseUrl: baseUrl)
+  }
+
+  func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult> {
+    return Promise.async {
+      return try await DocumentExtractor.shared.extract(
+        imageUri: imageUri,
+        documentType: String(options.documentType),
+        language: String(options.language),
+        customPrompt: options.customPrompt.flatMap { String($0) },
+        forceOffline: options.forceOffline ?? false,
+        scanOcr: options.scanOcr ?? false
+      )
+    }
   }
 }

@@ -29,6 +29,12 @@ namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 namespace margelo::nitro::PharmaScannerCxx { enum class BarcodeFormat; }
 // Forward declaration of `OcrResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
+// Forward declaration of `InvoiceResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
+// Forward declaration of `DocumentExtractionResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
+// Forward declaration of `ExtractionOptions` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -42,6 +48,9 @@ namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 #include "BarcodeScanOptions.hpp"
 #include "BarcodeFormat.hpp"
 #include "OcrResult.hpp"
+#include "InvoiceResult.hpp"
+#include "DocumentExtractionResult.hpp"
+#include "ExtractionOptions.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -89,7 +98,11 @@ namespace margelo::nitro::PharmaScannerCxx {
       virtual void startContinuousScan(const std::vector<BarcodeFormat>& formats, const std::function<void(const std::vector<BarcodeResult>& /* codes */)>& onDetected) = 0;
       virtual void stopContinuousScan() = 0;
       virtual std::shared_ptr<Promise<OcrResult>> recognizeText(const std::string& imageUri) = 0;
+      virtual std::shared_ptr<Promise<OcrResult>> recognizeDocument(const std::string& imageUri) = 0;
       virtual void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) = 0;
+      virtual std::shared_ptr<Promise<InvoiceResult>> scanInvoice(const std::string& imageUri) = 0;
+      virtual void configure(const std::string& apiKey, const std::string& baseUrl) = 0;
+      virtual std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) = 0;
 
     protected:
       // Hybrid Setup
