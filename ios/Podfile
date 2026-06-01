@@ -32,5 +32,32 @@ target 'ReactNativePharmaScanner' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Fix Clang module definition mismatch for NetworkIOAgent::streams_.
+    # NetworkIOAgent.h uses an anonymous namespace for StreamsMap, which
+    # produces different types when compiled in different Clang module
+    # contexts (React_RCTAppDelegate vs jsinspector_modern). Replacing the
+    # anonymous namespace with a named one resolves the type identity conflict.
+    rn_path = config[:reactNativePath]
+    network_io_h = File.join(rn_path, 'ReactCommon/jsinspector-modern/NetworkIOAgent.h')
+    network_io_cpp = File.join(rn_path, 'ReactCommon/jsinspector-modern/NetworkIOAgent.cpp')
+
+    [network_io_h, network_io_cpp].each do |file|
+      next unless File.exist?(file)
+      content = File.read(file)
+      next unless content.include?('namespace {')
+      patched = content
+        .sub("namespace {\nclass Stream;", "namespace networkioagent_detail {\nclass Stream;")
+        .sub("} // namespace\n", "} // namespace networkioagent_detail\nusing networkioagent_detail::Stream;\nusing networkioagent_detail::StreamsMap;\n")
+      if file.end_with?('.cpp')
+        patched = patched
+          .sub("namespace {\n\nstruct InitStreamResult", "namespace networkioagent_detail {\n\nstruct InitStreamResult")
+          .sub("} // namespace\n\nNetworkIOAgent::~", "} // namespace networkioagent_detail\nusing namespace networkioagent_detail;\n\nNetworkIOAgent::~")
+      end
+      if patched != content
+        File.write(file, patched)
+        Pod::UI.puts "[NetworkIOAgent] Patched #{File.basename(file)} to fix Clang module conflict".yellow
+      end
+    end
   end
 end
