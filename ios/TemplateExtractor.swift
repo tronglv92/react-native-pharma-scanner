@@ -57,9 +57,9 @@ final class TemplateExtractor {
     var data: [String: Any] = [:]
 
     // Find section boundaries
-    let buyerStartIdx = findLineIndex(lines: lines, keywords: ["nguoi mua", "nguoi thua", "buyer", "ben mua", "khach hang"])
-    let tableStartIdx = findLineIndex(lines: lines, keywords: ["ten hang hoa", "name of goods", "stt"])
-    let totalsStartIdx = findLineIndex(lines: lines, keywords: ["cong tien hang", "total amount"])
+    let buyerStartIdx = findLineIndex(lines: lines, keywords: ["nguoi mua", "nguoi thua", "buyer", "ben mua", "khach hang", "client"])
+    let tableStartIdx = findLineIndex(lines: lines, keywords: ["ten hang hoa", "name of goods", "stt", "items", "description"])
+    let totalsStartIdx = findLineIndex(lines: lines, keywords: ["cong tien hang", "total amount", "summary"])
 
     // --- SELLER (from start to buyer section) ---
     let sellerEnd = buyerStartIdx ?? tableStartIdx ?? lines.count
@@ -69,15 +69,19 @@ final class TemplateExtractor {
       let line = lines[i]
       let norm = normVi(line)
 
-      // Company name: look for CONG TY ... (but not just "CONG TY" alone)
-      if seller["companyName"]!.isEmpty && (norm.contains("cong ty") || norm.contains("cty")) {
-        // Try to build full company name from this line + potentially next lines
-        let name = extractCompanyName(line: line, lines: lines, index: i)
-        if !name.isEmpty { seller["companyName"] = name }
+      // Company name: look for CONG TY ... or "Seller:" label
+      if seller["companyName"]!.isEmpty {
+        if norm.contains("cong ty") || norm.contains("cty") {
+          let name = extractCompanyName(line: line, lines: lines, index: i)
+          if !name.isEmpty { seller["companyName"] = name }
+        } else if matchesAny(norm, ["seller"]) {
+          let val = extractValueAfterColon(line: line, lines: lines, index: i)
+          if !val.isEmpty { seller["companyName"] = val }
+        }
       }
 
       // Tax code: various OCR garbling of "Mã số thuế" / "Tax code"
-      if seller["taxCode"]!.isEmpty && matchesAny(norm, ["ma so thue", "so thue", "tax code", "tareodo", "thuc ("]) {
+      if seller["taxCode"]!.isEmpty && matchesAny(norm, ["ma so thue", "so thue", "tax code", "tax id", "tareodo", "thuc ("]) {
         seller["taxCode"] = findTaxCode(line: line, lines: lines, index: i)
       }
 
@@ -103,14 +107,14 @@ final class TemplateExtractor {
     var buyer: [String: String] = ["companyName": "", "taxCode": "", "address": ""]
     let buyerEnd = tableStartIdx ?? totalsStartIdx ?? lines.count
 
-    if let bStart = buyerStartIdx {
+    if let bStart = buyerStartIdx, bStart < buyerEnd {
       for i in bStart..<buyerEnd {
         let line = lines[i]
         let norm = normVi(line)
 
         // Buyer company name from "Ho ten nguoi mua hang" line itself or "Ten don vi" line
         if buyer["companyName"]!.isEmpty {
-          if matchesAny(norm, ["nguoi mua", "nguoi thua", "buyer"]) {
+          if matchesAny(norm, ["nguoi mua", "nguoi thua", "buyer", "client"]) {
             let val = extractValueAfterColon(line: line, lines: lines, index: i)
             if !val.isEmpty { buyer["companyName"] = val }
           }
@@ -292,7 +296,7 @@ final class TemplateExtractor {
         let (norm, original) = entry
 
         // Subtotal: "Cong tien hang" / "Total amount"
-        if matchesAny(norm, ["cong tien hang", "cong tien", "total amount"]) && !matchesAny(norm, ["tong", "thanh toan"]) {
+        if matchesAny(norm, ["cong tien hang", "cong tien", "total amount", "net worth"]) && !matchesAny(norm, ["tong", "thanh toan"]) {
           let num = extractLargestNumber(from: original)
           if num > 0 {
             totals["subtotal"] = num
@@ -303,7 +307,7 @@ final class TemplateExtractor {
         }
 
         // VAT rate
-        if matchesAny(norm, ["thue suat", "vat rate", "gigt", "rat rac"]) {
+        if matchesAny(norm, ["thue suat", "vat rate", "vat [%]", "vat[%]", "gigt", "rat rac"]) {
           if let rate = extractPattern(from: original, pattern: "(\\d+)\\s*%"), let val = Double(rate) {
             totals["vatRate"] = val
           } else if let rate = extractPattern(from: norm, pattern: "(\\d+)\\s*%"), let val = Double(rate) {
@@ -323,7 +327,7 @@ final class TemplateExtractor {
         }
 
         // Total payment: "Tong tien thanh toan"
-        if matchesAny(norm, ["tong tien thanh toan", "tong cong", "toral amosu", "toral amount"]) {
+        if matchesAny(norm, ["tong tien thanh toan", "tong cong", "toral amosu", "toral amount", "gross worth"]) {
           let num = extractLargestNumber(from: original)
           if num > 0 {
             totals["totalPayment"] = num

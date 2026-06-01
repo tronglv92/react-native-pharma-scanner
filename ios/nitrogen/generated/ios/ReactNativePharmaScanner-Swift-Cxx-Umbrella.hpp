@@ -18,10 +18,14 @@ namespace margelo::nitro::PharmaScannerCxx { struct BarcodeScanOptions; }
 namespace margelo::nitro::PharmaScannerCxx { struct CapturedImage; }
 // Forward declaration of `Corners` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Corners; }
+// Forward declaration of `DetectedEntity` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DetectedEntity; }
 // Forward declaration of `DocumentDetection` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentDetection; }
 // Forward declaration of `DocumentExtractionResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
+// Forward declaration of `DocumentSummary` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentSummary; }
 // Forward declaration of `ExtractionOptions` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 // Forward declaration of `FlashMode` to properly resolve imports.
@@ -42,10 +46,20 @@ namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
 namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
 // Forward declaration of `InvoiceTotals` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
+// Forward declaration of `KeyValuePair` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct KeyValuePair; }
 // Forward declaration of `OcrResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct OcrResult; }
 // Forward declaration of `Point` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct Point; }
+// Forward declaration of `StructuredDocumentResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredDocumentResult; }
+// Forward declaration of `StructuredParagraph` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredParagraph; }
+// Forward declaration of `StructuredTable` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredTable; }
+// Forward declaration of `TableRow` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TableRow; }
 // Forward declaration of `TextBlock` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
 // Forward declaration of `TextElement` to properly resolve imports.
@@ -59,8 +73,10 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 #include "BarcodeScanOptions.hpp"
 #include "CapturedImage.hpp"
 #include "Corners.hpp"
+#include "DetectedEntity.hpp"
 #include "DocumentDetection.hpp"
 #include "DocumentExtractionResult.hpp"
+#include "DocumentSummary.hpp"
 #include "ExtractionOptions.hpp"
 #include "FlashMode.hpp"
 #include "FrameRect.hpp"
@@ -71,8 +87,13 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 #include "InvoiceResult.hpp"
 #include "InvoiceSeller.hpp"
 #include "InvoiceTotals.hpp"
+#include "KeyValuePair.hpp"
 #include "OcrResult.hpp"
 #include "Point.hpp"
+#include "StructuredDocumentResult.hpp"
+#include "StructuredParagraph.hpp"
+#include "StructuredTable.hpp"
+#include "TableRow.hpp"
 #include "TextBlock.hpp"
 #include "TextElement.hpp"
 #include "TextLine.hpp"

@@ -33,6 +33,7 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func scanInvoice(imageUri: String) throws -> Promise<InvoiceResult>
   func configure(apiKey: String, baseUrl: String) throws -> Void
   func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult>
+  func recognizeStructuredDocument(imageUri: String) throws -> Promise<StructuredDocumentResult>
 }
 
 public extension HybridPharmaScannerSpec_protocol {

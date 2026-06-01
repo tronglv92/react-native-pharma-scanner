@@ -34,6 +34,7 @@ namespace margelo::nitro::PharmaScannerCxx {
       prototype.registerHybridMethod("scanInvoice", &HybridPharmaScannerSpec::scanInvoice);
       prototype.registerHybridMethod("configure", &HybridPharmaScannerSpec::configure);
       prototype.registerHybridMethod("extractDocument", &HybridPharmaScannerSpec::extractDocument);
+      prototype.registerHybridMethod("recognizeStructuredDocument", &HybridPharmaScannerSpec::recognizeStructuredDocument);
     });
   }
 

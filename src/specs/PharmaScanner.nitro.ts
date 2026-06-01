@@ -1,5 +1,5 @@
 import type { HybridObject } from 'react-native-nitro-modules';
-import type { FlashMode, CapturedImage, Corners, DocumentDetection, BarcodeScanOptions, BarcodeResult, BarcodeFormat, OcrResult, InvoiceResult, ExtractionOptions, DocumentExtractionResult } from './types.nitro';
+import type { FlashMode, CapturedImage, Corners, DocumentDetection, BarcodeScanOptions, BarcodeResult, BarcodeFormat, OcrResult, InvoiceResult, ExtractionOptions, DocumentExtractionResult, StructuredDocumentResult } from './types.nitro';
 
 export interface PharmaScanner
   extends HybridObject<{ ios: 'swift'; android: 'kotlin' }> {
@@ -23,4 +23,5 @@ export interface PharmaScanner
   scanInvoice(imageUri: string): Promise<InvoiceResult>;
   configure(apiKey: string, baseUrl: string): void;
   extractDocument(imageUri: string, options: ExtractionOptions): Promise<DocumentExtractionResult>;
+  recognizeStructuredDocument(imageUri: string): Promise<StructuredDocumentResult>;
 }

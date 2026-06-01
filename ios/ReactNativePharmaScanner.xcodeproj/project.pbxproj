@@ -7,19 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0143A315958C7A854F14256C /* StructuredDocumentAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-ReactNativePharmaScanner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-ReactNativePharmaScanner.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */; };
+		3705D77804AE998CBC12C657 /* KeyValuePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */; };
 		419B14E27B689E7BD3C5DBE0 /* LLMExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */; };
+		47EB36FB85D1155388E77236 /* Func_void_StructuredDocumentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */; };
+		49C0618B7FB719EF32D06134 /* StructuredDocumentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */; };
 		5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */; };
 		5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */; };
 		5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707302FAD77FFB83376B730C /* ExtractionOptions.swift */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		7EA16751F7D4DEBF133ED1F9 /* DocumentSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		87701109E364DACF5DBCAD95 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB680131207492534C3710D1 /* NetworkMonitor.swift */; };
+		8CDC82BCEDB4DCF1421DFF3E /* StructuredParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CC65938941077DCC571E7E /* StructuredParagraph.swift */; };
+		900E0B1D94A801453F321A24 /* StructuredTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */; };
+		B22F7A701902F1AF9FD1E2CB /* DetectedEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */; };
 		B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */; };
 		D0715C20B1605DFBC6ADA657 /* TemplateExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */; };
+		D5B5466B068C9892794867B4 /* TableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */; };
 		EC646F11546DA83AC96C3281 /* DocumentPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */; };
 		FA000001200000000000AA01 /* CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB01 /* CapturedImage.swift */; };
 		FA000001200000000000AA02 /* FlashMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB02 /* FlashMode.swift */; };
@@ -76,11 +85,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		10CC65938941077DCC571E7E /* StructuredParagraph.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredParagraph.swift; sourceTree = "<group>"; };
+		11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredTable.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativePharmaScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativePharmaScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReactNativePharmaScanner/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativePharmaScanner/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ReactNativePharmaScanner/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_StructuredDocumentResult.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-ReactNativePharmaScanner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.debug.xcconfig"; sourceTree = "<group>"; };
+		3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TableRow.swift; sourceTree = "<group>"; };
+		3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredDocumentAnalyzer.swift; sourceTree = "<group>"; };
+		4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentSummary.swift; sourceTree = "<group>"; };
 		4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentPrompts.swift; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ReactNativePharmaScanner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.release.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReactNativePharmaScanner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativePharmaScanner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,11 +105,14 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentExtractionResult.swift; sourceTree = "<group>"; };
+		9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyValuePair.swift; sourceTree = "<group>"; };
 		A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LLMExtractor.swift; sourceTree = "<group>"; };
 		AB680131207492534C3710D1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredDocumentResult.swift; sourceTree = "<group>"; };
 		D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_DocumentExtractionResult.swift; sourceTree = "<group>"; };
 		E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TemplateExtractor.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DetectedEntity.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB01 /* CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImage.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB02 /* FlashMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMode.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB03 /* Func_void_CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_CapturedImage.swift; sourceTree = "<group>"; };
@@ -252,6 +270,7 @@
 				E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
+				3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -449,6 +468,14 @@
 				707302FAD77FFB83376B730C /* ExtractionOptions.swift */,
 				86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */,
 				D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */,
+				BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */,
+				10CC65938941077DCC571E7E /* StructuredParagraph.swift */,
+				11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */,
+				3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */,
+				F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */,
+				9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */,
+				4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */,
+				2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -733,6 +760,15 @@
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,
 				B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */,
 				2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */,
+				49C0618B7FB719EF32D06134 /* StructuredDocumentResult.swift in Sources */,
+				8CDC82BCEDB4DCF1421DFF3E /* StructuredParagraph.swift in Sources */,
+				900E0B1D94A801453F321A24 /* StructuredTable.swift in Sources */,
+				D5B5466B068C9892794867B4 /* TableRow.swift in Sources */,
+				B22F7A701902F1AF9FD1E2CB /* DetectedEntity.swift in Sources */,
+				3705D77804AE998CBC12C657 /* KeyValuePair.swift in Sources */,
+				7EA16751F7D4DEBF133ED1F9 /* DocumentSummary.swift in Sources */,
+				47EB36FB85D1155388E77236 /* Func_void_StructuredDocumentResult.swift in Sources */,
+				0143A315958C7A854F14256C /* StructuredDocumentAnalyzer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

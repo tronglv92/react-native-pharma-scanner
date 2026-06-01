@@ -1,0 +1,15 @@
+name: generic
+version: 1
+
+detection:
+  keywords: []
+
+sections:
+  content:
+    startAt: document_start
+    endAt: document_end
+    fields: {}
+
+confidence:
+  maxScore: 0.2
+  fields: []

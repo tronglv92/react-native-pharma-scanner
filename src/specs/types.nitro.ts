@@ -123,6 +123,51 @@ export interface InvoiceResult {
   warnings: string[];
 }
 
+export interface StructuredParagraph {
+  text: string;
+  position: string;         // "top" | "middle" | "bottom"
+  boundingBox: FrameRect;
+}
+
+export interface TableRow {
+  cells: string[];
+}
+
+export interface StructuredTable {
+  rows: TableRow[];
+  boundingBox: FrameRect;
+}
+
+export interface DetectedEntity {
+  type: string;              // "date"|"money"|"phone"|"email"|"url"|"address"
+  value: string;
+  context: string;           // surrounding text
+}
+
+export interface KeyValuePair {
+  key: string;
+  value: string;
+}
+
+export interface DocumentSummary {
+  keyValuePairs: KeyValuePair[];
+  moneyAmounts: string[];
+  dates: string[];
+  identifiers: string[];     // tax codes, phone numbers, IDs
+}
+
+export interface StructuredDocumentResult {
+  documentType: string;
+  paragraphs: StructuredParagraph[];
+  tables: StructuredTable[];
+  detectedEntities: DetectedEntity[];
+  barcodes: string[];
+  summary: DocumentSummary;
+  rawText: string;
+  confidence: number;
+  processingTimeMs: number;
+}
+
 export interface ExtractionOptions {
   documentType: string;      // "invoice"|"prescription"|"receipt"|"purchase_order"|"delivery_note"|"certificate"|"auto"
   language: string;          // "vi"|"en"

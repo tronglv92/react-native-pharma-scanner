@@ -147,6 +147,13 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
     DocumentExtractor.shared.configure(apiKey: apiKey, baseUrl: baseUrl)
   }
 
+  func recognizeStructuredDocument(imageUri: String) throws -> Promise<StructuredDocumentResult> {
+    return Promise.async {
+      let processor = DocumentOcrProcessor()
+      return try await processor.recognizeStructuredDocument(imageUri: imageUri)
+    }
+  }
+
   func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult> {
     return Promise.async {
       return try await DocumentExtractor.shared.extract(

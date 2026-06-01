@@ -27,8 +27,13 @@ import type {
   OcrResult,
   InvoiceResult,
   DocumentExtractionResult,
+  StructuredDocumentResult,
 } from './src';
+import { organizeDocument } from './src/structured-document';
+import type { OrganizedDocument } from './src/structured-document';
 import Config from 'react-native-config';
+import { extractWithMistral } from './src/mistral';
+import { extractWithTemplate } from './src/template-engine';
 
 type AppMode =
   | 'home'
@@ -40,8 +45,7 @@ type AppMode =
   | 'extract-pick'
   | 'extract';
 
-const API_KEY = Config.API_KEY ?? '';
-const BASE_URL = Config.BASE_URL ?? 'https://generativelanguage.googleapis.com';
+const MISTRAL_API_KEY = Config.MISTRAL_API_KEY ?? '';
 
 const ALL_BARCODE_FORMATS: BarcodeFormat[] = [
   'QR_CODE',
@@ -92,6 +96,12 @@ function App(): React.JSX.Element {
   const [extractionResult, setExtractionResult] =
     useState<DocumentExtractionResult | null>(null);
 
+  // Structured OCR state
+  type ExtractionMode = 'mistral' | 'template' | 'structured';
+  const [extractionMode, setExtractionMode] = useState<ExtractionMode>('mistral');
+  const [structuredResult, setStructuredResult] =
+    useState<OrganizedDocument | null>(null);
+
   const stableStartRef = useRef<number | null>(null);
   const isCapturingRef = useRef(false);
   const scanCountRef = useRef(0);
@@ -101,7 +111,6 @@ function App(): React.JSX.Element {
     try {
       setPing(scanner.ping());
       setVersion(scanner.getVersion());
-      scanner.configure(API_KEY, BASE_URL);
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       setPing(`Error: ${msg}`);
@@ -241,6 +250,7 @@ function App(): React.JSX.Element {
       setOcrResult(null);
       setInvoiceResult(null);
       setExtractionResult(null);
+      setStructuredResult(null);
       stableStartRef.current = null;
     } catch (e) {
       Alert.alert('Error', String(e));
@@ -405,6 +415,7 @@ function App(): React.JSX.Element {
     setAppMode('extract');
     setCapturedImage(null);
     setExtractionResult(null);
+    setStructuredResult(null);
     setScannedImages([]);
 
     try {
@@ -423,12 +434,47 @@ function App(): React.JSX.Element {
       }
 
       setIsProcessing(true);
-      const result = await scanner.extractDocument(results[0].uri, {
-        documentType: selectedDocType,
-        language: 'vi',
-        scanOcr: useScanOcr,
-      });
-      setExtractionResult(result);
+
+      if (extractionMode === 'structured') {
+        // Structured OCR path (iOS 26+ with fallback)
+        const raw = await scanner.recognizeStructuredDocument(results[0].uri);
+        const organized = organizeDocument(raw);
+        setStructuredResult(organized);
+      } else if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
+        // Full Mistral pipeline (Mistral OCR + Chat)
+        const result = await extractWithMistral(
+          MISTRAL_API_KEY,
+          results[0].uri,
+          selectedDocType,
+          'vi',
+        );
+        setExtractionResult(result);
+      } else {
+        // On-device OCR + JS template extraction
+        const startTime = Date.now();
+        const ocrStart = Date.now();
+        const ocrResult2 = useScanOcr
+          ? await scanner.recognizeDocument(results[0].uri)
+          : await scanner.recognizeText(results[0].uri);
+        const ocrTimeMs = Date.now() - ocrStart;
+        const templateResult = extractWithTemplate(
+          ocrResult2.text,
+          selectedDocType,
+          'vi',
+        );
+        const processingTimeMs = Date.now() - startTime;
+        const result: DocumentExtractionResult = {
+          documentType: templateResult.documentType,
+          data: templateResult.data,
+          rawText: ocrResult2.text,
+          confidence: templateResult.confidence,
+          extractionMethod: 'template',
+          processingTimeMs,
+          ocrTimeMs,
+          warnings: [],
+        };
+        setExtractionResult(result);
+      }
     } catch (e) {
       Alert.alert('Extraction Error', String(e));
       setAppMode('extract-pick');
@@ -465,6 +511,7 @@ function App(): React.JSX.Element {
     setOcrResult(null);
     setInvoiceResult(null);
     setExtractionResult(null);
+    setStructuredResult(null);
     setAppMode('home');
   };
 
@@ -485,7 +532,8 @@ function App(): React.JSX.Element {
     barcodeResults.length > 0 ||
     ocrResult !== null ||
     invoiceResult !== null ||
-    extractionResult !== null;
+    extractionResult !== null ||
+    structuredResult !== null;
 
   const renderBarcodeResult = (result: BarcodeResult, index: number) => (
     <View key={index} style={styles.barcodeResultItem}>
@@ -852,25 +900,64 @@ function App(): React.JSX.Element {
                   <Text style={styles.docTypeDesc}>{dt.description}</Text>
                 </TouchableOpacity>
               ))}
+              <Text style={[styles.sectionTitle, { color: '#00796B', marginTop: 12 }]}>
+                Extraction Mode
+              </Text>
               <TouchableOpacity
                 style={[
                   styles.ocrToggle,
-                  useScanOcr && styles.ocrToggleActive,
+                  extractionMode === 'mistral' && styles.ocrToggleActive,
                 ]}
-                onPress={() => setUseScanOcr(!useScanOcr)}
+                onPress={() => setExtractionMode('mistral')}
               >
                 <Text
                   style={[
                     styles.ocrToggleText,
-                    useScanOcr && styles.ocrToggleTextActive,
+                    extractionMode === 'mistral' && styles.ocrToggleTextActive,
                   ]}
                 >
-                  {useScanOcr ? 'OCR: On-device (offline)' : 'OCR: AI Vision (online)'}
+                  Mistral (online)
                 </Text>
                 <Text style={styles.ocrToggleHint}>
-                  {useScanOcr
-                    ? 'Uses RecognizeDocumentsRequest - free, no API key needed'
-                    : 'Uses Gemini Vision API - requires API key & network'}
+                  Uses Mistral OCR + Chat API - requires API key & network
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.ocrToggle,
+                  extractionMode === 'template' && styles.ocrToggleActive,
+                ]}
+                onPress={() => setExtractionMode('template')}
+              >
+                <Text
+                  style={[
+                    styles.ocrToggleText,
+                    extractionMode === 'template' && styles.ocrToggleTextActive,
+                  ]}
+                >
+                  Template (offline)
+                </Text>
+                <Text style={styles.ocrToggleHint}>
+                  Uses on-device OCR + template extraction - no network needed
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.ocrToggle,
+                  extractionMode === 'structured' && styles.structuredToggleActive,
+                ]}
+                onPress={() => setExtractionMode('structured')}
+              >
+                <Text
+                  style={[
+                    styles.ocrToggleText,
+                    extractionMode === 'structured' && styles.structuredToggleTextActive,
+                  ]}
+                >
+                  Structured OCR (offline, iOS 26+)
+                </Text>
+                <Text style={styles.ocrToggleHint}>
+                  Template-free structured extraction - tables, entities, key-value pairs
                 </Text>
               </TouchableOpacity>
               <View style={styles.controls}>
@@ -1291,6 +1378,157 @@ function App(): React.JSX.Element {
                 <View style={styles.ocrTextContainer}>
                   <Text style={styles.ocrFullText}>
                     {extractionResult.rawText}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* Structured OCR results */}
+          {structuredResult && !isProcessing && (
+            <View style={styles.resultContainer}>
+              <Text style={[styles.sectionTitle, { color: '#6A1B9A' }]}>
+                Structured OCR Result
+              </Text>
+
+              {capturedImage && (
+                <>
+                  <Image
+                    source={{ uri: capturedImage.uri }}
+                    style={styles.capturedImage}
+                  />
+                  <Text style={styles.label}>
+                    {capturedImage.width} x {capturedImage.height}
+                  </Text>
+                </>
+              )}
+
+              {/* Type & confidence */}
+              <View style={styles.extractMetaRow}>
+                <View
+                  style={[styles.extractMethodBadge, { backgroundColor: '#6A1B9A' }]}
+                >
+                  <Text style={styles.barcodeFormatText}>STRUCTURED</Text>
+                </View>
+                <Text style={styles.extractMetaText}>
+                  Type: {structuredResult.type} | Conf:{' '}
+                  {Math.round(structuredResult.confidence * 100)}%
+                </Text>
+              </View>
+
+              {/* Header key-value pairs */}
+              {structuredResult.header.length > 0 && (
+                <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                  <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                    Header ({structuredResult.header.length})
+                  </Text>
+                  {structuredResult.header.map((kv, i) => (
+                    <Text key={i} style={styles.invoiceField}>
+                      {kv.key}: {kv.value}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+              {/* Body key-value pairs */}
+              {structuredResult.body.length > 0 && (
+                <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                  <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                    Body ({structuredResult.body.length})
+                  </Text>
+                  {structuredResult.body.map((kv, i) => (
+                    <Text key={i} style={styles.invoiceField}>
+                      {kv.key}: {kv.value}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+              {/* Footer key-value pairs */}
+              {structuredResult.footer.length > 0 && (
+                <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                  <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                    Footer ({structuredResult.footer.length})
+                  </Text>
+                  {structuredResult.footer.map((kv, i) => (
+                    <Text key={i} style={styles.invoiceField}>
+                      {kv.key}: {kv.value}
+                    </Text>
+                  ))}
+                </View>
+              )}
+
+              {/* Tables */}
+              {structuredResult.tables.length > 0 && (
+                <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                  <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                    Tables ({structuredResult.tables.length})
+                  </Text>
+                  {structuredResult.tables.map((table, ti) => (
+                    <View key={ti} style={styles.invoiceItemRow}>
+                      {table.map((row, ri) => (
+                        <Text key={ri} style={styles.invoiceField}>
+                          {row.join(' | ')}
+                        </Text>
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {/* Entities */}
+              <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                  Detected Entities
+                </Text>
+                {structuredResult.entities.dates.length > 0 && (
+                  <Text style={styles.invoiceField}>
+                    Dates: {structuredResult.entities.dates.join(', ')}
+                  </Text>
+                )}
+                {structuredResult.entities.moneyAmounts.length > 0 && (
+                  <Text style={styles.invoiceField}>
+                    Money: {structuredResult.entities.moneyAmounts.join(', ')}
+                  </Text>
+                )}
+                {structuredResult.entities.phones.length > 0 && (
+                  <Text style={styles.invoiceField}>
+                    Phones: {structuredResult.entities.phones.join(', ')}
+                  </Text>
+                )}
+                {structuredResult.entities.emails.length > 0 && (
+                  <Text style={styles.invoiceField}>
+                    Emails: {structuredResult.entities.emails.join(', ')}
+                  </Text>
+                )}
+                {structuredResult.entities.dates.length === 0 &&
+                  structuredResult.entities.moneyAmounts.length === 0 &&
+                  structuredResult.entities.phones.length === 0 &&
+                  structuredResult.entities.emails.length === 0 && (
+                    <Text style={styles.invoiceField}>No entities detected</Text>
+                  )}
+              </View>
+
+              {/* Barcodes */}
+              {structuredResult.barcodes.length > 0 && (
+                <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                  <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                    Barcodes ({structuredResult.barcodes.length})
+                  </Text>
+                  {structuredResult.barcodes.map((bc, i) => (
+                    <Text key={i} style={styles.invoiceField}>{bc}</Text>
+                  ))}
+                </View>
+              )}
+
+              {/* Raw Text */}
+              <View style={[styles.invoiceSection, { borderLeftColor: '#6A1B9A' }]}>
+                <Text style={[styles.invoiceSectionTitle, { color: '#6A1B9A' }]}>
+                  Raw OCR Text
+                </Text>
+                <View style={styles.ocrTextContainer}>
+                  <Text style={styles.ocrFullText}>
+                    {structuredResult.rawText}
                   </Text>
                 </View>
               </View>
@@ -1802,6 +2040,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#888',
     marginTop: 2,
+  },
+  structuredToggleActive: {
+    borderLeftColor: '#6A1B9A',
+    backgroundColor: '#F3E5F5',
+  },
+  structuredToggleTextActive: {
+    color: '#6A1B9A',
   },
 });
 

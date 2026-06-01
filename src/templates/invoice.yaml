@@ -1,0 +1,268 @@
+name: invoice
+version: 1
+
+detection:
+  keywords:
+    - hoa don
+    - invoice
+    - mst
+    - ma so thue
+    - gtgt
+    - vat
+    - gia tri gia tang
+    - tax code
+    - tax id
+
+sections:
+  seller:
+    startAt: document_start
+    endBefore:
+      - buyer
+    fields:
+      companyName:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [cong ty, cty]
+            extract: company_name
+          - method: keyword_label
+            keywords: [seller]
+            extract: value_after_colon
+      taxCode:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [ma so thue, so thue, tax code, tax id, tareodo, "thuc ("]
+            extract: tax_code
+      address:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [dia chi, d/c, addrs, address]
+            extract: value_after_colon
+      phone:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [dien thoai, "dt:", tel]
+            extract: regex
+            pattern: '((?:0|\+84)\d[\d\s\.\-]{7,12})'
+      bankAccount:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [so tai khoan, so ti khoan, bank account, banh wcoon]
+            extract: value_after_colon
+
+  buyer:
+    startKeywords:
+      - nguoi mua
+      - nguoi thua
+      - buyer
+      - ben mua
+      - khach hang
+      - client
+    endBefore:
+      - items
+      - totals
+    fields:
+      companyName:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [nguoi mua, nguoi thua, buyer, client]
+            extract: value_after_colon
+          - method: keyword_label
+            keywords: [ten don vi, company, conynnyl name, don vi mua]
+            extract: value_after_colon
+      taxCode:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [ma so thue, mi so thue, so thue, tax code, tm code]
+            extract: tax_code
+      address:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [dia chi, d/c, addrs, address, dudr]
+            extract: value_after_colon
+
+  metadata:
+    startAt: document_start
+    endAt: document_end
+    fields:
+      serial:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [ky hieu, serial, seriul]
+            extract: value_after_colon
+            scope: full_text
+      form:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [mau so, form]
+            extract: value_after_colon
+            scope: full_text
+      number:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: ["so (no", no.f, "so:", invoice no, "no."]
+            extract: regex
+            pattern: '(\d{4,})'
+            checkNextLine: true
+            scope: full_text
+      date:
+        type: string
+        default: ""
+        strategies:
+          - method: vietnamese_date
+            scope: full_text
+          - method: regex
+            pattern: '(\d{1,2}/\d{1,2}/\d{4})'
+            scope: full_text
+
+  items:
+    startKeywords:
+      - ten hang hoa
+      - name of goods
+      - stt
+      - items
+      - description
+    endBefore:
+      - totals
+    fields: {}
+    skipHeaderKeywords:
+      - name of goods
+      - ten hang
+      - so lo
+      - lot
+      - exp
+      - dvt
+      - unit
+      - so luong
+      - quan
+      - don gia
+      - unit price
+      - thanh tien
+      - amount
+      - "(no)"
+    itemSchema:
+      productName:
+        type: string
+        default: ""
+        strategies: []
+      lotNumber:
+        type: string
+        default: ""
+        strategies: []
+      expiryDate:
+        type: string
+        default: ""
+        strategies: []
+      unit:
+        type: string
+        default: ""
+        strategies: []
+      quantity:
+        type: number
+        default: 0
+        strategies: []
+      unitPrice:
+        type: number
+        default: 0
+        strategies: []
+      amount:
+        type: number
+        default: 0
+        strategies: []
+    numericFields:
+      - quantity
+      - unitPrice
+      - amount
+
+  totals:
+    startKeywords:
+      - cong tien hang
+      - total amount
+      - summary
+      - net worth
+    endAt: document_end
+    fallbackNumericFields:
+      - subtotal
+      - vatAmount
+      - totalPayment
+    fields:
+      subtotal:
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [cong tien hang, cong tien, total amount, net worth]
+            excludeKeywords: [tong, thanh toan]
+            extract: largest_number
+            checkNextLine: true
+      vatRate:
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_contains
+            keywords: [thue suat, vat rate, "vat [%]", "vat[%]", gigt, rat rac]
+            pattern: '(\d+)\s*%'
+      vatAmount:
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [tien thue, vat amount, ten duc gigt]
+            extract: largest_number
+            checkNextLine: true
+      totalPayment:
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [tong tien thanh toan, tong cong, toral amosu, toral amount, gross worth, grand total]
+            extract: largest_number
+            checkNextLine: true
+      amountInWords:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [bang chu, viet bang chu, amorar, amount in words]
+            extract: value_after_colon
+
+confidence:
+  maxScore: 0.5
+  fields:
+    - path: seller.companyName
+      type: non_empty
+    - path: seller.taxCode
+      type: non_empty
+    - path: buyer.companyName
+      type: non_empty
+    - path: buyer.taxCode
+      type: non_empty
+    - path: metadata.serial
+      type: non_empty
+    - path: metadata.number
+      type: non_empty
+    - path: metadata.date
+      type: non_empty
+    - path: totals.totalPayment
+      type: non_zero

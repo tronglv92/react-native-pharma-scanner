@@ -43,6 +43,20 @@ namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
 namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
 // Forward declaration of `DocumentExtractionResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
+// Forward declaration of `StructuredDocumentResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredDocumentResult; }
+// Forward declaration of `StructuredParagraph` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredParagraph; }
+// Forward declaration of `StructuredTable` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredTable; }
+// Forward declaration of `TableRow` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct TableRow; }
+// Forward declaration of `DetectedEntity` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DetectedEntity; }
+// Forward declaration of `DocumentSummary` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct DocumentSummary; }
+// Forward declaration of `KeyValuePair` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct KeyValuePair; }
 // Forward declaration of `FlashMode` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { enum class FlashMode; }
 // Forward declaration of `BarcodeScanOptions` to properly resolve imports.
@@ -91,6 +105,20 @@ namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 #include "JInvoiceTotals.hpp"
 #include "DocumentExtractionResult.hpp"
 #include "JDocumentExtractionResult.hpp"
+#include "StructuredDocumentResult.hpp"
+#include "JStructuredDocumentResult.hpp"
+#include "StructuredParagraph.hpp"
+#include "JStructuredParagraph.hpp"
+#include "StructuredTable.hpp"
+#include "JStructuredTable.hpp"
+#include "TableRow.hpp"
+#include "JTableRow.hpp"
+#include "DetectedEntity.hpp"
+#include "JDetectedEntity.hpp"
+#include "DocumentSummary.hpp"
+#include "JDocumentSummary.hpp"
+#include "KeyValuePair.hpp"
+#include "JKeyValuePair.hpp"
 #include "FlashMode.hpp"
 #include "JFlashMode.hpp"
 #include <functional>
@@ -344,6 +372,22 @@ namespace margelo::nitro::PharmaScannerCxx {
       auto __promise = Promise<DocumentExtractionResult>::create();
       __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
         auto __result = jni::static_ref_cast<JDocumentExtractionResult>(__boxedResult);
+        __promise->resolve(__result->toCpp());
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  std::shared_ptr<Promise<StructuredDocumentResult>> JHybridPharmaScannerSpec::recognizeStructuredDocument(const std::string& imageUri) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */)>("recognizeStructuredDocument");
+    auto __result = method(_javaPart, jni::make_jstring(imageUri));
+    return [&]() {
+      auto __promise = Promise<StructuredDocumentResult>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
+        auto __result = jni::static_ref_cast<JStructuredDocumentResult>(__boxedResult);
         __promise->resolve(__result->toCpp());
       });
       __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {

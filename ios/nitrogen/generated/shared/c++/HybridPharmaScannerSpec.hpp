@@ -35,6 +35,8 @@ namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
 // Forward declaration of `ExtractionOptions` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
+// Forward declaration of `StructuredDocumentResult` to properly resolve imports.
+namespace margelo::nitro::PharmaScannerCxx { struct StructuredDocumentResult; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -51,6 +53,7 @@ namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 #include "InvoiceResult.hpp"
 #include "DocumentExtractionResult.hpp"
 #include "ExtractionOptions.hpp"
+#include "StructuredDocumentResult.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -103,6 +106,7 @@ namespace margelo::nitro::PharmaScannerCxx {
       virtual std::shared_ptr<Promise<InvoiceResult>> scanInvoice(const std::string& imageUri) = 0;
       virtual void configure(const std::string& apiKey, const std::string& baseUrl) = 0;
       virtual std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) = 0;
+      virtual std::shared_ptr<Promise<StructuredDocumentResult>> recognizeStructuredDocument(const std::string& imageUri) = 0;
 
     protected:
       // Hybrid Setup
