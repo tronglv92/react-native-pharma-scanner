@@ -7,8 +7,13 @@ import prescriptionYaml from './prescription.yaml';
 import receiptYaml from './receipt.yaml';
 import genericYaml from './generic.yaml';
 
-function parseTemplate(raw: string): DocumentTemplate {
-  return yaml.load(raw) as DocumentTemplate;
+function parseTemplate(raw: string): DocumentTemplate | null {
+  const parsed = yaml.load(raw) as DocumentTemplate | undefined;
+  if (!parsed?.name || !parsed?.detection?.keywords || !parsed?.sections) {
+    console.warn('[templates] Failed to parse template:', typeof raw, parsed?.name);
+    return null;
+  }
+  return parsed;
 }
 
 /**
@@ -19,7 +24,7 @@ export const builtinTemplates: DocumentTemplate[] = [
   parseTemplate(prescriptionYaml),
   parseTemplate(receiptYaml),
   parseTemplate(genericYaml),
-];
+].filter((t): t is DocumentTemplate => t !== null);
 
 /**
  * Registry for user-provided custom templates.
@@ -39,8 +44,9 @@ const customTemplateRegistry: DocumentTemplate[] = [];
  * registerTemplate(myTemplateYaml);
  * ```
  */
-export function registerTemplate(yamlString: string): DocumentTemplate {
+export function registerTemplate(yamlString: string): DocumentTemplate | null {
   const template = parseTemplate(yamlString);
+  if (!template) return null;
   // Replace existing template with the same name, or add new
   const existingIdx = customTemplateRegistry.findIndex(t => t.name === template.name);
   if (existingIdx >= 0) {

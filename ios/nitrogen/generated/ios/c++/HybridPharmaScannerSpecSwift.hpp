@@ -38,36 +38,10 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
 namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 // Forward declaration of `TextElement` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
-// Forward declaration of `InvoiceResult` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
-// Forward declaration of `InvoiceSeller` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
-// Forward declaration of `InvoiceBuyer` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceBuyer; }
-// Forward declaration of `InvoiceMetadata` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceMetadata; }
-// Forward declaration of `InvoiceLineItem` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
-// Forward declaration of `InvoiceTotals` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
 // Forward declaration of `DocumentExtractionResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
 // Forward declaration of `ExtractionOptions` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
-// Forward declaration of `StructuredDocumentResult` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct StructuredDocumentResult; }
-// Forward declaration of `StructuredParagraph` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct StructuredParagraph; }
-// Forward declaration of `StructuredTable` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct StructuredTable; }
-// Forward declaration of `TableRow` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct TableRow; }
-// Forward declaration of `DetectedEntity` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct DetectedEntity; }
-// Forward declaration of `DocumentSummary` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct DocumentSummary; }
-// Forward declaration of `KeyValuePair` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct KeyValuePair; }
 
 #include <string>
 #include "CapturedImage.hpp"
@@ -87,21 +61,8 @@ namespace margelo::nitro::PharmaScannerCxx { struct KeyValuePair; }
 #include "TextBlock.hpp"
 #include "TextLine.hpp"
 #include "TextElement.hpp"
-#include "InvoiceResult.hpp"
-#include "InvoiceSeller.hpp"
-#include "InvoiceBuyer.hpp"
-#include "InvoiceMetadata.hpp"
-#include "InvoiceLineItem.hpp"
-#include "InvoiceTotals.hpp"
 #include "DocumentExtractionResult.hpp"
 #include "ExtractionOptions.hpp"
-#include "StructuredDocumentResult.hpp"
-#include "StructuredParagraph.hpp"
-#include "StructuredTable.hpp"
-#include "TableRow.hpp"
-#include "DetectedEntity.hpp"
-#include "DocumentSummary.hpp"
-#include "KeyValuePair.hpp"
 
 #include "ReactNativePharmaScanner-Swift-Cxx-Umbrella.hpp"
 
@@ -273,14 +234,6 @@ namespace margelo::nitro::PharmaScannerCxx {
         std::rethrow_exception(__result.error());
       }
     }
-    inline std::shared_ptr<Promise<InvoiceResult>> scanInvoice(const std::string& imageUri) override {
-      auto __result = _swiftPart.scanInvoice(imageUri);
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-      auto __value = std::move(__result.value());
-      return __value;
-    }
     inline void configure(const std::string& apiKey, const std::string& baseUrl) override {
       auto __result = _swiftPart.configure(apiKey, baseUrl);
       if (__result.hasError()) [[unlikely]] {
@@ -289,14 +242,6 @@ namespace margelo::nitro::PharmaScannerCxx {
     }
     inline std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) override {
       auto __result = _swiftPart.extractDocument(imageUri, std::forward<decltype(options)>(options));
-      if (__result.hasError()) [[unlikely]] {
-        std::rethrow_exception(__result.error());
-      }
-      auto __value = std::move(__result.value());
-      return __value;
-    }
-    inline std::shared_ptr<Promise<StructuredDocumentResult>> recognizeStructuredDocument(const std::string& imageUri) override {
-      auto __result = _swiftPart.recognizeStructuredDocument(imageUri);
       if (__result.hasError()) [[unlikely]] {
         std::rethrow_exception(__result.error());
       }

@@ -40,14 +40,11 @@ namespace margelo::nitro::PharmaScannerCxx {
       jni::local_ref<jni::JString> customPrompt = this->getFieldValue(fieldCustomPrompt);
       static const auto fieldForceOffline = clazz->getField<jni::JBoolean>("forceOffline");
       jni::local_ref<jni::JBoolean> forceOffline = this->getFieldValue(fieldForceOffline);
-      static const auto fieldScanOcr = clazz->getField<jni::JBoolean>("scanOcr");
-      jni::local_ref<jni::JBoolean> scanOcr = this->getFieldValue(fieldScanOcr);
       return ExtractionOptions(
         documentType->toStdString(),
         language->toStdString(),
         customPrompt != nullptr ? std::make_optional(customPrompt->toStdString()) : std::nullopt,
-        forceOffline != nullptr ? std::make_optional(static_cast<bool>(forceOffline->value())) : std::nullopt,
-        scanOcr != nullptr ? std::make_optional(static_cast<bool>(scanOcr->value())) : std::nullopt
+        forceOffline != nullptr ? std::make_optional(static_cast<bool>(forceOffline->value())) : std::nullopt
       );
     }
 
@@ -57,7 +54,7 @@ namespace margelo::nitro::PharmaScannerCxx {
      */
     [[maybe_unused]]
     static jni::local_ref<JExtractionOptions::javaobject> fromCpp(const ExtractionOptions& value) {
-      using JSignature = JExtractionOptions(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>, jni::alias_ref<jni::JBoolean>);
+      using JSignature = JExtractionOptions(jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JString>, jni::alias_ref<jni::JBoolean>);
       static const auto clazz = javaClassStatic();
       static const auto create = clazz->getStaticMethod<JSignature>("fromCpp");
       return create(
@@ -65,8 +62,7 @@ namespace margelo::nitro::PharmaScannerCxx {
         jni::make_jstring(value.documentType),
         jni::make_jstring(value.language),
         value.customPrompt.has_value() ? jni::make_jstring(value.customPrompt.value()) : nullptr,
-        value.forceOffline.has_value() ? jni::JBoolean::valueOf(value.forceOffline.value()) : nullptr,
-        value.scanOcr.has_value() ? jni::JBoolean::valueOf(value.scanOcr.value()) : nullptr
+        value.forceOffline.has_value() ? jni::JBoolean::valueOf(value.forceOffline.value()) : nullptr
       );
     }
   };

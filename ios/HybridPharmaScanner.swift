@@ -134,24 +134,8 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
     cameraManager.onTextRecognizedCallback = callback
   }
 
-  func scanInvoice(imageUri: String) throws -> Promise<InvoiceResult> {
-    return Promise.async {
-      let processor = OcrProcessor()
-      let ocrResult = try await processor.recognizeText(imageUri: imageUri)
-      let parser = InvoiceParser()
-      return parser.parse(ocrResult: ocrResult)
-    }
-  }
-
   func configure(apiKey: String, baseUrl: String) throws -> Void {
     DocumentExtractor.shared.configure(apiKey: apiKey, baseUrl: baseUrl)
-  }
-
-  func recognizeStructuredDocument(imageUri: String) throws -> Promise<StructuredDocumentResult> {
-    return Promise.async {
-      let processor = DocumentOcrProcessor()
-      return try await processor.recognizeStructuredDocument(imageUri: imageUri)
-    }
   }
 
   func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult> {
@@ -161,8 +145,7 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
         documentType: String(options.documentType),
         language: String(options.language),
         customPrompt: options.customPrompt.flatMap { String($0) },
-        forceOffline: options.forceOffline ?? false,
-        scanOcr: options.scanOcr ?? false
+        forceOffline: options.forceOffline ?? false
       )
     }
   }

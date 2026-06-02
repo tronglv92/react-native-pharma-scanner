@@ -62,26 +62,10 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     };
   }
   
-  // pragma MARK: std::function<void(const InvoiceResult& /* result */)>
-  Func_void_InvoiceResult create_Func_void_InvoiceResult(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = ReactNativePharmaScanner::Func_void_InvoiceResult::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const InvoiceResult& result) mutable -> void {
-      swiftClosure.call(result);
-    };
-  }
-  
   // pragma MARK: std::function<void(const DocumentExtractionResult& /* result */)>
   Func_void_DocumentExtractionResult create_Func_void_DocumentExtractionResult(void* NON_NULL swiftClosureWrapper) noexcept {
     auto swiftClosure = ReactNativePharmaScanner::Func_void_DocumentExtractionResult::fromUnsafe(swiftClosureWrapper);
     return [swiftClosure = std::move(swiftClosure)](const DocumentExtractionResult& result) mutable -> void {
-      swiftClosure.call(result);
-    };
-  }
-  
-  // pragma MARK: std::function<void(const StructuredDocumentResult& /* result */)>
-  Func_void_StructuredDocumentResult create_Func_void_StructuredDocumentResult(void* NON_NULL swiftClosureWrapper) noexcept {
-    auto swiftClosure = ReactNativePharmaScanner::Func_void_StructuredDocumentResult::fromUnsafe(swiftClosureWrapper);
-    return [swiftClosure = std::move(swiftClosure)](const StructuredDocumentResult& result) mutable -> void {
       swiftClosure.call(result);
     };
   }

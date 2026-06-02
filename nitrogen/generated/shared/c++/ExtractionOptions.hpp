@@ -44,11 +44,10 @@ namespace margelo::nitro::PharmaScannerCxx {
     std::string language     SWIFT_PRIVATE;
     std::optional<std::string> customPrompt     SWIFT_PRIVATE;
     std::optional<bool> forceOffline     SWIFT_PRIVATE;
-    std::optional<bool> scanOcr     SWIFT_PRIVATE;
 
   public:
     ExtractionOptions() = default;
-    explicit ExtractionOptions(std::string documentType, std::string language, std::optional<std::string> customPrompt, std::optional<bool> forceOffline, std::optional<bool> scanOcr): documentType(documentType), language(language), customPrompt(customPrompt), forceOffline(forceOffline), scanOcr(scanOcr) {}
+    explicit ExtractionOptions(std::string documentType, std::string language, std::optional<std::string> customPrompt, std::optional<bool> forceOffline): documentType(documentType), language(language), customPrompt(customPrompt), forceOffline(forceOffline) {}
 
   public:
     friend bool operator==(const ExtractionOptions& lhs, const ExtractionOptions& rhs) = default;
@@ -67,8 +66,7 @@ namespace margelo::nitro {
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "documentType"))),
         JSIConverter<std::string>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "language"))),
         JSIConverter<std::optional<std::string>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customPrompt"))),
-        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "forceOffline"))),
-        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scanOcr")))
+        JSIConverter<std::optional<bool>>::fromJSI(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "forceOffline")))
       );
     }
     static inline jsi::Value toJSI(jsi::Runtime& runtime, const margelo::nitro::PharmaScannerCxx::ExtractionOptions& arg) {
@@ -77,7 +75,6 @@ namespace margelo::nitro {
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "language"), JSIConverter<std::string>::toJSI(runtime, arg.language));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "customPrompt"), JSIConverter<std::optional<std::string>>::toJSI(runtime, arg.customPrompt));
       obj.setProperty(runtime, PropNameIDCache::get(runtime, "forceOffline"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.forceOffline));
-      obj.setProperty(runtime, PropNameIDCache::get(runtime, "scanOcr"), JSIConverter<std::optional<bool>>::toJSI(runtime, arg.scanOcr));
       return obj;
     }
     static inline bool canConvert(jsi::Runtime& runtime, const jsi::Value& value) {
@@ -92,7 +89,6 @@ namespace margelo::nitro {
       if (!JSIConverter<std::string>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "language")))) return false;
       if (!JSIConverter<std::optional<std::string>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "customPrompt")))) return false;
       if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "forceOffline")))) return false;
-      if (!JSIConverter<std::optional<bool>>::canConvert(runtime, obj.getProperty(runtime, PropNameIDCache::get(runtime, "scanOcr")))) return false;
       return true;
     }
   };

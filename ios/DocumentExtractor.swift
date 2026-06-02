@@ -20,29 +20,8 @@ final class DocumentExtractor {
     language: String,
     customPrompt: String?,
     forceOffline: Bool,
-    scanOcr: Bool = false
   ) async throws -> DocumentExtractionResult {
     let startTime = CFAbsoluteTimeGetCurrent()
-
-    // scanOcr path: use RecognizeDocumentsRequest (iOS 26+) for structured on-device OCR
-    if scanOcr {
-      let ocrProcessor = DocumentOcrProcessor()
-      let structuredResult = try await ocrProcessor.recognizeStructuredDocument(imageUri: imageUri)
-      let builder = StructuredJsonBuilder()
-      let (jsonString, resolvedType, confidence) = builder.buildJson(from: structuredResult, requestedType: documentType)
-      let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
-
-      return DocumentExtractionResult(
-        documentType: resolvedType,
-        data: jsonString,
-        rawText: structuredResult.rawText,
-        confidence: confidence,
-        extractionMethod: "structured_ocr",
-        processingTimeMs: elapsed,
-        ocrTimeMs: structuredResult.processingTimeMs,
-        warnings: ["Using on-device structured OCR (RecognizeDocumentsRequest)."]
-      )
-    }
 
     let useLLM = !forceOffline
       && NetworkMonitor.shared.isConnected

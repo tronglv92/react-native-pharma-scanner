@@ -29,10 +29,7 @@ data class ExtractionOptions(
   val customPrompt: String?,
   @DoNotStrip
   @Keep
-  val forceOffline: Boolean?,
-  @DoNotStrip
-  @Keep
-  val scanOcr: Boolean?
+  val forceOffline: Boolean?
 ) {
   /* primary constructor */
 
@@ -43,7 +40,6 @@ data class ExtractionOptions(
       && Objects.deepEquals(this.language, other.language)
       && Objects.deepEquals(this.customPrompt, other.customPrompt)
       && Objects.deepEquals(this.forceOffline, other.forceOffline)
-      && Objects.deepEquals(this.scanOcr, other.scanOcr)
   }
 
   override fun hashCode(): Int {
@@ -51,8 +47,7 @@ data class ExtractionOptions(
       documentType,
       language,
       customPrompt,
-      forceOffline,
-      scanOcr
+      forceOffline
     ).contentDeepHashCode()
   }
 
@@ -64,8 +59,8 @@ data class ExtractionOptions(
     @Keep
     @Suppress("unused")
     @JvmStatic
-    private fun fromCpp(documentType: String, language: String, customPrompt: String?, forceOffline: Boolean?, scanOcr: Boolean?): ExtractionOptions {
-      return ExtractionOptions(documentType, language, customPrompt, forceOffline, scanOcr)
+    private fun fromCpp(documentType: String, language: String, customPrompt: String?, forceOffline: Boolean?): ExtractionOptions {
+      return ExtractionOptions(documentType, language, customPrompt, forceOffline)
     }
   }
 }

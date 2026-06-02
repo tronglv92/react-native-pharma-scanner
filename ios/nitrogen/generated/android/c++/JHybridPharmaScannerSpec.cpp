@@ -29,18 +29,6 @@ namespace margelo::nitro::PharmaScannerCxx { struct TextBlock; }
 namespace margelo::nitro::PharmaScannerCxx { struct TextLine; }
 // Forward declaration of `TextElement` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct TextElement; }
-// Forward declaration of `InvoiceResult` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceResult; }
-// Forward declaration of `InvoiceSeller` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceSeller; }
-// Forward declaration of `InvoiceBuyer` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceBuyer; }
-// Forward declaration of `InvoiceMetadata` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceMetadata; }
-// Forward declaration of `InvoiceLineItem` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceLineItem; }
-// Forward declaration of `InvoiceTotals` to properly resolve imports.
-namespace margelo::nitro::PharmaScannerCxx { struct InvoiceTotals; }
 // Forward declaration of `DocumentExtractionResult` to properly resolve imports.
 namespace margelo::nitro::PharmaScannerCxx { struct DocumentExtractionResult; }
 // Forward declaration of `FlashMode` to properly resolve imports.
@@ -77,18 +65,6 @@ namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 #include "JTextLine.hpp"
 #include "TextElement.hpp"
 #include "JTextElement.hpp"
-#include "InvoiceResult.hpp"
-#include "JInvoiceResult.hpp"
-#include "InvoiceSeller.hpp"
-#include "JInvoiceSeller.hpp"
-#include "InvoiceBuyer.hpp"
-#include "JInvoiceBuyer.hpp"
-#include "InvoiceMetadata.hpp"
-#include "JInvoiceMetadata.hpp"
-#include "InvoiceLineItem.hpp"
-#include "JInvoiceLineItem.hpp"
-#include "InvoiceTotals.hpp"
-#include "JInvoiceTotals.hpp"
 #include "DocumentExtractionResult.hpp"
 #include "JDocumentExtractionResult.hpp"
 #include "FlashMode.hpp"
@@ -316,22 +292,6 @@ namespace margelo::nitro::PharmaScannerCxx {
   void JHybridPharmaScannerSpec::setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<JFunc_void_OcrResult::javaobject> /* callback */)>("setOnTextRecognized_cxx");
     method(_javaPart, JFunc_void_OcrResult_cxx::fromCpp(callback));
-  }
-  std::shared_ptr<Promise<InvoiceResult>> JHybridPharmaScannerSpec::scanInvoice(const std::string& imageUri) {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<jni::JString> /* imageUri */)>("scanInvoice");
-    auto __result = method(_javaPart, jni::make_jstring(imageUri));
-    return [&]() {
-      auto __promise = Promise<InvoiceResult>::create();
-      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& __boxedResult) {
-        auto __result = jni::static_ref_cast<JInvoiceResult>(__boxedResult);
-        __promise->resolve(__result->toCpp());
-      });
-      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
-        jni::JniException __jniError(__throwable);
-        __promise->reject(std::make_exception_ptr(__jniError));
-      });
-      return __promise;
-    }();
   }
   void JHybridPharmaScannerSpec::configure(const std::string& apiKey, const std::string& baseUrl) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<void(jni::alias_ref<jni::JString> /* apiKey */, jni::alias_ref<jni::JString> /* baseUrl */)>("configure");

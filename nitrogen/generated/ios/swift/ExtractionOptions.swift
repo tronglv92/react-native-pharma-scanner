@@ -18,7 +18,7 @@ public extension ExtractionOptions {
   /**
    * Create a new instance of `ExtractionOptions`.
    */
-  init(documentType: String, language: String, customPrompt: String?, forceOffline: Bool?, scanOcr: Bool?) {
+  init(documentType: String, language: String, customPrompt: String?, forceOffline: Bool?) {
     self.init(std.string(documentType), std.string(language), { () -> bridge.std__optional_std__string_ in
       if let __unwrappedValue = customPrompt {
         return bridge.create_std__optional_std__string_(std.string(__unwrappedValue))
@@ -27,12 +27,6 @@ public extension ExtractionOptions {
       }
     }(), { () -> bridge.std__optional_bool_ in
       if let __unwrappedValue = forceOffline {
-        return bridge.create_std__optional_bool_(__unwrappedValue)
-      } else {
-        return .init()
-      }
-    }(), { () -> bridge.std__optional_bool_ in
-      if let __unwrappedValue = scanOcr {
         return bridge.create_std__optional_bool_(__unwrappedValue)
       } else {
         return .init()
@@ -67,18 +61,6 @@ public extension ExtractionOptions {
     return { () -> Bool? in
       if bridge.has_value_std__optional_bool_(self.__forceOffline) {
         let __unwrapped = bridge.get_std__optional_bool_(self.__forceOffline)
-        return __unwrapped
-      } else {
-        return nil
-      }
-    }()
-  }
-  
-  @inline(__always)
-  var scanOcr: Bool? {
-    return { () -> Bool? in
-      if bridge.has_value_std__optional_bool_(self.__scanOcr) {
-        let __unwrapped = bridge.get_std__optional_bool_(self.__scanOcr)
         return __unwrapped
       } else {
         return nil

@@ -114,10 +114,6 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun scanInvoice(imageUri: String): Promise<InvoiceResult>
-  
-  @DoNotStrip
-  @Keep
   abstract fun configure(apiKey: String, baseUrl: String): Unit
   
   @DoNotStrip

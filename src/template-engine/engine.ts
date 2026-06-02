@@ -29,6 +29,7 @@ export function detectDocumentType(
   let bestScore = 0;
 
   for (const tpl of templates) {
+    if (!tpl?.detection?.keywords) continue;
     const score = tpl.detection.keywords.filter(kw => lower.includes(kw)).length;
     if (score > bestScore) {
       bestScore = score;

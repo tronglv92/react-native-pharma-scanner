@@ -7,29 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0143A315958C7A854F14256C /* StructuredDocumentAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */; };
-		0143A315958C7A854F14256D /* StructuredJsonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6821D06ACF6C72596AE21E /* StructuredJsonBuilder.swift */; };
 		0C80B921A6F3F58F76C31292 /* libPods-ReactNativePharmaScanner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-ReactNativePharmaScanner.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */; };
-		3705D77804AE998CBC12C657 /* KeyValuePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */; };
 		419B14E27B689E7BD3C5DBE0 /* LLMExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */; };
-		47EB36FB85D1155388E77236 /* Func_void_StructuredDocumentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */; };
-		49C0618B7FB719EF32D06134 /* StructuredDocumentResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */; };
 		5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */; };
 		5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */; };
 		5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707302FAD77FFB83376B730C /* ExtractionOptions.swift */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
-		7EA16751F7D4DEBF133ED1F9 /* DocumentSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		87701109E364DACF5DBCAD95 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB680131207492534C3710D1 /* NetworkMonitor.swift */; };
-		8CDC82BCEDB4DCF1421DFF3E /* StructuredParagraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CC65938941077DCC571E7E /* StructuredParagraph.swift */; };
-		900E0B1D94A801453F321A24 /* StructuredTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */; };
-		B22F7A701902F1AF9FD1E2CB /* DetectedEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */; };
 		B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */; };
 		D0715C20B1605DFBC6ADA657 /* TemplateExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */; };
-		D5B5466B068C9892794867B4 /* TableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */; };
 		EC646F11546DA83AC96C3281 /* DocumentPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */; };
 		FA000001200000000000AA01 /* CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB01 /* CapturedImage.swift */; };
 		FA000001200000000000AA02 /* FlashMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB02 /* FlashMode.swift */; };
@@ -57,14 +47,6 @@
 		FA500001500000000000AA05 /* TextElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB05 /* TextElement.swift */; };
 		FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB06 /* Func_void_OcrResult.swift */; };
 		FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA600001600000000000BB01 /* DocumentScannerManager.swift */; };
-		FA700001700000000000AA01 /* InvoiceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB01 /* InvoiceParser.swift */; };
-		FA700001700000000000AA02 /* InvoiceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB02 /* InvoiceResult.swift */; };
-		FA700001700000000000AA03 /* InvoiceSeller.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB03 /* InvoiceSeller.swift */; };
-		FA700001700000000000AA04 /* InvoiceBuyer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB04 /* InvoiceBuyer.swift */; };
-		FA700001700000000000AA05 /* InvoiceMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB05 /* InvoiceMetadata.swift */; };
-		FA700001700000000000AA06 /* InvoiceLineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB06 /* InvoiceLineItem.swift */; };
-		FA700001700000000000AA07 /* InvoiceTotals.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB07 /* InvoiceTotals.swift */; };
-		FA700001700000000000AA08 /* Func_void_InvoiceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB08 /* Func_void_InvoiceResult.swift */; };
 		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
 		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
 		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
@@ -86,18 +68,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		10CC65938941077DCC571E7E /* StructuredParagraph.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredParagraph.swift; sourceTree = "<group>"; };
-		11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredTable.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativePharmaScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativePharmaScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReactNativePharmaScanner/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativePharmaScanner/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ReactNativePharmaScanner/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_StructuredDocumentResult.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-ReactNativePharmaScanner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.debug.xcconfig"; sourceTree = "<group>"; };
-		3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TableRow.swift; sourceTree = "<group>"; };
-		3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredDocumentAnalyzer.swift; sourceTree = "<group>"; };
-		3F6821D06ACF6C72596AE21E /* StructuredJsonBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredJsonBuilder.swift; sourceTree = "<group>"; };
-		4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentSummary.swift; sourceTree = "<group>"; };
 		4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentPrompts.swift; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ReactNativePharmaScanner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.release.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReactNativePharmaScanner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativePharmaScanner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,14 +82,11 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentExtractionResult.swift; sourceTree = "<group>"; };
-		9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = KeyValuePair.swift; sourceTree = "<group>"; };
 		A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LLMExtractor.swift; sourceTree = "<group>"; };
 		AB680131207492534C3710D1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StructuredDocumentResult.swift; sourceTree = "<group>"; };
 		D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_DocumentExtractionResult.swift; sourceTree = "<group>"; };
 		E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TemplateExtractor.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DetectedEntity.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB01 /* CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImage.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB02 /* FlashMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMode.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB03 /* Func_void_CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_CapturedImage.swift; sourceTree = "<group>"; };
@@ -180,32 +152,6 @@
 		FA500001500000000000DD04 /* TextElement.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextElement.kt; sourceTree = "<group>"; };
 		FA500001500000000000DD05 /* TextLine.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextLine.kt; sourceTree = "<group>"; };
 		FA600001600000000000BB01 /* DocumentScannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerManager.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB01 /* InvoiceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceParser.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB02 /* InvoiceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceResult.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB03 /* InvoiceSeller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceSeller.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB04 /* InvoiceBuyer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceBuyer.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB05 /* InvoiceMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceMetadata.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB06 /* InvoiceLineItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceLineItem.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB07 /* InvoiceTotals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceTotals.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB08 /* Func_void_InvoiceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func_void_InvoiceResult.swift; sourceTree = "<group>"; };
-		FA700001700000000000CC01 /* InvoiceResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceResult.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC02 /* InvoiceSeller.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceSeller.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC03 /* InvoiceBuyer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceBuyer.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC04 /* InvoiceMetadata.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceMetadata.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC05 /* InvoiceLineItem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceLineItem.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC06 /* InvoiceTotals.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InvoiceTotals.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC07 /* JInvoiceResult.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceResult.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC08 /* JInvoiceSeller.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceSeller.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC09 /* JInvoiceBuyer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceBuyer.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC10 /* JInvoiceMetadata.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceMetadata.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC11 /* JInvoiceLineItem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceLineItem.hpp; sourceTree = "<group>"; };
-		FA700001700000000000CC12 /* JInvoiceTotals.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JInvoiceTotals.hpp; sourceTree = "<group>"; };
-		FA700001700000000000DD01 /* InvoiceResult.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceResult.kt; sourceTree = "<group>"; };
-		FA700001700000000000DD02 /* InvoiceSeller.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceSeller.kt; sourceTree = "<group>"; };
-		FA700001700000000000DD03 /* InvoiceBuyer.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceBuyer.kt; sourceTree = "<group>"; };
-		FA700001700000000000DD04 /* InvoiceMetadata.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceMetadata.kt; sourceTree = "<group>"; };
-		FA700001700000000000DD05 /* InvoiceLineItem.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceLineItem.kt; sourceTree = "<group>"; };
-		FA700001700000000000DD06 /* InvoiceTotals.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = InvoiceTotals.kt; sourceTree = "<group>"; };
 		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
 		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
@@ -265,15 +211,12 @@
 				FA400001400000000000BB01 /* BarcodeScanner.swift */,
 				FA500001500000000000BB01 /* OcrProcessor.swift */,
 				FA600001600000000000BB01 /* DocumentScannerManager.swift */,
-				FA700001700000000000BB01 /* InvoiceParser.swift */,
 				AB680131207492534C3710D1 /* NetworkMonitor.swift */,
 				4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */,
 				A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */,
 				E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
-				3F6821D06ACF6C72596AE21D /* StructuredDocumentAnalyzer.swift */,
-				3F6821D06ACF6C72596AE21E /* StructuredJsonBuilder.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -340,12 +283,6 @@
 				FA400001400000000000BB16 /* JFunc_void_std__vector_BarcodeResult_.hpp */,
 				FA500001500000000000CC09 /* JFunc_void_OcrResult.hpp */,
 				FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */,
-				FA700001700000000000CC09 /* JInvoiceBuyer.hpp */,
-				FA700001700000000000CC11 /* JInvoiceLineItem.hpp */,
-				FA700001700000000000CC10 /* JInvoiceMetadata.hpp */,
-				FA700001700000000000CC07 /* JInvoiceResult.hpp */,
-				FA700001700000000000CC08 /* JInvoiceSeller.hpp */,
-				FA700001700000000000CC12 /* JInvoiceTotals.hpp */,
 				FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */,
 				FA500001500000000000CC05 /* JOcrResult.hpp */,
 				FA300001300000000000BB14 /* JPoint.hpp */,
@@ -368,12 +305,6 @@
 				FA400001400000000000BB21 /* Func_void_std__vector_BarcodeResult_.kt */,
 				FA500001500000000000DD01 /* Func_void_OcrResult.kt */,
 				FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */,
-				FA700001700000000000DD03 /* InvoiceBuyer.kt */,
-				FA700001700000000000DD05 /* InvoiceLineItem.kt */,
-				FA700001700000000000DD04 /* InvoiceMetadata.kt */,
-				FA700001700000000000DD01 /* InvoiceResult.kt */,
-				FA700001700000000000DD02 /* InvoiceSeller.kt */,
-				FA700001700000000000DD06 /* InvoiceTotals.kt */,
 				FA500001500000000000DD02 /* OcrResult.kt */,
 				FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */,
 				FA500001500000000000DD03 /* TextBlock.kt */,
@@ -454,15 +385,8 @@
 				FA400001400000000000BB07 /* Func_void_std__vector_CapturedImage_.swift */,
 				FA000001200000000000BB04 /* Func_void_std__exception_ptr.swift */,
 				FA500001500000000000BB06 /* Func_void_OcrResult.swift */,
-				FA700001700000000000BB08 /* Func_void_InvoiceResult.swift */,
 				FACDFC092FBEF19000A271C5 /* HybridPharmaScannerSpec.swift */,
 				FACDFC0A2FBEF19000A271C5 /* HybridPharmaScannerSpec_cxx.swift */,
-				FA700001700000000000BB04 /* InvoiceBuyer.swift */,
-				FA700001700000000000BB06 /* InvoiceLineItem.swift */,
-				FA700001700000000000BB05 /* InvoiceMetadata.swift */,
-				FA700001700000000000BB02 /* InvoiceResult.swift */,
-				FA700001700000000000BB03 /* InvoiceSeller.swift */,
-				FA700001700000000000BB07 /* InvoiceTotals.swift */,
 				FA500001500000000000BB02 /* OcrResult.swift */,
 				FA300001300000000000BB03 /* Point.swift */,
 				FA500001500000000000BB03 /* TextBlock.swift */,
@@ -471,14 +395,6 @@
 				707302FAD77FFB83376B730C /* ExtractionOptions.swift */,
 				86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */,
 				D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */,
-				BDCC94EAAB52DD816F4D3125 /* StructuredDocumentResult.swift */,
-				10CC65938941077DCC571E7E /* StructuredParagraph.swift */,
-				11D01A8BBBD8662291F2B2BF /* StructuredTable.swift */,
-				3B8BEBEAC9DDE5166E6F62B8 /* TableRow.swift */,
-				F85E47AC24ACF82CA2348DB6 /* DetectedEntity.swift */,
-				9BEB65A35A2EA762E92B9D8F /* KeyValuePair.swift */,
-				4C5CA624D322C090CEBD32D3 /* DocumentSummary.swift */,
-				2163C369F79A5C490D3957BC /* Func_void_StructuredDocumentResult.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -511,12 +427,6 @@
 				FA400001400000000000BB11 /* FrameRect.hpp */,
 				FACDFC132FBEF19000A271C5 /* HybridPharmaScannerSpec.hpp */,
 				FACDFC142FBEF19000A271C5 /* HybridPharmaScannerSpec.cpp */,
-				FA700001700000000000CC03 /* InvoiceBuyer.hpp */,
-				FA700001700000000000CC05 /* InvoiceLineItem.hpp */,
-				FA700001700000000000CC04 /* InvoiceMetadata.hpp */,
-				FA700001700000000000CC01 /* InvoiceResult.hpp */,
-				FA700001700000000000CC02 /* InvoiceSeller.hpp */,
-				FA700001700000000000CC06 /* InvoiceTotals.hpp */,
 				FA500001500000000000CC01 /* OcrResult.hpp */,
 				FA300001300000000000BB11 /* Point.hpp */,
 				FA500001500000000000CC02 /* TextBlock.hpp */,
@@ -746,14 +656,6 @@
 				FA500001500000000000AA05 /* TextElement.swift in Sources */,
 				FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */,
 				FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */,
-				FA700001700000000000AA01 /* InvoiceParser.swift in Sources */,
-				FA700001700000000000AA02 /* InvoiceResult.swift in Sources */,
-				FA700001700000000000AA03 /* InvoiceSeller.swift in Sources */,
-				FA700001700000000000AA04 /* InvoiceBuyer.swift in Sources */,
-				FA700001700000000000AA05 /* InvoiceMetadata.swift in Sources */,
-				FA700001700000000000AA06 /* InvoiceLineItem.swift in Sources */,
-				FA700001700000000000AA07 /* InvoiceTotals.swift in Sources */,
-				FA700001700000000000AA08 /* Func_void_InvoiceResult.swift in Sources */,
 				87701109E364DACF5DBCAD95 /* NetworkMonitor.swift in Sources */,
 				EC646F11546DA83AC96C3281 /* DocumentPrompts.swift in Sources */,
 				419B14E27B689E7BD3C5DBE0 /* LLMExtractor.swift in Sources */,
@@ -763,16 +665,6 @@
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,
 				B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */,
 				2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */,
-				49C0618B7FB719EF32D06134 /* StructuredDocumentResult.swift in Sources */,
-				8CDC82BCEDB4DCF1421DFF3E /* StructuredParagraph.swift in Sources */,
-				900E0B1D94A801453F321A24 /* StructuredTable.swift in Sources */,
-				D5B5466B068C9892794867B4 /* TableRow.swift in Sources */,
-				B22F7A701902F1AF9FD1E2CB /* DetectedEntity.swift in Sources */,
-				3705D77804AE998CBC12C657 /* KeyValuePair.swift in Sources */,
-				7EA16751F7D4DEBF133ED1F9 /* DocumentSummary.swift in Sources */,
-				47EB36FB85D1155388E77236 /* Func_void_StructuredDocumentResult.swift in Sources */,
-				0143A315958C7A854F14256C /* StructuredDocumentAnalyzer.swift in Sources */,
-				0143A315958C7A854F14256D /* StructuredJsonBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -71,10 +71,8 @@ namespace margelo::nitro::PharmaScannerCxx {
     std::shared_ptr<Promise<OcrResult>> recognizeText(const std::string& imageUri) override;
     std::shared_ptr<Promise<OcrResult>> recognizeDocument(const std::string& imageUri) override;
     void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) override;
-    std::shared_ptr<Promise<InvoiceResult>> scanInvoice(const std::string& imageUri) override;
     void configure(const std::string& apiKey, const std::string& baseUrl) override;
     std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) override;
-    std::shared_ptr<Promise<StructuredDocumentResult>> recognizeStructuredDocument(const std::string& imageUri) override;
 
   private:
     jni::global_ref<JHybridPharmaScannerSpec::JavaPart> _javaPart;

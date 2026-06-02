@@ -114,19 +114,11 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
-  abstract fun scanInvoice(imageUri: String): Promise<InvoiceResult>
-  
-  @DoNotStrip
-  @Keep
   abstract fun configure(apiKey: String, baseUrl: String): Unit
   
   @DoNotStrip
   @Keep
   abstract fun extractDocument(imageUri: String, options: ExtractionOptions): Promise<DocumentExtractionResult>
-  
-  @DoNotStrip
-  @Keep
-  abstract fun recognizeStructuredDocument(imageUri: String): Promise<StructuredDocumentResult>
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

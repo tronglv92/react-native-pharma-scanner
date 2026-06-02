@@ -30,10 +30,8 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func recognizeText(imageUri: String) throws -> Promise<OcrResult>
   func recognizeDocument(imageUri: String) throws -> Promise<OcrResult>
   func setOnTextRecognized(callback: @escaping (_ result: OcrResult) -> Void) throws -> Void
-  func scanInvoice(imageUri: String) throws -> Promise<InvoiceResult>
   func configure(apiKey: String, baseUrl: String) throws -> Void
   func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult>
-  func recognizeStructuredDocument(imageUri: String) throws -> Promise<StructuredDocumentResult>
 }
 
 public extension HybridPharmaScannerSpec_protocol {
