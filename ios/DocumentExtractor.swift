@@ -27,21 +27,19 @@ final class DocumentExtractor {
     // scanOcr path: use RecognizeDocumentsRequest (iOS 26+) for structured on-device OCR
     if scanOcr {
       let ocrProcessor = DocumentOcrProcessor()
-      let ocrResult = try await ocrProcessor.recognizeDocument(imageUri: imageUri)
-      let ocrText = String(ocrResult.text)
-      let ocrTimeMs = ocrResult.processingTimeMs
-
-      let templateResult = TemplateExtractor().extract(ocrText: ocrText, documentType: documentType, language: language)
+      let structuredResult = try await ocrProcessor.recognizeStructuredDocument(imageUri: imageUri)
+      let builder = StructuredJsonBuilder()
+      let (jsonString, resolvedType, confidence) = builder.buildJson(from: structuredResult, requestedType: documentType)
       let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
 
       return DocumentExtractionResult(
-        documentType: templateResult.documentType,
-        data: templateResult.jsonString,
-        rawText: ocrText,
-        confidence: templateResult.confidence,
-        extractionMethod: "ocr",
+        documentType: resolvedType,
+        data: jsonString,
+        rawText: structuredResult.rawText,
+        confidence: confidence,
+        extractionMethod: "structured_ocr",
         processingTimeMs: elapsed,
-        ocrTimeMs: ocrTimeMs,
+        ocrTimeMs: structuredResult.processingTimeMs,
         warnings: ["Using on-device structured OCR (RecognizeDocumentsRequest)."]
       )
     }

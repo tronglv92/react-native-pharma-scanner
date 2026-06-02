@@ -436,7 +436,15 @@ function App(): React.JSX.Element {
       setIsProcessing(true);
 
       if (extractionMode === 'structured') {
-        // Structured OCR path (iOS 26+ with fallback)
+        // Structured OCR → JSON path: uses StructuredJsonBuilder on native side
+        const result = await scanner.extractDocument(results[0].uri, {
+          documentType: selectedDocType,
+          language: 'vi',
+          scanOcr: true,
+        });
+        setExtractionResult(result);
+
+        // Also fetch raw structured data for the structured result view
         const raw = await scanner.recognizeStructuredDocument(results[0].uri);
         const organized = organizeDocument(raw);
         setStructuredResult(organized);
@@ -1313,6 +1321,8 @@ function App(): React.JSX.Element {
                       backgroundColor:
                         extractionResult.extractionMethod === 'vision'
                           ? '#00796B'
+                          : extractionResult.extractionMethod === 'structured_ocr'
+                          ? '#6A1B9A'
                           : extractionResult.extractionMethod === 'ocr'
                           ? '#2196F3'
                           : '#FF9800',
