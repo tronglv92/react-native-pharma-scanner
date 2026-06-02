@@ -9,7 +9,7 @@
  * Examples: "286.000" → 286000, "272,00" → 272, "1.234.567" → 1234567
  */
 export function parseVietnameseNumber(text: string): number {
-  let cleaned = text.trim().replace(/ /g, '');
+  let cleaned = text.trim().replace(/[$%]/g, '').replace(/ /g, '');
 
   if (cleaned.includes(',')) {
     const parts = cleaned.split(',');

@@ -12,6 +12,15 @@ detection:
     - gia tri gia tang
     - tax code
     - tax id
+    - invoice no
+    - date of issue
+    - seller
+    - client
+    - net price
+    - net worth
+    - gross worth
+    - items
+    - summary
 
 sections:
   seller:
@@ -56,7 +65,7 @@ sections:
         default: ""
         strategies:
           - method: keyword_label
-            keywords: [so tai khoan, so ti khoan, bank account, banh wcoon]
+            keywords: [so tai khoan, so ti khoan, bank account, banh wcoon, iban]
             extract: value_after_colon
 
   buyer:
@@ -86,7 +95,7 @@ sections:
         default: ""
         strategies:
           - method: keyword_label
-            keywords: [ma so thue, mi so thue, so thue, tax code, tm code]
+            keywords: [ma so thue, mi so thue, so thue, tax code, tax id, tm code]
             extract: tax_code
       address:
         type: string
@@ -161,6 +170,13 @@ sections:
       - thanh tien
       - amount
       - "(no)"
+      - "no."
+      - qty
+      - um
+      - net price
+      - net worth
+      - "vat [%]"
+      - gross worth
     itemSchema:
       productName:
         type: string
@@ -186,6 +202,18 @@ sections:
         type: number
         default: 0
         strategies: []
+      netWorth:
+        type: number
+        default: 0
+        strategies: []
+      vatRate:
+        type: number
+        default: 0
+        strategies: []
+      grossWorth:
+        type: number
+        default: 0
+        strategies: []
       amount:
         type: number
         default: 0
@@ -193,7 +221,9 @@ sections:
     numericFields:
       - quantity
       - unitPrice
-      - amount
+      - netWorth
+      - vatRate
+      - grossWorth
 
   totals:
     startKeywords:
@@ -213,7 +243,7 @@ sections:
         strategies:
           - method: keyword_label
             keywords: [cong tien hang, cong tien, total amount, net worth]
-            excludeKeywords: [tong, thanh toan]
+            excludeKeywords: [tong, thanh toan, gross]
             extract: largest_number
             checkNextLine: true
       vatRate:
@@ -228,7 +258,8 @@ sections:
         default: 0
         strategies:
           - method: keyword_label
-            keywords: [tien thue, vat amount, ten duc gigt]
+            keywords: [tien thue, vat amount, ten duc gigt, vat]
+            excludeKeywords: [thue suat, "vat [%]", vat rate, gross]
             extract: largest_number
             checkNextLine: true
       totalPayment:
@@ -237,6 +268,15 @@ sections:
         strategies:
           - method: keyword_label
             keywords: [tong tien thanh toan, tong cong, toral amosu, toral amount, gross worth, grand total]
+            extract: largest_number
+            checkNextLine: true
+      grossWorth:
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [gross worth]
+            excludeKeywords: [net worth]
             extract: largest_number
             checkNextLine: true
       amountInWords:

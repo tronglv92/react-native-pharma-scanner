@@ -63,6 +63,15 @@ export function findTaxCode(
   lines: string[],
   index: number,
 ): string {
+  // Try dashed US-style Tax ID first (e.g. 945-82-2137)
+  const dashedRe = /(\d{3}-\d{2}-\d{4})/;
+  const dm = line.match(dashedRe);
+  if (dm) return dm[1];
+  if (index + 1 < lines.length) {
+    const dm2 = lines[index + 1].match(dashedRe);
+    if (dm2) return dm2[1];
+  }
+  // Then try 10-14 digit continuous tax code
   const taxRe = /(\d{10,14})/;
   const m = line.match(taxRe);
   if (m) return m[1];

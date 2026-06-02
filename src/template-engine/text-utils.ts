@@ -30,6 +30,7 @@ export function matchesAny(text: string, keywords: string[]): boolean {
 export function isNumericLine(text: string): boolean {
   const cleaned = text
     .trim()
+    .replace(/[$%]/g, '')
     .replace(/\./g, '')
     .replace(/,/g, '')
     .replace(/ /g, '');
