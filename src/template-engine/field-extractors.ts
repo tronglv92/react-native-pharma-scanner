@@ -145,6 +145,85 @@ export function extractDateFromVietnamese(text: string): string | null {
 }
 
 /**
+ * Extract a US-style date: MM/DD/YYYY → YYYY-MM-DD.
+ * Also handles MM-DD-YYYY and MM.DD.YYYY formats.
+ */
+export function extractDateUS(text: string): string | null {
+  const re = /(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/;
+  const m = text.match(re);
+  if (m) {
+    const month = m[1].padStart(2, '0');
+    const day = m[2].padStart(2, '0');
+    const year = m[3];
+    return `${year}-${month}-${day}`;
+  }
+  return null;
+}
+
+/**
+ * Extract a component from a US-format address block.
+ * Given the matched line and surrounding lines, extracts street, city, state, or zip.
+ *
+ * Expected format across 1-3 lines:
+ *   "Street Address"
+ *   "City, ST ZIP" or "City, State ZIP"
+ */
+export function extractAddressComponent(
+  line: string,
+  lines: string[],
+  index: number,
+  component: 'street' | 'city' | 'state' | 'zip',
+): string {
+  // Collect address lines: start from the value after colon on the keyword line,
+  // then continue with subsequent non-empty lines that look like address parts
+  const afterColon = extractValueAfterColon(line, lines, index);
+
+  // Build address block: the colon value + up to 2 following lines
+  const addressLines: string[] = [];
+  if (afterColon) {
+    addressLines.push(afterColon);
+  }
+  // Check if the after-colon value came from the next line (extractValueAfterColon fallback)
+  const colonIdx = line.lastIndexOf(':');
+  const hasInlineValue = colonIdx >= 0 && line.slice(colonIdx + 1).trim().length > 0;
+  const startNext = hasInlineValue ? index + 1 : index + 2; // skip the line already consumed
+
+  for (let i = startNext; i < Math.min(startNext + 2, lines.length); i++) {
+    const next = lines[i].trim();
+    if (next.length === 0) break;
+    // Stop if this looks like a new field label (contains colon with keyword before it)
+    if (/^[A-Za-z\s]+:/.test(next) && next.indexOf(':') < next.length - 1) break;
+    addressLines.push(next);
+  }
+
+  if (addressLines.length === 0) return '';
+
+  // For street: return the first line
+  if (component === 'street') {
+    return addressLines[0];
+  }
+
+  // For city/state/zip: parse from the last line that matches "City, ST ZIP" pattern
+  const cityStateZipRe = /^(.+?),\s*([A-Z]{2})\s+(\d{5}(?:-\d{4})?)$/;
+  // Also try: "City, Full State ZIP"
+  const cityStateZipRe2 = /^(.+?),\s*([A-Za-z\s]+?)\s+(\d{5}(?:-\d{4})?)$/;
+
+  for (let i = addressLines.length - 1; i >= 0; i--) {
+    let m = addressLines[i].match(cityStateZipRe);
+    if (!m) m = addressLines[i].match(cityStateZipRe2);
+    if (m) {
+      switch (component) {
+        case 'city': return m[1].trim();
+        case 'state': return m[2].trim();
+        case 'zip': return m[3].trim();
+      }
+    }
+  }
+
+  return '';
+}
+
+/**
  * Extract first match of a regex pattern with an optional capture group.
  */
 export function extractPattern(text: string, pattern: string): string | null {

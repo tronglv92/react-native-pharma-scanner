@@ -4,7 +4,7 @@
  */
 
 import { normVi, matchesAny, isNumericLine } from './text-utils';
-import { parseVietnameseNumber } from './number-parser';
+import { parseVietnameseNumber, parseStandardNumber, parseEuropeanNumber } from './number-parser';
 import { extractPattern } from './field-extractors';
 import type { SectionDef } from './types';
 
@@ -27,6 +27,7 @@ export function parseItems(
   sectionStart: number,
   sectionEnd: number,
   sectionDef: SectionDef,
+  detectedFormat?: 'european' | 'standard',
 ): ParsedItem[] {
   const skipKw = sectionDef.skipHeaderKeywords ?? [];
   const numericFields = sectionDef.numericFields ?? [
@@ -34,6 +35,21 @@ export function parseItems(
     'unitPrice',
     'amount',
   ];
+
+  // Derive item number field name and description field name from itemSchema
+  const schemaKeys = sectionDef.itemSchema ? Object.keys(sectionDef.itemSchema) : [];
+  const numberFieldName = schemaKeys.find(k => k === 'no') ?? 'stt';
+  const descFieldName = schemaKeys.find(k => k === 'description') ?? 'productName';
+
+  // Select number parser: use detected European format if applicable, otherwise fall back to section config
+  let parseNumber: (text: string) => number;
+  if (detectedFormat === 'european') {
+    parseNumber = parseEuropeanNumber;
+  } else if (sectionDef.numberFormat === 'en') {
+    parseNumber = parseStandardNumber;
+  } else {
+    parseNumber = parseVietnameseNumber;
+  }
 
   // Skip header lines
   let dataStart = sectionStart + 1;
@@ -68,7 +84,7 @@ export function parseItems(
 
   // If no STT boundaries found, fall back to single-item parsing
   if (boundaries.length === 0) {
-    return [parseSingleItem(itemLines, numericFields)];
+    return [parseSingleItem(itemLines, numericFields, parseNumber, numberFieldName, descFieldName)];
   }
 
   // Parse each item block
@@ -78,7 +94,7 @@ export function parseItems(
     const blockEnd = b + 1 < boundaries.length ? boundaries[b + 1] : itemLines.length;
     const blockLines = itemLines.slice(blockStart, blockEnd);
 
-    const item = parseItemBlock(blockLines, numericFields);
+    const item = parseItemBlock(blockLines, numericFields, parseNumber, numberFieldName, descFieldName);
     items.push(item);
   }
 
@@ -90,12 +106,18 @@ export function parseItems(
  * First line starts with "N. ..." containing the STT and possibly the product name + numbers.
  * Subsequent lines may be product name continuations, units, or numeric values.
  */
-function parseItemBlock(blockLines: string[], numericFields: string[]): ParsedItem {
+function parseItemBlock(
+  blockLines: string[],
+  numericFields: string[],
+  parseNumber: (text: string) => number,
+  numberFieldName: string,
+  descFieldName: string,
+): ParsedItem {
   const sttMatch = blockLines[0].match(/^(\d+)\.\s+(.*)/);
   const stt = sttMatch ? parseInt(sttMatch[1], 10) : 1;
   const firstLineRest = sttMatch ? sttMatch[2] : blockLines[0];
 
-  const item: ParsedItem = { stt, productName: '', unit: '' };
+  const item: ParsedItem = { [numberFieldName]: stt, [descFieldName]: '', unit: '' };
   for (const f of numericFields) {
     item[f] = 0;
   }
@@ -131,13 +153,13 @@ function parseItemBlock(blockLines: string[], numericFields: string[]): ParsedIt
     }
   }
 
-  item.productName = productNameParts.join(' ').trim();
+  item[descFieldName] = productNameParts.join(' ').trim();
   if (unit) {
     item.unit = unit;
   }
 
   // Assign numeric values to fields (last N values mapped right-to-left)
-  const parsedNumbers = numericValues.map(v => parseVietnameseNumber(v));
+  const parsedNumbers = numericValues.map(v => parseNumber(v));
   if (parsedNumbers.length >= numericFields.length) {
     const offset = parsedNumbers.length - numericFields.length;
     for (let i = 0; i < numericFields.length; i++) {
@@ -200,8 +222,11 @@ function splitTextAndNumbers(line: string): { textPart: string; numbers: string[
 
 /**
  * Check if a token looks numeric (possibly with $, %, comma, dot, spaces).
+ * Also recognizes European-format numbers like "689,70" or "1.394,67".
  */
 function isNumericToken(token: string): boolean {
+  // European format: digits with comma-decimal like "689,70" or "1.394,67"
+  if (/^\$?\d[\d.]*,\d{2}%?$/.test(token)) return true;
   const cleaned = token.replace(/[$%.,\s]/g, '');
   return cleaned.length > 0 && /^\d+$/.test(cleaned);
 }
@@ -209,10 +234,16 @@ function isNumericToken(token: string): boolean {
 /**
  * Fallback: parse all lines as a single item (original behavior).
  */
-function parseSingleItem(itemLines: string[], numericFields: string[]): ParsedItem {
+function parseSingleItem(
+  itemLines: string[],
+  numericFields: string[],
+  parseNumber: (text: string) => number,
+  numberFieldName: string,
+  descFieldName: string,
+): ParsedItem {
   const item: ParsedItem = {
-    stt: 1,
-    productName: '',
+    [numberFieldName]: 1,
+    [descFieldName]: '',
     lotNumber: '',
     expiryDate: '',
     unit: '',
@@ -239,7 +270,7 @@ function parseSingleItem(itemLines: string[], numericFields: string[]): ParsedIt
     }
     numericStartIdx = idx + 1;
   }
-  item.productName = productNameParts.join(' ');
+  item[descFieldName] = productNameParts.join(' ');
 
   const numericValues: string[] = [];
   for (let idx = numericStartIdx; idx < itemLines.length; idx++) {
@@ -260,7 +291,7 @@ function parseSingleItem(itemLines: string[], numericFields: string[]): ParsedIt
     }
   }
 
-  const parsedNumbers = numericValues.map(v => parseVietnameseNumber(v));
+  const parsedNumbers = numericValues.map(v => parseNumber(v));
   if (parsedNumbers.length >= numericFields.length) {
     const offset = parsedNumbers.length - numericFields.length;
     for (let i = 0; i < numericFields.length; i++) {

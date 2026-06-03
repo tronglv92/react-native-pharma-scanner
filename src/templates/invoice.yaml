@@ -1,5 +1,5 @@
 name: invoice
-version: 1
+version: 2
 
 detection:
   keywords:
@@ -23,129 +23,157 @@ detection:
     - summary
 
 sections:
-  seller:
+  invoice_meta:
+    flatten: true
     startAt: document_start
     endBefore:
-      - buyer
+      - seller
     fields:
-      companyName:
+      invoice_no:
         type: string
         default: ""
         strategies:
           - method: keyword_label
-            keywords: [cong ty, cty]
-            extract: company_name
-          - method: keyword_label
-            keywords: [seller]
-            extract: value_after_colon
-      taxCode:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [ma so thue, so thue, tax code, tax id, tareodo, "thuc ("]
-            extract: tax_code
-      address:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [dia chi, d/c, addrs, address]
-            extract: value_after_colon
-      phone:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [dien thoai, "dt:", tel]
-            extract: regex
-            pattern: '((?:0|\+84)\d[\d\s\.\-]{7,12})'
-      bankAccount:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [so tai khoan, so ti khoan, bank account, banh wcoon, iban]
-            extract: value_after_colon
-
-  buyer:
-    startKeywords:
-      - nguoi mua
-      - nguoi thua
-      - buyer
-      - ben mua
-      - khach hang
-      - client
-    endBefore:
-      - items
-      - totals
-    fields:
-      companyName:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [nguoi mua, nguoi thua, buyer, client]
-            extract: value_after_colon
-          - method: keyword_label
-            keywords: [ten don vi, company, conynnyl name, don vi mua]
-            extract: value_after_colon
-      taxCode:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [ma so thue, mi so thue, so thue, tax code, tax id, tm code]
-            extract: tax_code
-      address:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [dia chi, d/c, addrs, address, dudr]
-            extract: value_after_colon
-
-  metadata:
-    startAt: document_start
-    endAt: document_end
-    fields:
-      serial:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [ky hieu, serial, seriul]
-            extract: value_after_colon
-            scope: full_text
-      form:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: [mau so, form]
-            extract: value_after_colon
-            scope: full_text
-      number:
-        type: string
-        default: ""
-        strategies:
-          - method: keyword_label
-            keywords: ["so (no", no.f, "so:", invoice no, "no."]
+            keywords: [invoice no, "no.", "no.f", "so:", "so (no"]
             extract: regex
             pattern: '(\d{4,})'
             checkNextLine: true
             scope: full_text
-      date:
+      date_of_issue:
         type: string
         default: ""
         strategies:
+          - method: us_date
+            scope: full_text
           - method: vietnamese_date
             scope: full_text
           - method: regex
             pattern: '(\d{1,2}/\d{1,2}/\d{4})'
             scope: full_text
 
+  seller:
+    startKeywords:
+      - seller
+      - cong ty
+      - cty
+    endBefore:
+      - buyer
+      - client
+    fields:
+      name:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [seller]
+            extract: value_after_colon
+          - method: keyword_label
+            keywords: [cong ty, cty]
+            extract: company_name
+      "address.street":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, street]
+            extract: address_street
+      "address.city":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, city]
+            extract: address_city
+      "address.state":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, state]
+            extract: address_state
+      "address.zip_code":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, zip]
+            extract: address_zip
+      tax_id:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [tax id, tax code, ma so thue, so thue, tareodo, "thuc ("]
+            extract: tax_code
+      iban:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [iban, bank account, so tai khoan, so ti khoan, banh wcoon]
+            extract: value_after_colon
+
+  client:
+    startKeywords:
+      - client
+      - buyer
+      - nguoi mua
+      - nguoi thua
+      - ben mua
+      - khach hang
+    endBefore:
+      - items
+      - totals
+      - summary
+    fields:
+      name:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [client, buyer, nguoi mua, nguoi thua]
+            extract: value_after_colon
+          - method: keyword_label
+            keywords: [ten don vi, company, conynnyl name, don vi mua]
+            extract: value_after_colon
+      "address.street":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, street]
+            extract: address_street
+      "address.city":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, city]
+            extract: address_city
+      "address.state":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, state]
+            extract: address_state
+      "address.zip_code":
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [address, dia chi, "d/c", addrs, zip]
+            extract: address_zip
+      tax_id:
+        type: string
+        default: ""
+        strategies:
+          - method: keyword_label
+            keywords: [tax id, tax code, ma so thue, mi so thue, so thue, tm code]
+            extract: tax_code
+
   items:
+    numberFormat: en
     startKeywords:
       - ten hang hoa
       - name of goods
@@ -154,6 +182,7 @@ sections:
       - description
     endBefore:
       - totals
+      - summary
     fields: {}
     skipHeaderKeywords:
       - name of goods
@@ -177,20 +206,13 @@ sections:
       - net worth
       - "vat [%]"
       - gross worth
+      - description
     itemSchema:
-      productName:
-        type: string
-        default: ""
+      no:
+        type: number
+        default: 0
         strategies: []
-      lotNumber:
-        type: string
-        default: ""
-        strategies: []
-      expiryDate:
-        type: string
-        default: ""
-        strategies: []
-      unit:
+      description:
         type: string
         default: ""
         strategies: []
@@ -198,34 +220,35 @@ sections:
         type: number
         default: 0
         strategies: []
-      unitPrice:
+      unit:
+        type: string
+        default: ""
+        strategies: []
+      net_price:
         type: number
         default: 0
         strategies: []
-      netWorth:
+      net_worth:
         type: number
         default: 0
         strategies: []
-      vatRate:
+      vat_percent:
         type: number
         default: 0
         strategies: []
-      grossWorth:
-        type: number
-        default: 0
-        strategies: []
-      amount:
+      gross_worth:
         type: number
         default: 0
         strategies: []
     numericFields:
       - quantity
-      - unitPrice
-      - netWorth
-      - vatRate
-      - grossWorth
+      - net_price
+      - net_worth
+      - vat_percent
+      - gross_worth
 
-  totals:
+  summary:
+    numberFormat: en
     startKeywords:
       - cong tien hang
       - total amount
@@ -233,50 +256,66 @@ sections:
       - net worth
     endAt: document_end
     fallbackNumericFields:
-      - subtotal
-      - vatAmount
-      - totalPayment
+      - net_worth
+      - vat
+      - gross_worth
     fields:
-      subtotal:
-        type: number
-        default: 0
-        strategies:
-          - method: keyword_label
-            keywords: [cong tien hang, cong tien, total amount, net worth]
-            excludeKeywords: [tong, thanh toan, gross]
-            extract: largest_number
-            checkNextLine: true
-      vatRate:
+      vat_percent:
         type: number
         default: 0
         strategies:
           - method: keyword_contains
-            keywords: [thue suat, vat rate, "vat [%]", "vat[%]", gigt, rat rac]
+            keywords: [thue suat, vat rate, "vat [%]", "vat[%]", gigt, rat rac, "vat %"]
             pattern: '(\d+)\s*%'
-      vatAmount:
+      net_worth:
         type: number
         default: 0
         strategies:
           - method: keyword_label
-            keywords: [tien thue, vat amount, ten duc gigt, vat]
-            excludeKeywords: [thue suat, "vat [%]", vat rate, gross]
+            keywords: [net worth, cong tien hang, cong tien, total amount]
+            excludeKeywords: [tong, thanh toan, gross, total net]
             extract: largest_number
             checkNextLine: true
-      totalPayment:
+      vat:
         type: number
         default: 0
         strategies:
           - method: keyword_label
-            keywords: [tong tien thanh toan, tong cong, toral amosu, toral amount, gross worth, grand total]
+            keywords: [vat amount, tien thue, ten duc gigt, "vat:"]
+            excludeKeywords: [thue suat, "vat [%]", vat rate, gross, net]
             extract: largest_number
             checkNextLine: true
-      grossWorth:
+      gross_worth:
         type: number
         default: 0
         strategies:
           - method: keyword_label
-            keywords: [gross worth]
+            keywords: [gross worth, tong tien thanh toan, tong cong, grand total]
             excludeKeywords: [net worth]
+            extract: largest_number
+            checkNextLine: true
+      "total.net_worth":
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [total net worth, tong net]
+            extract: largest_number
+            checkNextLine: true
+      "total.vat":
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [total vat, tong thue]
+            extract: largest_number
+            checkNextLine: true
+      "total.gross_worth":
+        type: number
+        default: 0
+        strategies:
+          - method: keyword_label
+            keywords: [total gross worth, total gross, tong cong]
             extract: largest_number
             checkNextLine: true
       amountInWords:
@@ -290,19 +329,15 @@ sections:
 confidence:
   maxScore: 0.5
   fields:
-    - path: seller.companyName
+    - path: seller.name
       type: non_empty
-    - path: seller.taxCode
+    - path: seller.tax_id
       type: non_empty
-    - path: buyer.companyName
+    - path: client.name
       type: non_empty
-    - path: buyer.taxCode
+    - path: invoice_no
       type: non_empty
-    - path: metadata.serial
+    - path: date_of_issue
       type: non_empty
-    - path: metadata.number
-      type: non_empty
-    - path: metadata.date
-      type: non_empty
-    - path: totals.totalPayment
+    - path: summary.gross_worth
       type: non_zero

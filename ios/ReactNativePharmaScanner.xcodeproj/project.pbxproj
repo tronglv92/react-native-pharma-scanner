@@ -19,7 +19,7 @@
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		87701109E364DACF5DBCAD95 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB680131207492534C3710D1 /* NetworkMonitor.swift */; };
 		B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */; };
-		D0715C20B1605DFBC6ADA657 /* TemplateExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */; };
+		FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */; };
 		EC646F11546DA83AC96C3281 /* DocumentPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */; };
 		FA000001200000000000AA01 /* CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB01 /* CapturedImage.swift */; };
 		FA000001200000000000AA02 /* FlashMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB02 /* FlashMode.swift */; };
@@ -85,7 +85,7 @@
 		A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LLMExtractor.swift; sourceTree = "<group>"; };
 		AB680131207492534C3710D1 /* NetworkMonitor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_DocumentExtractionResult.swift; sourceTree = "<group>"; };
-		E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TemplateExtractor.swift; sourceTree = "<group>"; };
+		FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoundationModelInvoiceExtractor.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA000001200000000000BB01 /* CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImage.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB02 /* FlashMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMode.swift; sourceTree = "<group>"; };
@@ -214,7 +214,7 @@
 				AB680131207492534C3710D1 /* NetworkMonitor.swift */,
 				4CB790361C85D63CA6E85FA5 /* DocumentPrompts.swift */,
 				A443D7F7F203FFAF3D719797 /* LLMExtractor.swift */,
-				E4FE66AB3A0FD124DD68ECA6 /* TemplateExtractor.swift */,
+				FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
 			);
@@ -659,7 +659,7 @@
 				87701109E364DACF5DBCAD95 /* NetworkMonitor.swift in Sources */,
 				EC646F11546DA83AC96C3281 /* DocumentPrompts.swift in Sources */,
 				419B14E27B689E7BD3C5DBE0 /* LLMExtractor.swift in Sources */,
-				D0715C20B1605DFBC6ADA657 /* TemplateExtractor.swift in Sources */,
+				FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */,
 				5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */,
 				5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */,
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,

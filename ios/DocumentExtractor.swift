@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import NitroModules
 
 final class DocumentExtractor {
@@ -22,6 +23,15 @@ final class DocumentExtractor {
     forceOffline: Bool,
   ) async throws -> DocumentExtractionResult {
     let startTime = CFAbsoluteTimeGetCurrent()
+
+    // FoundationModels path (iOS 26+, on-device AI)
+    if customPrompt == "__foundation_models__" {
+      return try await foundationModelExtraction(
+        imageUri: imageUri,
+        documentType: documentType,
+        startTime: startTime
+      )
+    }
 
     let useLLM = !forceOffline
       && NetworkMonitor.shared.isConnected
@@ -84,6 +94,44 @@ final class DocumentExtractor {
     }
   }
 
+  private func foundationModelExtraction(
+    imageUri: String,
+    documentType: String,
+    startTime: CFAbsoluteTime
+  ) async throws -> DocumentExtractionResult {
+    guard #available(iOS 26.0, *) else {
+      throw LLMExtractorError(message: "Foundation Models requires iOS 26 or later.")
+    }
+
+    let imageData = try loadImageData(from: imageUri)
+    guard let uiImage = UIImage(data: imageData) else {
+      throw LLMExtractorError(message: "Failed to create image from data.")
+    }
+
+    let ocrStart = CFAbsoluteTimeGetCurrent()
+    let ocrText = try await FoundationModelInvoiceExtractor.recognizeText(from: uiImage)
+    let ocrTimeMs = (CFAbsoluteTimeGetCurrent() - ocrStart) * 1000
+
+    guard !ocrText.isEmpty else {
+      throw LLMExtractorError(message: "No text recognized in the image.")
+    }
+
+    let invoiceData = try await FoundationModelInvoiceExtractor.extractInvoice(ocrText: ocrText)
+    let jsonString = invoiceData.toJSONString() ?? "{}"
+    let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
+
+    return DocumentExtractionResult(
+      documentType: documentType == "auto" ? "invoice" : documentType,
+      data: jsonString,
+      rawText: ocrText,
+      confidence: 0.92,
+      extractionMethod: "foundation_models",
+      processingTimeMs: elapsed,
+      ocrTimeMs: ocrTimeMs,
+      warnings: []
+    )
+  }
+
   private func loadImageData(from imageUri: String) throws -> Data {
     let path: String
     if imageUri.hasPrefix("file://") {
@@ -111,19 +159,25 @@ final class DocumentExtractor {
     let ocrResult = try await processor.recognizeText(imageUri: imageUri)
     let ocrText = String(ocrResult.text)
     let ocrTimeMs = ocrResult.processingTimeMs
-
-    let templateResult = TemplateExtractor().extract(ocrText: ocrText, documentType: documentType, language: language)
     let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
 
+    // Return raw OCR text — structured extraction is handled by the JS template engine
+    let lines = ocrText.components(separatedBy: "\n")
+      .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+      .filter { !$0.isEmpty }
+    let data: [String: Any] = ["_documentType": documentType, "content": ["lines": lines]]
+    let jsonString = (try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]))
+      .flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+
     return DocumentExtractionResult(
-      documentType: templateResult.documentType,
-      data: templateResult.jsonString,
+      documentType: documentType,
+      data: jsonString,
       rawText: ocrText,
-      confidence: templateResult.confidence,
-      extractionMethod: "template",
+      confidence: 0.1,
+      extractionMethod: "ocr_only",
       processingTimeMs: elapsed,
       ocrTimeMs: ocrTimeMs,
-      warnings: warnings
+      warnings: warnings + ["Template extraction moved to JS engine. Use Template (offline) mode for structured extraction."]
     )
   }
 }

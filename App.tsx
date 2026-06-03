@@ -85,7 +85,7 @@ function App(): React.JSX.Element {
   const [extractionResult, setExtractionResult] =
     useState<DocumentExtractionResult | null>(null);
 
-  type ExtractionMode = 'mistral' | 'template';
+  type ExtractionMode = 'mistral' | 'template' | 'foundation_models';
   const [extractionMode, setExtractionMode] = useState<ExtractionMode>('mistral');
 
   const stableStartRef = useRef<number | null>(null);
@@ -392,7 +392,16 @@ function App(): React.JSX.Element {
 
       setIsProcessing(true);
 
-      if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
+      if (extractionMode === 'foundation_models') {
+        // On-device Apple Intelligence (iOS 26+)
+        const result = await scanner.extractDocument(results[0].uri, {
+          documentType: selectedDocType,
+          language: 'en',
+          customPrompt: '__foundation_models__',
+          forceOffline: true,
+        });
+        setExtractionResult(result);
+      } else if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
         // Full Mistral pipeline (Mistral OCR + Chat)
         const result = await extractWithMistral(
           MISTRAL_API_KEY,
@@ -828,6 +837,25 @@ function App(): React.JSX.Element {
                   Uses on-device OCR + template extraction - no network needed
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.ocrToggle,
+                  extractionMode === 'foundation_models' && styles.ocrToggleActive,
+                ]}
+                onPress={() => setExtractionMode('foundation_models')}
+              >
+                <Text
+                  style={[
+                    styles.ocrToggleText,
+                    extractionMode === 'foundation_models' && styles.ocrToggleTextActive,
+                  ]}
+                >
+                  Foundation Models (on-device AI)
+                </Text>
+                <Text style={styles.ocrToggleHint}>
+                  Uses Apple Intelligence on-device LLM - iOS 26+, no network needed
+                </Text>
+              </TouchableOpacity>
               <View style={styles.controls}>
                 <TouchableOpacity
                   style={[styles.captureButton, { backgroundColor: '#00796B' }]}
@@ -1021,6 +1049,8 @@ function App(): React.JSX.Element {
                       backgroundColor:
                         extractionResult.extractionMethod === 'vision'
                           ? '#00796B'
+                          : extractionResult.extractionMethod === 'foundation_models'
+                          ? '#6A1B9A'
                           : extractionResult.extractionMethod === 'ocr'
                           ? '#2196F3'
                           : '#FF9800',

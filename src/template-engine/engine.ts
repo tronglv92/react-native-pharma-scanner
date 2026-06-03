@@ -5,17 +5,50 @@
 
 import type { DocumentTemplate, SectionDef, FieldDef, FieldStrategy, TemplateResult } from './types';
 import { normVi, matchesAny, isNumericLine } from './text-utils';
-import { parseVietnameseNumber, extractLargestNumber } from './number-parser';
+import {
+  parseNumberForFormat,
+  extractLargestNumber,
+  detectNumberFormat,
+} from './number-parser';
 import {
   extractValueAfterColon,
   findTaxCode,
   extractCompanyName,
   extractDateFromVietnamese,
+  extractDateUS,
+  extractAddressComponent,
   extractPattern,
 } from './field-extractors';
 import { resolveSectionBounds } from './section-finder';
 import { parseItems } from './item-parser';
 import { computeConfidence } from './confidence';
+
+/**
+ * Convert flat dotted keys into nested objects.
+ * E.g. { "address.street": "X", "address.city": "Y", "name": "Z" }
+ *   → { address: { street: "X", city: "Y" }, name: "Z" }
+ */
+function unflattenDottedKeys(
+  flat: Record<string, string | number>,
+): Record<string, unknown> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(flat)) {
+    const parts = key.split('.');
+    if (parts.length === 1) {
+      result[key] = value;
+    } else {
+      let current = result;
+      for (let i = 0; i < parts.length - 1; i++) {
+        if (!(parts[i] in current) || typeof current[parts[i]] !== 'object') {
+          current[parts[i]] = {};
+        }
+        current = current[parts[i]] as Record<string, unknown>;
+      }
+      current[parts[parts.length - 1]] = value;
+    }
+  }
+  return result;
+}
 
 /**
  * Auto-detect document type by scoring keyword matches across all templates.
@@ -51,6 +84,9 @@ export function extractWithEngine(
     .split('\n')
     .map(l => l.trim());
 
+  // Auto-detect number format from OCR text
+  const detectedFormat = detectNumberFormat(ocrText);
+
   const data: Record<string, unknown> = {};
 
   for (const [sectionName, sectionDef] of Object.entries(template.sections)) {
@@ -58,7 +94,7 @@ export function extractWithEngine(
 
     if (sectionDef.itemSchema) {
       // Item section — parse table items
-      data[sectionName] = parseItems(lines, bounds.start, bounds.end, sectionDef);
+      data[sectionName] = parseItems(lines, bounds.start, bounds.end, sectionDef, detectedFormat);
     } else {
       // Regular section — extract fields
       const sectionData: Record<string, string | number> = {};
@@ -70,16 +106,25 @@ export function extractWithEngine(
           bounds.start,
           bounds.end,
           ocrText,
+          detectedFormat,
         );
       }
 
-      data[sectionName] = sectionData;
+      // Unflatten dotted keys (e.g. "address.street" → { address: { street: ... } })
+      const unflattened = unflattenDottedKeys(sectionData);
+
+      if (sectionDef.flatten) {
+        // Merge fields into root object
+        Object.assign(data, unflattened);
+      } else {
+        data[sectionName] = unflattened;
+      }
     }
   }
 
   // Totals fallback: if we have a "totals" section with mostly zeros,
   // try sequential number extraction
-  applyTotalsFallback(data, lines, template);
+  applyTotalsFallback(data, lines, template, detectedFormat);
 
   const confidence = computeConfidence(template, data);
 
@@ -99,6 +144,7 @@ function extractField(
   sectionStart: number,
   sectionEnd: number,
   fullText: string,
+  numFormat: 'european' | 'standard',
 ): string | number {
   for (const strategy of fieldDef.strategies) {
     const result = applyStrategy(
@@ -108,6 +154,7 @@ function extractField(
       sectionStart,
       sectionEnd,
       fullText,
+      numFormat,
     );
     if (result !== null && result !== '' && result !== 0) {
       return result;
@@ -126,6 +173,7 @@ function applyStrategy(
   sectionStart: number,
   sectionEnd: number,
   fullText: string,
+  numFormat: 'european' | 'standard',
 ): string | number | null {
   const searchLines = strategy.scope === 'full_text'
     ? lines
@@ -151,23 +199,31 @@ function applyStrategy(
           case 'company_name':
             return extractCompanyName(searchLines[i], lines, globalIdx);
           case 'largest_number': {
-            let num = extractLargestNumber(searchLines[i]);
+            let num = extractLargestNumber(searchLines[i], numFormat);
             if (num > 0) return num;
             // Check next line
             if (strategy.checkNextLine !== false && i + 1 < searchLines.length) {
-              num = extractLargestNumber(searchLines[i + 1]);
+              num = extractLargestNumber(searchLines[i + 1], numFormat);
               if (num > 0) return num;
             }
             return null;
           }
+          case 'address_street':
+            return extractAddressComponent(searchLines[i], lines, globalIdx, 'street');
+          case 'address_city':
+            return extractAddressComponent(searchLines[i], lines, globalIdx, 'city');
+          case 'address_state':
+            return extractAddressComponent(searchLines[i], lines, globalIdx, 'state');
+          case 'address_zip':
+            return extractAddressComponent(searchLines[i], lines, globalIdx, 'zip');
           case 'regex': {
             if (!strategy.pattern) return null;
             const m = extractPattern(searchLines[i], strategy.pattern);
-            if (m) return fieldDef.type === 'number' ? parseVietnameseNumber(m) : m;
+            if (m) return fieldDef.type === 'number' ? parseNumberForFormat(m, numFormat) : m;
             // Check next line
             if (strategy.checkNextLine && i + 1 < searchLines.length) {
               const m2 = extractPattern(searchLines[i + 1], strategy.pattern);
-              if (m2) return fieldDef.type === 'number' ? parseVietnameseNumber(m2) : m2;
+              if (m2) return fieldDef.type === 'number' ? parseNumberForFormat(m2, numFormat) : m2;
             }
             return null;
           }
@@ -201,7 +257,7 @@ function applyStrategy(
       if (!strategy.pattern) return null;
       const text = strategy.scope === 'full_text' ? fullText : searchLines.join('\n');
       const m = extractPattern(text, strategy.pattern);
-      if (m) return fieldDef.type === 'number' ? parseVietnameseNumber(m) : m;
+      if (m) return fieldDef.type === 'number' ? parseNumberForFormat(m, numFormat) : m;
       return null;
     }
 
@@ -209,13 +265,18 @@ function applyStrategy(
       if (!strategy.pattern) return null;
       const text = strategy.scope === 'full_text' ? fullText : searchLines.join('\n');
       const m = extractPattern(text, strategy.pattern);
-      if (m) return fieldDef.type === 'number' ? parseVietnameseNumber(m) : m;
+      if (m) return fieldDef.type === 'number' ? parseNumberForFormat(m, numFormat) : m;
       return null;
     }
 
     case 'vietnamese_date': {
       const text = strategy.scope === 'full_text' ? fullText : searchLines.join('\n');
       return extractDateFromVietnamese(text);
+    }
+
+    case 'us_date': {
+      const text = strategy.scope === 'full_text' ? fullText : searchLines.join('\n');
+      return extractDateUS(text);
     }
 
     default:
@@ -232,11 +293,14 @@ function applyTotalsFallback(
   data: Record<string, unknown>,
   lines: string[],
   template: DocumentTemplate,
+  numFormat: 'european' | 'standard',
 ): void {
-  const totalsDef = template.sections['totals'];
-  if (!totalsDef) return;
+  // Check for 'totals' or 'summary' section
+  const sectionKey = template.sections['totals'] ? 'totals' : template.sections['summary'] ? 'summary' : null;
+  if (!sectionKey) return;
+  const totalsDef = template.sections[sectionKey];
 
-  const totals = data['totals'] as Record<string, string | number> | undefined;
+  const totals = data[sectionKey] as Record<string, string | number> | undefined;
   if (!totals) return;
 
   const fallbackFields = totalsDef.fallbackNumericFields ?? [
@@ -252,12 +316,12 @@ function applyTotalsFallback(
   // Find the totals section start
   const bounds = resolveSectionBounds(totalsDef, template.sections, lines);
 
-  // Collect standalone numeric lines
+  // Collect standalone numeric lines — use detected format
   const numbers: number[] = [];
   for (let i = bounds.start; i < lines.length; i++) {
     const line = lines[i].trim();
     if (isNumericLine(line)) {
-      numbers.push(parseVietnameseNumber(line));
+      numbers.push(parseNumberForFormat(line, numFormat));
     }
   }
 

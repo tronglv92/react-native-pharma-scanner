@@ -6,7 +6,8 @@ export interface FieldStrategy {
     | 'keyword_contains'
     | 'regex'
     | 'regex_first_match'
-    | 'vietnamese_date';
+    | 'vietnamese_date'
+    | 'us_date';
   keywords?: string[];
   excludeKeywords?: string[];
   extract?:
@@ -14,7 +15,11 @@ export interface FieldStrategy {
     | 'tax_code'
     | 'company_name'
     | 'largest_number'
-    | 'regex';
+    | 'regex'
+    | 'address_street'
+    | 'address_city'
+    | 'address_state'
+    | 'address_zip';
   pattern?: string;
   checkNextLine?: boolean;
   scope?: 'full_text';
@@ -37,6 +42,10 @@ export interface SectionDef {
   itemSchema?: Record<string, FieldDef>;
   numericFields?: string[];
   fallbackNumericFields?: string[];
+  /** Merge section fields into the root object instead of nesting under section name */
+  flatten?: boolean;
+  /** Number format: 'vi' (dot=thousands, comma=decimal) or 'en' (comma=thousands, dot=decimal) */
+  numberFormat?: 'vi' | 'en';
 }
 
 export interface ConfidenceFieldRef {

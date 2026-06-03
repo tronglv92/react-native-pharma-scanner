@@ -39,6 +39,51 @@ export interface InvoiceData {
   };
 }
 
+export interface EnglishInvoiceAddress {
+  street: string;
+  city: string;
+  state: string;
+  zip_code: string;
+}
+
+export interface EnglishInvoiceData {
+  invoice_no: string;
+  date_of_issue: string;
+  seller: {
+    name: string;
+    address: EnglishInvoiceAddress;
+    tax_id: string;
+    iban: string;
+  };
+  client: {
+    name: string;
+    address: EnglishInvoiceAddress;
+    tax_id: string;
+  };
+  items: Array<{
+    no: number;
+    description: string;
+    quantity: number;
+    unit: string;
+    net_price: number;
+    net_worth: number;
+    vat_percent: number;
+    gross_worth: number;
+  }>;
+  summary: {
+    vat_percent: number;
+    net_worth: number;
+    vat: number;
+    gross_worth: number;
+    total: {
+      net_worth: number;
+      vat: number;
+      gross_worth: number;
+    };
+    amountInWords: string;
+  };
+}
+
 export interface PrescriptionData {
   patient: {
     name: string;
