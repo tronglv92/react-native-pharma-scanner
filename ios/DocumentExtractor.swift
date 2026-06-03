@@ -2,18 +2,18 @@ import Foundation
 import UIKit
 import NitroModules
 
+private struct ExtractorError: Error, LocalizedError {
+  let message: String
+  var errorDescription: String? { message }
+}
+
 final class DocumentExtractor {
   static let shared = DocumentExtractor()
 
-  private var apiKey: String?
-  private var baseUrl: String = "https://generativelanguage.googleapis.com"
-
   private init() {}
 
-  func configure(apiKey: String, baseUrl: String) {
-    self.apiKey = apiKey
-    self.baseUrl = baseUrl.isEmpty ? "https://generativelanguage.googleapis.com" : baseUrl
-  }
+  /// No-op — kept for Nitro bridge API compatibility.
+  func configure(apiKey: String, baseUrl: String) {}
 
   func extract(
     imageUri: String,
@@ -33,65 +33,13 @@ final class DocumentExtractor {
       )
     }
 
-    let useLLM = !forceOffline
-      && NetworkMonitor.shared.isConnected
-      && apiKey != nil
-      && !(apiKey?.isEmpty ?? true)
-
-    if useLLM {
-      // Vision-first: send image directly to Gemini
-      do {
-        let imageData = try loadImageData(from: imageUri)
-        let llm = LLMExtractor(apiKey: apiKey!, baseUrl: baseUrl)
-        let result = try await llm.extractFromImage(
-          imageData: imageData,
-          documentType: documentType,
-          language: language,
-          customPrompt: customPrompt
-        )
-        let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
-        let resolvedType = result.detectedDocumentType ?? documentType
-
-        return DocumentExtractionResult(
-          documentType: resolvedType,
-          data: result.jsonString,
-          rawText: "",
-          confidence: 0.90,
-          extractionMethod: "vision",
-          processingTimeMs: elapsed,
-          ocrTimeMs: 0,
-          warnings: []
-        )
-      } catch {
-        // Vision failed — fall back to OCR + template
-        let fallbackResult = try await ocrAndTemplateFallback(
-          imageUri: imageUri,
-          documentType: documentType,
-          language: language,
-          startTime: startTime,
-          warnings: ["Vision extraction failed: \(error.localizedDescription). Fell back to OCR + template."]
-        )
-        return fallbackResult
-      }
-    } else {
-      // Offline / no API key — OCR + template
-      var warnings: [String] = []
-      if forceOffline {
-        warnings.append("Offline mode forced by user.")
-      } else if apiKey == nil || (apiKey?.isEmpty ?? true) {
-        warnings.append("No API key configured. Using template extraction.")
-      } else if !NetworkMonitor.shared.isConnected {
-        warnings.append("No network connection. Using template extraction.")
-      }
-
-      return try await ocrAndTemplateFallback(
-        imageUri: imageUri,
-        documentType: documentType,
-        language: language,
-        startTime: startTime,
-        warnings: warnings
-      )
-    }
+    // All other extraction (Mistral, Template) is handled in JS.
+    // Native fallback: return raw OCR text.
+    return try await ocrFallback(
+      imageUri: imageUri,
+      documentType: documentType,
+      startTime: startTime
+    )
   }
 
   private func foundationModelExtraction(
@@ -100,12 +48,12 @@ final class DocumentExtractor {
     startTime: CFAbsoluteTime
   ) async throws -> DocumentExtractionResult {
     guard #available(iOS 26.0, *) else {
-      throw LLMExtractorError(message: "Foundation Models requires iOS 26 or later.")
+      throw ExtractorError(message: "Foundation Models requires iOS 26 or later.")
     }
 
     let imageData = try loadImageData(from: imageUri)
     guard let uiImage = UIImage(data: imageData) else {
-      throw LLMExtractorError(message: "Failed to create image from data.")
+      throw ExtractorError(message: "Failed to create image from data.")
     }
 
     let ocrStart = CFAbsoluteTimeGetCurrent()
@@ -113,7 +61,7 @@ final class DocumentExtractor {
     let ocrTimeMs = (CFAbsoluteTimeGetCurrent() - ocrStart) * 1000
 
     guard !ocrText.isEmpty else {
-      throw LLMExtractorError(message: "No text recognized in the image.")
+      throw ExtractorError(message: "No text recognized in the image.")
     }
 
     let invoiceData = try await FoundationModelInvoiceExtractor.extractInvoice(ocrText: ocrText)
@@ -136,24 +84,22 @@ final class DocumentExtractor {
     let path: String
     if imageUri.hasPrefix("file://") {
       guard let fileUrl = URL(string: imageUri) else {
-        throw LLMExtractorError(message: "Invalid image URI: \(imageUri)")
+        throw ExtractorError(message: "Invalid image URI: \(imageUri)")
       }
       path = fileUrl.path
     } else {
       path = imageUri
     }
     guard FileManager.default.fileExists(atPath: path) else {
-      throw LLMExtractorError(message: "Image file not found at: \(path)")
+      throw ExtractorError(message: "Image file not found at: \(path)")
     }
     return try Data(contentsOf: URL(fileURLWithPath: path))
   }
 
-  private func ocrAndTemplateFallback(
+  private func ocrFallback(
     imageUri: String,
     documentType: String,
-    language: String,
-    startTime: CFAbsoluteTime,
-    warnings: [String]
+    startTime: CFAbsoluteTime
   ) async throws -> DocumentExtractionResult {
     let processor = OcrProcessor()
     let ocrResult = try await processor.recognizeText(imageUri: imageUri)
@@ -161,7 +107,6 @@ final class DocumentExtractor {
     let ocrTimeMs = ocrResult.processingTimeMs
     let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
 
-    // Return raw OCR text — structured extraction is handled by the JS template engine
     let lines = ocrText.components(separatedBy: "\n")
       .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
       .filter { !$0.isEmpty }
@@ -177,7 +122,7 @@ final class DocumentExtractor {
       extractionMethod: "ocr_only",
       processingTimeMs: elapsed,
       ocrTimeMs: ocrTimeMs,
-      warnings: warnings + ["Template extraction moved to JS engine. Use Template (offline) mode for structured extraction."]
+      warnings: ["Use Template (offline) or Mistral mode for structured extraction."]
     )
   }
 }
