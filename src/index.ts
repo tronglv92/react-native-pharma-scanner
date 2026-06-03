@@ -9,4 +9,4 @@ export { DOCUMENT_TYPES, parseDocumentData } from './document-types';
 export type { InvoiceData, PrescriptionData, ReceiptData, PurchaseOrderData, DeliveryNoteData, CertificateData, DocumentTypeInfo } from './document-types';
 export { extractWithTemplate } from './template-engine';
 export type { DocumentTemplate, TemplateResult } from './template-engine';
-export { registerTemplate, registerTemplateObject, unregisterTemplate, getCustomTemplates, getAllTemplates } from './templates';
+export { registerTemplateObject, unregisterTemplate, getCustomTemplates, getAllTemplates } from './templates';
