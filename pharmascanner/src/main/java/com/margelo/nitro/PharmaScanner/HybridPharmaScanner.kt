@@ -121,4 +121,42 @@ class HybridPharmaScanner : HybridPharmaScannerSpec() {
         OcrManager.onTextRecognizedCallback = callback
         Log.d(TAG, "setOnTextRecognized: registered callback. Use recognizeText() with image URI on Android.")
     }
+
+    override fun recognizeDocument(imageUri: String): Promise<OcrResult> {
+        return Promise.async {
+            OcrManager.recognizeText(imageUri)
+        }
+    }
+
+    override fun configure(apiKey: String, baseUrl: String): Unit {
+        DocumentExtractor.configure(apiKey, baseUrl)
+    }
+
+    override fun extractDocument(imageUri: String, options: ExtractionOptions): Promise<DocumentExtractionResult> {
+        return Promise.async {
+            DocumentExtractor.extract(
+                imageUri = imageUri,
+                documentType = options.documentType,
+                language = options.language,
+                customPrompt = options.customPrompt,
+                forceOffline = options.forceOffline ?: false
+            )
+        }
+    }
+
+    override fun isLocalLlmModelReady(): Boolean {
+        return LlamaCppManager.isModelDownloaded
+    }
+
+    override fun downloadLocalLlmModel(onProgress: (progress: Double) -> Unit): Promise<Unit> {
+        return Promise.async {
+            LlamaCppManager.downloadModel { progress ->
+                onProgress(progress)
+            }
+        }
+    }
+
+    override fun unloadLocalLlmModel(): Unit {
+        LlamaCppManager.unloadModel()
+    }
 }

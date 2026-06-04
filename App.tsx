@@ -28,8 +28,8 @@ import type {
   DocumentExtractionResult,
 } from './src';
 import Config from 'react-native-config';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { extractWithMistral } from './src/mistral';
-
 
 type AppMode =
   | 'home'
@@ -86,7 +86,8 @@ function App(): React.JSX.Element {
     useState<DocumentExtractionResult | null>(null);
 
   type ExtractionMode = 'mistral' | 'foundation_models' | 'local_llm';
-  const [extractionMode, setExtractionMode] = useState<ExtractionMode>('mistral');
+  const [extractionMode, setExtractionMode] =
+    useState<ExtractionMode>('mistral');
 
   // Local LLM state
   const [llmDownloadProgress, setLlmDownloadProgress] = useState(0);
@@ -470,7 +471,10 @@ function App(): React.JSX.Element {
         );
         setExtractionResult(result);
       } else {
-        Alert.alert('No Extraction Method', 'No extraction method available. Please select a valid mode.');
+        Alert.alert(
+          'No Extraction Method',
+          'No extraction method available. Please select a valid mode.',
+        );
         setAppMode('extract-pick');
       }
     } catch (e) {
@@ -479,6 +483,117 @@ function App(): React.JSX.Element {
     } finally {
       setIsProcessing(false);
       setIsScanning(false);
+    }
+  };
+
+  // Pick image from gallery and extract (for emulator / testing)
+  const handlePickAndExtract = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        selectionLimit: 1,
+      });
+
+      if (result.didCancel || !result.assets || result.assets.length === 0) {
+        return;
+      }
+
+      const asset = result.assets[0];
+      if (!asset.uri) {
+        Alert.alert('Error', 'No image URI returned');
+        return;
+      }
+
+      const pickedImage: CapturedImage = {
+        uri: asset.uri,
+        width: asset.width ?? 0,
+        height: asset.height ?? 0,
+      };
+
+      setAppMode('extract');
+      setCapturedImage(pickedImage);
+      setExtractionResult(null);
+      setScannedImages([]);
+      setIsProcessing(true);
+
+      if (extractionMode === 'local_llm') {
+        if (!scanner.isLocalLlmModelReady()) {
+          setIsProcessing(false);
+          Alert.alert(
+            'Model Required',
+            'The Qwen3-1.7B model (~1.1GB) needs to be downloaded. Download now?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+                onPress: () => setAppMode('extract-pick'),
+              },
+              {
+                text: 'Download',
+                onPress: async () => {
+                  setIsDownloadingModel(true);
+                  setLlmDownloadProgress(0);
+                  try {
+                    await scanner.downloadLocalLlmModel((progress: number) => {
+                      setLlmDownloadProgress(progress);
+                    });
+                    setIsDownloadingModel(false);
+                    setIsProcessing(true);
+                    const extracted = await scanner.extractDocument(
+                      pickedImage.uri,
+                      {
+                        documentType: selectedDocType,
+                        language: 'en',
+                        customPrompt: '__local_llm__',
+                        forceOffline: true,
+                      },
+                    );
+                    setExtractionResult(extracted);
+                    setIsProcessing(false);
+                  } catch (downloadErr) {
+                    setIsDownloadingModel(false);
+                    setIsProcessing(false);
+                    Alert.alert('Download Error', String(downloadErr));
+                    setAppMode('extract-pick');
+                  }
+                },
+              },
+            ],
+          );
+          return;
+        }
+        const extracted = await scanner.extractDocument(pickedImage.uri, {
+          documentType: selectedDocType,
+          language: 'en',
+          customPrompt: '__local_llm__',
+          forceOffline: true,
+        });
+        setExtractionResult(extracted);
+      } else if (extractionMode === 'foundation_models') {
+        const extracted = await scanner.extractDocument(pickedImage.uri, {
+          documentType: selectedDocType,
+          language: 'en',
+          customPrompt: '__foundation_models__',
+          forceOffline: true,
+        });
+        setExtractionResult(extracted);
+      } else if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
+        const extracted = await extractWithMistral(
+          MISTRAL_API_KEY,
+          pickedImage.uri,
+          selectedDocType,
+          'vi',
+        );
+        setExtractionResult(extracted);
+      } else {
+        Alert.alert('No Extraction Method', 'No extraction method available.');
+        setAppMode('extract-pick');
+      }
+    } catch (e) {
+      Alert.alert('Extraction Error', String(e));
+      setAppMode('extract-pick');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -836,7 +951,12 @@ function App(): React.JSX.Element {
                   <Text style={styles.docTypeDesc}>{dt.description}</Text>
                 </TouchableOpacity>
               ))}
-              <Text style={[styles.sectionTitle, { color: '#00796B', marginTop: 12 }]}>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  { color: '#00796B', marginTop: 12 },
+                ]}
+              >
                 Extraction Mode
               </Text>
               <TouchableOpacity
@@ -868,32 +988,37 @@ function App(): React.JSX.Element {
                 <Text
                   style={[
                     styles.ocrToggleText,
-                    extractionMode === 'local_llm' && styles.ocrToggleTextActive,
+                    extractionMode === 'local_llm' &&
+                      styles.ocrToggleTextActive,
                   ]}
                 >
                   Local LLM (Qwen3-1.7B)
                 </Text>
                 <Text style={styles.ocrToggleHint}>
-                  On-device OCR + Qwen3 via llama.cpp - ~1.1GB download, no network after
+                  On-device OCR + Qwen3 via llama.cpp - ~1.1GB download, no
+                  network after
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.ocrToggle,
-                  extractionMode === 'foundation_models' && styles.ocrToggleActive,
+                  extractionMode === 'foundation_models' &&
+                    styles.ocrToggleActive,
                 ]}
                 onPress={() => setExtractionMode('foundation_models')}
               >
                 <Text
                   style={[
                     styles.ocrToggleText,
-                    extractionMode === 'foundation_models' && styles.ocrToggleTextActive,
+                    extractionMode === 'foundation_models' &&
+                      styles.ocrToggleTextActive,
                   ]}
                 >
                   Foundation Models (on-device AI)
                 </Text>
                 <Text style={styles.ocrToggleHint}>
-                  Uses Apple Intelligence on-device LLM - iOS 26+, no network needed
+                  Uses Apple Intelligence on-device LLM - iOS 26+, no network
+                  needed
                 </Text>
               </TouchableOpacity>
               <View style={styles.controls}>
@@ -902,6 +1027,14 @@ function App(): React.JSX.Element {
                   onPress={handleScanAndExtract}
                 >
                   <Text style={styles.captureButtonText}>Start Scanning</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.captureButton, { backgroundColor: '#5C6BC0' }]}
+                  onPress={handlePickAndExtract}
+                >
+                  <Text style={styles.captureButtonText}>
+                    Pick from Gallery
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.controlButton}
@@ -928,7 +1061,9 @@ function App(): React.JSX.Element {
                 <View
                   style={[
                     styles.downloadProgressFill,
-                    { width: `${Math.round(llmDownloadProgress * 100)}%` as any },
+                    {
+                      width: `${Math.round(llmDownloadProgress * 100)}%` as any,
+                    },
                   ]}
                 />
               </View>
@@ -1110,7 +1245,8 @@ function App(): React.JSX.Element {
                       backgroundColor:
                         extractionResult.extractionMethod === 'vision'
                           ? '#00796B'
-                          : extractionResult.extractionMethod === 'foundation_models'
+                          : extractionResult.extractionMethod ===
+                            'foundation_models'
                           ? '#6A1B9A'
                           : extractionResult.extractionMethod === 'local_llm'
                           ? '#E65100'

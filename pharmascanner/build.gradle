@@ -20,6 +20,10 @@ android {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
 
+    ndk {
+      abiFilters "arm64-v8a", "x86_64"  // llama.cpp requires 64-bit (NEON FP16 on ARM)
+    }
+
     externalNativeBuild {
       cmake {
         cppFlags "-std=c++20"
@@ -65,6 +69,9 @@ android {
 dependencies {
   implementation "com.facebook.react:react-android"
   implementation project(':react-native-nitro-modules')  // provides HybridObject Kotlin class
+
+  // Coroutines (for Dispatchers.Default / Dispatchers.IO in LLM inference & download)
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1"
 
   // Activity KTX (for ActivityResultRegistry)
   implementation "androidx.activity:activity-ktx:1.9.3"

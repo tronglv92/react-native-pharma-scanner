@@ -1,0 +1,3 @@
+[submodule "pharmascanner/src/main/cpp/llama.cpp"]
+	path = pharmascanner/src/main/cpp/llama.cpp
+	url = https://github.com/ggml-org/llama.cpp.git
