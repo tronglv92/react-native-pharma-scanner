@@ -33,6 +33,9 @@ namespace margelo::nitro::PharmaScannerCxx {
       prototype.registerHybridMethod("setOnTextRecognized", &HybridPharmaScannerSpec::setOnTextRecognized);
       prototype.registerHybridMethod("configure", &HybridPharmaScannerSpec::configure);
       prototype.registerHybridMethod("extractDocument", &HybridPharmaScannerSpec::extractDocument);
+      prototype.registerHybridMethod("isLocalLlmModelReady", &HybridPharmaScannerSpec::isLocalLlmModelReady);
+      prototype.registerHybridMethod("downloadLocalLlmModel", &HybridPharmaScannerSpec::downloadLocalLlmModel);
+      prototype.registerHybridMethod("unloadLocalLlmModel", &HybridPharmaScannerSpec::unloadLocalLlmModel);
     });
   }
 

@@ -248,6 +248,28 @@ namespace margelo::nitro::PharmaScannerCxx {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline bool isLocalLlmModelReady() override {
+      auto __result = _swiftPart.isLocalLlmModelReady();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline std::shared_ptr<Promise<void>> downloadLocalLlmModel(const std::function<void(double /* progress */)>& onProgress) override {
+      auto __result = _swiftPart.downloadLocalLlmModel(onProgress);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
+    inline void unloadLocalLlmModel() override {
+      auto __result = _swiftPart.unloadLocalLlmModel();
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+    }
 
   private:
     ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx _swiftPart;

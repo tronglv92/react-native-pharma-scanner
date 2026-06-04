@@ -32,6 +32,9 @@ public protocol HybridPharmaScannerSpec_protocol: HybridObject {
   func setOnTextRecognized(callback: @escaping (_ result: OcrResult) -> Void) throws -> Void
   func configure(apiKey: String, baseUrl: String) throws -> Void
   func extractDocument(imageUri: String, options: ExtractionOptions) throws -> Promise<DocumentExtractionResult>
+  func isLocalLlmModelReady() throws -> Bool
+  func downloadLocalLlmModel(onProgress: @escaping (_ progress: Double) -> Void) throws -> Promise<Void>
+  func unloadLocalLlmModel() throws -> Void
 }
 
 public extension HybridPharmaScannerSpec_protocol {

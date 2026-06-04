@@ -67,6 +67,7 @@ namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 #include "JTextElement.hpp"
 #include "DocumentExtractionResult.hpp"
 #include "JDocumentExtractionResult.hpp"
+#include <NitroModules/JUnit.hpp>
 #include "FlashMode.hpp"
 #include "JFlashMode.hpp"
 #include <functional>
@@ -78,6 +79,7 @@ namespace margelo::nitro::PharmaScannerCxx { struct ExtractionOptions; }
 #include "JFunc_void_OcrResult.hpp"
 #include "ExtractionOptions.hpp"
 #include "JExtractionOptions.hpp"
+#include "JFunc_void_double.hpp"
 
 namespace margelo::nitro::PharmaScannerCxx {
 
@@ -312,6 +314,30 @@ namespace margelo::nitro::PharmaScannerCxx {
       });
       return __promise;
     }();
+  }
+  bool JHybridPharmaScannerSpec::isLocalLlmModelReady() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jboolean()>("isLocalLlmModelReady");
+    auto __result = method(_javaPart);
+    return static_cast<bool>(__result);
+  }
+  std::shared_ptr<Promise<void>> JHybridPharmaScannerSpec::downloadLocalLlmModel(const std::function<void(double /* progress */)>& onProgress) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<JFunc_void_double::javaobject> /* onProgress */)>("downloadLocalLlmModel_cxx");
+    auto __result = method(_javaPart, JFunc_void_double_cxx::fromCpp(onProgress));
+    return [&]() {
+      auto __promise = Promise<void>::create();
+      __result->cthis()->addOnResolvedListener([=](const jni::alias_ref<jni::JObject>& /* unit */) {
+        __promise->resolve();
+      });
+      __result->cthis()->addOnRejectedListener([=](const jni::alias_ref<jni::JThrowable>& __throwable) {
+        jni::JniException __jniError(__throwable);
+        __promise->reject(std::make_exception_ptr(__jniError));
+      });
+      return __promise;
+    }();
+  }
+  void JHybridPharmaScannerSpec::unloadLocalLlmModel() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<void()>("unloadLocalLlmModel");
+    method(_javaPart);
   }
 
 } // namespace margelo::nitro::PharmaScannerCxx

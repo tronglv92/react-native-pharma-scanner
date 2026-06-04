@@ -119,6 +119,23 @@ abstract class HybridPharmaScannerSpec: HybridObject() {
   @DoNotStrip
   @Keep
   abstract fun extractDocument(imageUri: String, options: ExtractionOptions): Promise<DocumentExtractionResult>
+  
+  @DoNotStrip
+  @Keep
+  abstract fun isLocalLlmModelReady(): Boolean
+  
+  abstract fun downloadLocalLlmModel(onProgress: (progress: Double) -> Unit): Promise<Unit>
+  
+  @DoNotStrip
+  @Keep
+  private fun downloadLocalLlmModel_cxx(onProgress: Func_void_double): Promise<Unit> {
+    val __result = downloadLocalLlmModel(onProgress)
+    return __result
+  }
+  
+  @DoNotStrip
+  @Keep
+  abstract fun unloadLocalLlmModel(): Unit
 
   // Default implementation of `HybridObject.toString()`
   override fun toString(): String {

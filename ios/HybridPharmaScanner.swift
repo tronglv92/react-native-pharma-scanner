@@ -149,4 +149,33 @@ class HybridPharmaScanner: HybridPharmaScannerSpec {
       )
     }
   }
+
+  // MARK: - Local LLM (Qwen3-1.7B via llama.cpp)
+
+  func isLocalLlmModelReady() throws -> Bool {
+    return LlamaCppManager.shared.isModelDownloaded
+  }
+
+  func downloadLocalLlmModel(onProgress: @escaping (Double) -> Void) throws -> Promise<Void> {
+    return Promise.async {
+      return try await withCheckedThrowingContinuation { continuation in
+        LlamaCppManager.shared.downloadModel(
+          onProgress: { progress in
+            onProgress(progress)
+          },
+          onComplete: { error in
+            if let error = error {
+              continuation.resume(throwing: error)
+            } else {
+              continuation.resume()
+            }
+          }
+        )
+      }
+    }
+  }
+
+  func unloadLocalLlmModel() throws {
+    LlamaCppManager.shared.unloadModel()
+  }
 }

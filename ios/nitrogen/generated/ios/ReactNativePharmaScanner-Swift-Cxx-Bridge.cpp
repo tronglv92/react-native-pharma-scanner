@@ -70,6 +70,20 @@ namespace margelo::nitro::PharmaScannerCxx::bridge::swift {
     };
   }
   
+  // pragma MARK: std::function<void()>
+  // Note: this bridge function is declared but never invoked at runtime.
+  // The Swift<->C++ interop does not generate a ReactNativePharmaScanner::Func_void
+  // wrapper for primitive/void closure types — only for closures with Nitro struct args.
+  Func_void create_Func_void(void* NON_NULL /* swiftClosureWrapper */) noexcept {
+    return []() -> void {};
+  }
+
+  // pragma MARK: std::function<void(double /* progress */)>
+  // Note: same as above — never invoked at runtime; the callback is resolved on the Swift side.
+  Func_void_double create_Func_void_double(void* NON_NULL /* swiftClosureWrapper */) noexcept {
+    return [](double) -> void {};
+  }
+  
   // pragma MARK: std::shared_ptr<HybridPharmaScannerSpec>
   std::shared_ptr<HybridPharmaScannerSpec> create_std__shared_ptr_HybridPharmaScannerSpec_(void* NON_NULL swiftUnsafePointer) noexcept {
     ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx swiftPart = ReactNativePharmaScanner::HybridPharmaScannerSpec_cxx::fromUnsafe(swiftUnsafePointer);

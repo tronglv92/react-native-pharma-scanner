@@ -99,6 +99,9 @@ namespace margelo::nitro::PharmaScannerCxx {
       virtual void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) = 0;
       virtual void configure(const std::string& apiKey, const std::string& baseUrl) = 0;
       virtual std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) = 0;
+      virtual bool isLocalLlmModelReady() = 0;
+      virtual std::shared_ptr<Promise<void>> downloadLocalLlmModel(const std::function<void(double /* progress */)>& onProgress) = 0;
+      virtual void unloadLocalLlmModel() = 0;
 
     protected:
       // Hybrid Setup

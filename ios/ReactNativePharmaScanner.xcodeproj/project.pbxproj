@@ -16,8 +16,10 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		837FA17898A26C51EF4E61BA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		954C5B9873C069F358E8A7B8 /* LlamaCppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20636B26A9D77C0855547E2E /* LlamaCppManager.swift */; };
 		B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */; };
-		FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */; };
+		DCCCCECFA7583C4B32BB2F50 /* llama.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD78BD8C712D41EC7128809 /* llama.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		F4D3F845A0497DC036905F32 /* llama.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AD78BD8C712D41EC7128809 /* llama.xcframework */; };
 		FA000001200000000000AA01 /* CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB01 /* CapturedImage.swift */; };
 		FA000001200000000000AA02 /* FlashMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB02 /* FlashMode.swift */; };
 		FA000001200000000000AA03 /* Func_void_CapturedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001200000000000BB03 /* Func_void_CapturedImage.swift */; };
@@ -44,6 +46,7 @@
 		FA500001500000000000AA05 /* TextElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB05 /* TextElement.swift */; };
 		FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB06 /* Func_void_OcrResult.swift */; };
 		FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA600001600000000000BB01 /* DocumentScannerManager.swift */; };
+		FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */; };
 		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
 		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
 		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
@@ -64,11 +67,26 @@
 		FACDFC322FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACDFC312FBF049A00A271C5 /* PharmaScannerCameraViewManager.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		F2E5F79FEE6484AABE85DA8F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DCCCCECFA7583C4B32BB2F50 /* llama.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* ReactNativePharmaScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativePharmaScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ReactNativePharmaScanner/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ReactNativePharmaScanner/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = ReactNativePharmaScanner/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		20636B26A9D77C0855547E2E /* LlamaCppManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LlamaCppManager.swift; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-ReactNativePharmaScanner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-ReactNativePharmaScanner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativePharmaScanner.release.xcconfig"; path = "Target Support Files/Pods-ReactNativePharmaScanner/Pods-ReactNativePharmaScanner.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-ReactNativePharmaScanner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ReactNativePharmaScanner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,10 +94,10 @@
 		73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentExtractor.swift; sourceTree = "<group>"; };
 		73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentOcrProcessor.swift; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
+		7AD78BD8C712D41EC7128809 /* llama.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = llama.xcframework; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		86DEBCA17B7BFC8E1094DFE7 /* DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentExtractionResult.swift; sourceTree = "<group>"; };
 		D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Func_void_DocumentExtractionResult.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoundationModelInvoiceExtractor.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FA000001200000000000BB01 /* CapturedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImage.swift; sourceTree = "<group>"; };
 		FA000001200000000000BB02 /* FlashMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashMode.swift; sourceTree = "<group>"; };
@@ -146,6 +164,7 @@
 		FA500001500000000000DD04 /* TextElement.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextElement.kt; sourceTree = "<group>"; };
 		FA500001500000000000DD05 /* TextLine.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextLine.kt; sourceTree = "<group>"; };
 		FA600001600000000000BB01 /* DocumentScannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerManager.swift; sourceTree = "<group>"; };
+		FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoundationModelInvoiceExtractor.swift; sourceTree = "<group>"; };
 		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
 		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
@@ -180,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-ReactNativePharmaScanner.a in Frameworks */,
+				F4D3F845A0497DC036905F32 /* llama.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +228,7 @@
 				FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
+				20636B26A9D77C0855547E2E /* LlamaCppManager.swift */,
 			);
 			name = ReactNativePharmaScanner;
 			sourceTree = "<group>";
@@ -236,6 +257,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				7AD78BD8C712D41EC7128809 /* llama.xcframework */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -468,6 +490,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				F2E5F79FEE6484AABE85DA8F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -653,6 +676,7 @@
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,
 				B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */,
 				2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */,
+				954C5B9873C069F358E8A7B8 /* LlamaCppManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +693,10 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 2UD3WQS2VS;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",
@@ -785,6 +813,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 2UD3WQS2VS;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"${PODS_ROOT}/Headers/Public\"",

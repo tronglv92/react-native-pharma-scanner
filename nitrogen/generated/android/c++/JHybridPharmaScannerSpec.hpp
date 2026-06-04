@@ -73,6 +73,9 @@ namespace margelo::nitro::PharmaScannerCxx {
     void setOnTextRecognized(const std::function<void(const OcrResult& /* result */)>& callback) override;
     void configure(const std::string& apiKey, const std::string& baseUrl) override;
     std::shared_ptr<Promise<DocumentExtractionResult>> extractDocument(const std::string& imageUri, const ExtractionOptions& options) override;
+    bool isLocalLlmModelReady() override;
+    std::shared_ptr<Promise<void>> downloadLocalLlmModel(const std::function<void(double /* progress */)>& onProgress) override;
+    void unloadLocalLlmModel() override;
 
   private:
     jni::global_ref<JHybridPharmaScannerSpec::JavaPart> _javaPart;

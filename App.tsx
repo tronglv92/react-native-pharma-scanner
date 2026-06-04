@@ -29,7 +29,7 @@ import type {
 } from './src';
 import Config from 'react-native-config';
 import { extractWithMistral } from './src/mistral';
-import { extractWithTemplate } from './src/template-engine';
+
 
 type AppMode =
   | 'home'
@@ -85,8 +85,12 @@ function App(): React.JSX.Element {
   const [extractionResult, setExtractionResult] =
     useState<DocumentExtractionResult | null>(null);
 
-  type ExtractionMode = 'mistral' | 'template' | 'foundation_models';
+  type ExtractionMode = 'mistral' | 'foundation_models' | 'local_llm';
   const [extractionMode, setExtractionMode] = useState<ExtractionMode>('mistral');
+
+  // Local LLM state
+  const [llmDownloadProgress, setLlmDownloadProgress] = useState(0);
+  const [isDownloadingModel, setIsDownloadingModel] = useState(false);
 
   const stableStartRef = useRef<number | null>(null);
   const isCapturingRef = useRef(false);
@@ -392,7 +396,62 @@ function App(): React.JSX.Element {
 
       setIsProcessing(true);
 
-      if (extractionMode === 'foundation_models') {
+      if (extractionMode === 'local_llm') {
+        // On-device LLM (Qwen3-1.7B via llama.cpp)
+        if (!scanner.isLocalLlmModelReady()) {
+          // Prompt to download model
+          setIsProcessing(false);
+          Alert.alert(
+            'Model Required',
+            'The Qwen3-1.7B model (~1.1GB) needs to be downloaded. Download now?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+                onPress: () => setAppMode('extract-pick'),
+              },
+              {
+                text: 'Download',
+                onPress: async () => {
+                  setIsDownloadingModel(true);
+                  setLlmDownloadProgress(0);
+                  try {
+                    await scanner.downloadLocalLlmModel((progress: number) => {
+                      setLlmDownloadProgress(progress);
+                    });
+                    setIsDownloadingModel(false);
+                    // Model downloaded — re-trigger extraction
+                    setIsProcessing(true);
+                    const result2 = await scanner.extractDocument(
+                      results[0].uri,
+                      {
+                        documentType: selectedDocType,
+                        language: 'en',
+                        customPrompt: '__local_llm__',
+                        forceOffline: true,
+                      },
+                    );
+                    setExtractionResult(result2);
+                    setIsProcessing(false);
+                  } catch (downloadErr) {
+                    setIsDownloadingModel(false);
+                    Alert.alert('Download Error', String(downloadErr));
+                    setAppMode('extract-pick');
+                  }
+                },
+              },
+            ],
+          );
+          return;
+        }
+        const result = await scanner.extractDocument(results[0].uri, {
+          documentType: selectedDocType,
+          language: 'en',
+          customPrompt: '__local_llm__',
+          forceOffline: true,
+        });
+        setExtractionResult(result);
+      } else if (extractionMode === 'foundation_models') {
         // On-device Apple Intelligence (iOS 26+)
         const result = await scanner.extractDocument(results[0].uri, {
           documentType: selectedDocType,
@@ -411,28 +470,8 @@ function App(): React.JSX.Element {
         );
         setExtractionResult(result);
       } else {
-        // On-device OCR + JS template extraction
-        const startTime = Date.now();
-        const ocrStart = Date.now();
-        const ocrResult2 = await scanner.recognizeText(results[0].uri);
-        const ocrTimeMs = Date.now() - ocrStart;
-        const templateResult = extractWithTemplate(
-          ocrResult2.text,
-          selectedDocType,
-          'vi',
-        );
-        const processingTimeMs = Date.now() - startTime;
-        const result: DocumentExtractionResult = {
-          documentType: templateResult.documentType,
-          data: templateResult.data,
-          rawText: ocrResult2.text,
-          confidence: templateResult.confidence,
-          extractionMethod: 'template',
-          processingTimeMs,
-          ocrTimeMs,
-          warnings: [],
-        };
-        setExtractionResult(result);
+        Alert.alert('No Extraction Method', 'No extraction method available. Please select a valid mode.');
+        setAppMode('extract-pick');
       }
     } catch (e) {
       Alert.alert('Extraction Error', String(e));
@@ -476,6 +515,7 @@ function App(): React.JSX.Element {
     if (cameraActive) {
       handleStopCamera();
     }
+    scanner.unloadLocalLlmModel();
     handleReset();
   };
 
@@ -821,20 +861,20 @@ function App(): React.JSX.Element {
               <TouchableOpacity
                 style={[
                   styles.ocrToggle,
-                  extractionMode === 'template' && styles.ocrToggleActive,
+                  extractionMode === 'local_llm' && styles.ocrToggleActive,
                 ]}
-                onPress={() => setExtractionMode('template')}
+                onPress={() => setExtractionMode('local_llm')}
               >
                 <Text
                   style={[
                     styles.ocrToggleText,
-                    extractionMode === 'template' && styles.ocrToggleTextActive,
+                    extractionMode === 'local_llm' && styles.ocrToggleTextActive,
                   ]}
                 >
-                  Template (offline)
+                  Local LLM (Qwen3-1.7B)
                 </Text>
                 <Text style={styles.ocrToggleHint}>
-                  Uses on-device OCR + template extraction - no network needed
+                  On-device OCR + Qwen3 via llama.cpp - ~1.1GB download, no network after
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -876,6 +916,27 @@ function App(): React.JSX.Element {
           {/* Extract mode — scanning indicator (VisionKit handles its own UI) */}
 
           {/* Camera active — Barcode Auto Scan mode (handled by fullscreen QRScannerScreen) */}
+
+          {/* LLM model download progress */}
+          {isDownloadingModel && (
+            <View style={styles.processingContainer}>
+              <ActivityIndicator size="large" color="#E65100" />
+              <Text style={styles.processingText}>
+                Downloading Qwen3-1.7B model...
+              </Text>
+              <View style={styles.downloadProgressBar}>
+                <View
+                  style={[
+                    styles.downloadProgressFill,
+                    { width: `${Math.round(llmDownloadProgress * 100)}%` as any },
+                  ]}
+                />
+              </View>
+              <Text style={styles.processingText}>
+                {Math.round(llmDownloadProgress * 100)}%
+              </Text>
+            </View>
+          )}
 
           {/* Processing indicator */}
           {isProcessing && (
@@ -1051,6 +1112,8 @@ function App(): React.JSX.Element {
                           ? '#00796B'
                           : extractionResult.extractionMethod === 'foundation_models'
                           ? '#6A1B9A'
+                          : extractionResult.extractionMethod === 'local_llm'
+                          ? '#E65100'
                           : extractionResult.extractionMethod === 'ocr'
                           ? '#2196F3'
                           : '#FF9800',
@@ -1616,6 +1679,19 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#888',
     marginTop: 2,
+  },
+  downloadProgressBar: {
+    width: 260,
+    height: 8,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 4,
+    marginTop: 8,
+    overflow: 'hidden',
+  },
+  downloadProgressFill: {
+    height: '100%',
+    backgroundColor: '#E65100',
+    borderRadius: 4,
   },
 });
 
