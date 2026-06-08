@@ -33,15 +33,6 @@ final class DocumentExtractor {
       )
     }
 
-    // FoundationModels path (iOS 26+, on-device AI)
-    if customPrompt == "__foundation_models__" {
-      return try await foundationModelExtraction(
-        imageUri: imageUri,
-        documentType: documentType,
-        startTime: startTime
-      )
-    }
-
     // All other extraction (Mistral) is handled in JS.
     // Native fallback: return raw OCR text.
     return try await ocrFallback(
@@ -198,44 +189,6 @@ final class DocumentExtractor {
       return jsonCandidate
     }
     return jsonCandidate // Return even if not perfectly valid — caller can handle
-  }
-
-  private func foundationModelExtraction(
-    imageUri: String,
-    documentType: String,
-    startTime: CFAbsoluteTime
-  ) async throws -> DocumentExtractionResult {
-    guard #available(iOS 26.0, *) else {
-      throw ExtractorError(message: "Foundation Models requires iOS 26 or later.")
-    }
-
-    let imageData = try loadImageData(from: imageUri)
-    guard let uiImage = UIImage(data: imageData) else {
-      throw ExtractorError(message: "Failed to create image from data.")
-    }
-
-    let ocrStart = CFAbsoluteTimeGetCurrent()
-    let ocrText = try await FoundationModelInvoiceExtractor.recognizeText(from: uiImage)
-    let ocrTimeMs = (CFAbsoluteTimeGetCurrent() - ocrStart) * 1000
-
-    guard !ocrText.isEmpty else {
-      throw ExtractorError(message: "No text recognized in the image.")
-    }
-
-    let invoiceData = try await FoundationModelInvoiceExtractor.extractInvoice(ocrText: ocrText)
-    let jsonString = invoiceData.toJSONString() ?? "{}"
-    let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
-
-    return DocumentExtractionResult(
-      documentType: documentType == "auto" ? "invoice" : documentType,
-      data: jsonString,
-      rawText: ocrText,
-      confidence: 0.92,
-      extractionMethod: "foundation_models",
-      processingTimeMs: elapsed,
-      ocrTimeMs: ocrTimeMs,
-      warnings: []
-    )
   }
 
   private func loadImageData(from imageUri: String) throws -> Data {

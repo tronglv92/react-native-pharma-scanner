@@ -46,7 +46,6 @@
 		FA500001500000000000AA05 /* TextElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB05 /* TextElement.swift */; };
 		FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA500001500000000000BB06 /* Func_void_OcrResult.swift */; };
 		FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA600001600000000000BB01 /* DocumentScannerManager.swift */; };
-		FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */; };
 		FACDFC1A2FBEF19000A271C5 /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC172FBEF19000A271C5 /* .gitattributes */; };
 		FACDFC1B2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt in Resources */ = {isa = PBXBuildFile; fileRef = FACDFBFB2FBEF19000A271C5 /* PharmaScannerCxxOnLoad.kt */; };
 		FACDFC1C2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb in Resources */ = {isa = PBXBuildFile; fileRef = FACDFC0F2FBEF19000A271C5 /* ReactNativePharmaScanner+autolinking.rb */; };
@@ -164,7 +163,6 @@
 		FA500001500000000000DD04 /* TextElement.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextElement.kt; sourceTree = "<group>"; };
 		FA500001500000000000DD05 /* TextLine.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = TextLine.kt; sourceTree = "<group>"; };
 		FA600001600000000000BB01 /* DocumentScannerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerManager.swift; sourceTree = "<group>"; };
-		FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FoundationModelInvoiceExtractor.swift; sourceTree = "<group>"; };
 		FACDFBF72FBEF19000A271C5 /* JHybridPharmaScannerSpec.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JHybridPharmaScannerSpec.hpp; sourceTree = "<group>"; };
 		FACDFBF82FBEF19000A271C5 /* JHybridPharmaScannerSpec.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JHybridPharmaScannerSpec.cpp; sourceTree = "<group>"; };
 		FACDFBFA2FBEF19000A271C5 /* HybridPharmaScannerSpec.kt */ = {isa = PBXFileReference; lastKnownFileType = text; path = HybridPharmaScannerSpec.kt; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 				FA400001400000000000BB01 /* BarcodeScanner.swift */,
 				FA500001500000000000BB01 /* OcrProcessor.swift */,
 				FA600001600000000000BB01 /* DocumentScannerManager.swift */,
-				FA700001700000000000BB01 /* FoundationModelInvoiceExtractor.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
 				20636B26A9D77C0855547E2E /* LlamaCppManager.swift */,
@@ -670,7 +667,6 @@
 				FA500001500000000000AA05 /* TextElement.swift in Sources */,
 				FA500001500000000000AA06 /* Func_void_OcrResult.swift in Sources */,
 				FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */,
-				FA700001700000000000AA01 /* FoundationModelInvoiceExtractor.swift in Sources */,
 				5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */,
 				5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */,
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,
