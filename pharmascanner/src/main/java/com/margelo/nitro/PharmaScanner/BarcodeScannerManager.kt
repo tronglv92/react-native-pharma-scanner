@@ -17,8 +17,7 @@ object BarcodeScannerManager {
     var activeFormats: Array<BarcodeFormat> = emptyArray()
 
     suspend fun scanBarcodes(options: com.margelo.nitro.PharmaScanner.BarcodeScanOptions): Array<BarcodeResult> {
-        val context = ActivityProvider.currentActivity
-            ?: throw IllegalStateException("Activity not available")
+        val context = ActivityProvider.applicationContext
 
         val uri = Uri.parse(options.imageUri)
         val image = InputImage.fromFilePath(context, uri)

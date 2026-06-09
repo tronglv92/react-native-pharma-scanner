@@ -6,6 +6,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.margelo.nitro.core.Promise
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HybridPharmaScanner : HybridPharmaScannerSpec() {
 
@@ -133,19 +135,29 @@ class HybridPharmaScanner : HybridPharmaScannerSpec() {
     }
 
     override fun extractDocument(imageUri: String, options: ExtractionOptions): Promise<DocumentExtractionResult> {
+        Log.d(TAG, "extractDocument called: mode=${options.customPrompt}, type=${options.documentType}")
         return Promise.async {
-            DocumentExtractor.extract(
-                imageUri = imageUri,
-                documentType = options.documentType,
-                language = options.language,
-                customPrompt = options.customPrompt,
-                forceOffline = options.forceOffline ?: false
-            )
+            // Run entire extraction off the main thread to prevent ANR
+            withContext(Dispatchers.Default) {
+                Log.d(TAG, "extractDocument coroutine started on ${Thread.currentThread().name}")
+                DocumentExtractor.extract(
+                    imageUri = imageUri,
+                    documentType = options.documentType,
+                    language = options.language,
+                    customPrompt = options.customPrompt,
+                    forceOffline = options.forceOffline ?: false
+                )
+            }
         }
     }
 
     override fun isLocalLlmModelReady(): Boolean {
-        return LlamaCppManager.isModelDownloaded
+        return try {
+            LlamaCppManager.isModelDownloaded
+        } catch (e: Exception) {
+            Log.w(TAG, "isLocalLlmModelReady check failed", e)
+            false
+        }
     }
 
     override fun downloadLocalLlmModel(onProgress: (progress: Double) -> Unit): Promise<Unit> {

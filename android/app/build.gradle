@@ -86,6 +86,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    packagingOptions {
+        // Extract native libs to disk so ggml can dlopen CPU backend variants at runtime
+        jniLibs.useLegacyPackaging = true
+    }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')

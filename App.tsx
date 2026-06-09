@@ -16,7 +16,10 @@ import {
   PharmaScannerCameraView,
   DOCUMENT_TYPES,
   parseDocumentData,
+  enrichExtractionResult,
+  mapToScanError,
 } from './src';
+import type { ValidationIssue } from './src';
 import { QRScannerScreenWithRef } from './src/QRScannerScreen';
 import type { QRScannerScreenHandle } from './src/QRScannerScreen';
 import type {
@@ -30,6 +33,7 @@ import type {
 import Config from 'react-native-config';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { extractWithMistral } from './src/mistral';
+import { ScanError } from './src/utils/errors';
 
 type AppMode =
   | 'home'
@@ -93,10 +97,16 @@ function App(): React.JSX.Element {
   const [llmDownloadProgress, setLlmDownloadProgress] = useState(0);
   const [isDownloadingModel, setIsDownloadingModel] = useState(false);
 
+  // Validation state
+  const [validationIssues, setValidationIssues] = useState<ValidationIssue[]>(
+    [],
+  );
+
   const stableStartRef = useRef<number | null>(null);
   const isCapturingRef = useRef(false);
   const scanCountRef = useRef(0);
   const qrScannerRef = useRef<QRScannerScreenHandle>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     try {
@@ -107,6 +117,56 @@ function App(): React.JSX.Element {
       setPing(`Error: ${msg}`);
       setVersion(`Error: ${msg}`);
     }
+  }, []);
+
+  // Cleanup: abort in-flight operations and unload model on unmount
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+      scanner.unloadLocalLlmModel();
+    };
+  }, []);
+
+  const showScanError = useCallback((e: unknown) => {
+    const scanError = mapToScanError(e);
+    let title = 'Error';
+    let message = scanError.message;
+
+    switch (scanError.code) {
+      case 'CAMERA_PERMISSION_DENIED':
+        title = 'Camera Access Required';
+        message = 'Please grant camera access in Settings';
+        break;
+      case 'CAMERA_NOT_AVAILABLE':
+        title = 'Camera Unavailable';
+        message = 'Camera is not available on this device';
+        break;
+      case 'IMAGE_TOO_BLURRY':
+        title = 'Image Too Blurry';
+        message = 'Please retake the photo with better focus';
+        break;
+      case 'MODEL_NOT_READY':
+        title = 'Model Not Ready';
+        message = 'The AI model needs to be downloaded first';
+        break;
+      case 'NO_DOCUMENT_DETECTED':
+        title = 'No Document Found';
+        message = 'Could not detect a document in the image';
+        break;
+      case 'OCR_FAILED':
+        title = 'Text Recognition Failed';
+        message = 'Could not recognize text in the image';
+        break;
+      case 'PROCESSING_CANCELLED':
+        // Don't show alert for user-initiated cancellations
+        return;
+      case 'NETWORK_ERROR':
+        title = 'Network Error';
+        message = 'Please check your internet connection and try again';
+        break;
+    }
+
+    Alert.alert(title, message);
   }, []);
 
   const captureAndCorrect = useCallback(async () => {
@@ -240,9 +300,10 @@ function App(): React.JSX.Element {
       scanCountRef.current = 0;
       setOcrResult(null);
       setExtractionResult(null);
+      setValidationIssues([]);
       stableStartRef.current = null;
     } catch (e) {
-      Alert.alert('Error', String(e));
+      showScanError(e);
     }
   };
 
@@ -374,10 +435,16 @@ function App(): React.JSX.Element {
 
   // Extract: use VisionKit scanner then extract document
   const handleScanAndExtract = async () => {
+    // Abort any previous in-flight extraction
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setIsScanning(true);
     setAppMode('extract');
     setCapturedImage(null);
     setExtractionResult(null);
+    setValidationIssues([]);
     setScannedImages([]);
 
     try {
@@ -398,13 +465,13 @@ function App(): React.JSX.Element {
       setIsProcessing(true);
 
       if (extractionMode === 'local_llm') {
-        // On-device LLM (Qwen3-1.7B via llama.cpp)
+        // On-device LLM (Qwen3 via llama.cpp)
         if (!scanner.isLocalLlmModelReady()) {
           // Prompt to download model
           setIsProcessing(false);
           Alert.alert(
             'Model Required',
-            'The Qwen3-1.7B model (~1.1GB) needs to be downloaded. Download now?',
+            'The Qwen3 model needs to be downloaded first. Download now?',
             [
               {
                 text: 'Cancel',
@@ -432,11 +499,13 @@ function App(): React.JSX.Element {
                         forceOffline: true,
                       },
                     );
-                    setExtractionResult(result2);
+                    const enriched = enrichExtractionResult(result2);
+                    setExtractionResult(enriched);
+                    setValidationIssues(enriched.validationIssues);
                     setIsProcessing(false);
                   } catch (downloadErr) {
                     setIsDownloadingModel(false);
-                    Alert.alert('Download Error', String(downloadErr));
+                    showScanError(downloadErr);
                     setAppMode('extract-pick');
                   }
                 },
@@ -451,7 +520,9 @@ function App(): React.JSX.Element {
           customPrompt: '__local_llm__',
           forceOffline: true,
         });
-        setExtractionResult(result);
+        const enriched = enrichExtractionResult(result);
+        setExtractionResult(enriched);
+        setValidationIssues(enriched.validationIssues);
       } else if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
         // Full Mistral pipeline (Mistral OCR + Chat)
         const result = await extractWithMistral(
@@ -459,8 +530,12 @@ function App(): React.JSX.Element {
           results[0].uri,
           selectedDocType,
           'vi',
+          undefined,
+          controller.signal,
         );
-        setExtractionResult(result);
+        const enriched = enrichExtractionResult(result);
+        setExtractionResult(enriched);
+        setValidationIssues(enriched.validationIssues);
       } else {
         Alert.alert(
           'No Extraction Method',
@@ -469,7 +544,7 @@ function App(): React.JSX.Element {
         setAppMode('extract-pick');
       }
     } catch (e) {
-      Alert.alert('Extraction Error', String(e));
+      showScanError(e);
       setAppMode('extract-pick');
     } finally {
       setIsProcessing(false);
@@ -479,6 +554,11 @@ function App(): React.JSX.Element {
 
   // Pick image from gallery and extract (for emulator / testing)
   const handlePickAndExtract = async () => {
+    // Abort any previous in-flight extraction
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       const result = await launchImageLibrary({
         mediaType: 'photo',
@@ -504,6 +584,7 @@ function App(): React.JSX.Element {
       setAppMode('extract');
       setCapturedImage(pickedImage);
       setExtractionResult(null);
+      setValidationIssues([]);
       setScannedImages([]);
       setIsProcessing(true);
 
@@ -512,7 +593,7 @@ function App(): React.JSX.Element {
           setIsProcessing(false);
           Alert.alert(
             'Model Required',
-            'The Qwen3-1.7B model (~1.1GB) needs to be downloaded. Download now?',
+            'The Qwen3 model needs to be downloaded first. Download now?',
             [
               {
                 text: 'Cancel',
@@ -539,12 +620,14 @@ function App(): React.JSX.Element {
                         forceOffline: true,
                       },
                     );
-                    setExtractionResult(extracted);
+                    const enriched = enrichExtractionResult(extracted);
+                    setExtractionResult(enriched);
+                    setValidationIssues(enriched.validationIssues);
                     setIsProcessing(false);
                   } catch (downloadErr) {
                     setIsDownloadingModel(false);
                     setIsProcessing(false);
-                    Alert.alert('Download Error', String(downloadErr));
+                    showScanError(downloadErr);
                     setAppMode('extract-pick');
                   }
                 },
@@ -559,21 +642,27 @@ function App(): React.JSX.Element {
           customPrompt: '__local_llm__',
           forceOffline: true,
         });
-        setExtractionResult(extracted);
+        const enriched = enrichExtractionResult(extracted);
+        setExtractionResult(enriched);
+        setValidationIssues(enriched.validationIssues);
       } else if (extractionMode === 'mistral' && MISTRAL_API_KEY) {
         const extracted = await extractWithMistral(
           MISTRAL_API_KEY,
           pickedImage.uri,
           selectedDocType,
           'vi',
+          undefined,
+          controller.signal,
         );
-        setExtractionResult(extracted);
+        const enriched = enrichExtractionResult(extracted);
+        setExtractionResult(enriched);
+        setValidationIssues(enriched.validationIssues);
       } else {
         Alert.alert('No Extraction Method', 'No extraction method available.');
         setAppMode('extract-pick');
       }
     } catch (e) {
-      Alert.alert('Extraction Error', String(e));
+      showScanError(e);
       setAppMode('extract-pick');
     } finally {
       setIsProcessing(false);
@@ -597,6 +686,8 @@ function App(): React.JSX.Element {
   };
 
   const handleReset = () => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
     setCapturedImage(null);
     setCorrectedImage(null);
     setScannedImages([]);
@@ -606,6 +697,7 @@ function App(): React.JSX.Element {
     scanCountRef.current = 0;
     setOcrResult(null);
     setExtractionResult(null);
+    setValidationIssues([]);
     setAppMode('home');
   };
 
@@ -975,11 +1067,11 @@ function App(): React.JSX.Element {
                       styles.ocrToggleTextActive,
                   ]}
                 >
-                  Local LLM (Qwen3-1.7B)
+                  Local LLM (Qwen3)
                 </Text>
                 <Text style={styles.ocrToggleHint}>
-                  On-device OCR + Qwen3 via llama.cpp - ~1.1GB download, no
-                  network after
+                  On-device OCR + Qwen3 via llama.cpp - offline after
+                  download
                 </Text>
               </TouchableOpacity>
               <View style={styles.controls}>
@@ -1016,7 +1108,7 @@ function App(): React.JSX.Element {
             <View style={styles.processingContainer}>
               <ActivityIndicator size="large" color="#E65100" />
               <Text style={styles.processingText}>
-                Downloading Qwen3-1.7B model...
+                Downloading Qwen3 model...
               </Text>
               <View style={styles.downloadProgressBar}>
                 <View
@@ -1204,11 +1296,11 @@ function App(): React.JSX.Element {
                     styles.extractMethodBadge,
                     {
                       backgroundColor:
-                        extractionResult.extractionMethod === 'vision'
+                        extractionResult.extractionMethod === 'mistral'
                           ? '#00796B'
                           : extractionResult.extractionMethod === 'local_llm'
                           ? '#E65100'
-                          : extractionResult.extractionMethod === 'ocr'
+                          : extractionResult.extractionMethod === 'ocr_only'
                           ? '#2196F3'
                           : '#FF9800',
                     },
@@ -1246,6 +1338,37 @@ function App(): React.JSX.Element {
                   </Text>
                 </View>
               </View>
+
+              {/* Validation Issues */}
+              {validationIssues.length > 0 && (
+                <View style={styles.invoiceSection}>
+                  <Text
+                    style={[styles.invoiceSectionTitle, { color: '#D32F2F' }]}
+                  >
+                    Validation ({validationIssues.length} issue
+                    {validationIssues.length > 1 ? 's' : ''})
+                  </Text>
+                  {validationIssues.map((issue, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.invoiceWarning,
+                        {
+                          color:
+                            issue.severity === 'error'
+                              ? '#D32F2F'
+                              : issue.severity === 'warning'
+                              ? '#FF9800'
+                              : '#666',
+                        },
+                      ]}
+                    >
+                      [{issue.severity.toUpperCase()}] {issue.field}:{' '}
+                      {issue.message}
+                    </Text>
+                  ))}
+                </View>
+              )}
 
               {/* Warnings */}
               {extractionResult.warnings.length > 0 && (

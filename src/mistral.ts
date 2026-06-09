@@ -20,7 +20,7 @@ async function fileToBase64(uri: string): Promise<string> {
   });
 }
 
-function extractJSON(text: string): string {
+export function extractJSON(text: string): string {
   const trimmed = text.trim();
   if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
     return trimmed;
@@ -100,9 +100,68 @@ const SCHEMA_PROMPTS: Record<string, string> = {
   "type": "", "certificateNumber": "", "issuedTo": "", "issuedBy": "",
   "issueDate": "DD/MM/YYYY", "expiryDate": "DD/MM/YYYY", "details": ""
 }`,
-  auto: `First detect the document type, then extract structured data.
-Return JSON with a "_documentType" field set to one of: "invoice", "prescription", "receipt", "purchase_order", "delivery_note", "certificate", "unknown".
-Then include all extracted fields appropriate for that document type.`,
+  auto: `Detect the document type and extract structured data.
+You MUST set "_documentType" to exactly one of: "invoice", "prescription", "receipt", "purchase_order", "delivery_note", "certificate".
+Always pick the most appropriate type based on the content. Never use "unknown" or any other value.
+
+Use the corresponding JSON structure based on the detected type:
+
+For invoice/bill/hoa don:
+{
+  "_documentType": "invoice",
+  "seller": { "companyName": "", "taxCode": "", "address": "", "phone": "", "bankAccount": "" },
+  "buyer": { "companyName": "", "taxCode": "", "address": "" },
+  "metadata": { "serial": "", "number": "", "date": "DD/MM/YYYY", "form": "" },
+  "items": [{ "stt": 1, "productName": "", "lotNumber": "", "expiryDate": "", "unit": "", "quantity": 0, "unitPrice": 0, "amount": 0 }],
+  "totals": { "subtotal": 0, "vatRate": 0, "vatAmount": 0, "totalPayment": 0, "amountInWords": "" }
+}
+
+For prescription/don thuoc:
+{
+  "_documentType": "prescription",
+  "patient": { "name": "", "age": "", "gender": "", "address": "", "diagnosis": "" },
+  "doctor": { "name": "", "department": "", "hospital": "" },
+  "medications": [{ "name": "", "dosage": "", "quantity": "", "instructions": "" }],
+  "date": "DD/MM/YYYY",
+  "notes": ""
+}
+
+For receipt/phieu thu:
+{
+  "_documentType": "receipt",
+  "vendor": { "name": "", "address": "", "phone": "" },
+  "date": "DD/MM/YYYY",
+  "receiptNumber": "",
+  "items": [{ "name": "", "quantity": 0, "unitPrice": 0, "amount": 0 }],
+  "subtotal": 0, "tax": 0, "total": 0, "paymentMethod": ""
+}
+
+For purchase_order/don dat hang:
+{
+  "_documentType": "purchase_order",
+  "orderNumber": "", "date": "DD/MM/YYYY",
+  "supplier": { "name": "", "address": "", "phone": "" },
+  "buyer": { "name": "", "address": "", "phone": "" },
+  "items": [{ "name": "", "quantity": 0, "unitPrice": 0, "amount": 0, "unit": "" }],
+  "totalAmount": 0, "notes": ""
+}
+
+For delivery_note/phieu giao hang:
+{
+  "_documentType": "delivery_note",
+  "deliveryNumber": "", "date": "DD/MM/YYYY",
+  "sender": { "name": "", "address": "" },
+  "receiver": { "name": "", "address": "" },
+  "items": [{ "name": "", "quantity": 0, "unit": "", "lotNumber": "", "expiryDate": "" }],
+  "notes": ""
+}
+
+For certificate/giay chung nhan:
+{
+  "_documentType": "certificate",
+  "type": "", "certificateNumber": "", "issuedTo": "", "issuedBy": "",
+  "issueDate": "DD/MM/YYYY", "expiryDate": "DD/MM/YYYY", "details": ""
+}`,
 };
 
 function getSchemaPrompt(documentType: string): string {
@@ -114,6 +173,7 @@ function getSchemaPrompt(documentType: string): string {
 export async function mistralOcr(
   apiKey: string,
   imageUri: string,
+  signal?: AbortSignal,
 ): Promise<string> {
   const base64 = await fileToBase64(imageUri);
   const dataUri = `data:image/jpeg;base64,${base64}`;
@@ -131,6 +191,7 @@ export async function mistralOcr(
         image_url: dataUri,
       },
     }),
+    signal,
   });
 
   if (!response.ok) {
@@ -151,6 +212,7 @@ export async function mistralExtractJson(
   documentType: string,
   language: string,
   customPrompt?: string,
+  signal?: AbortSignal,
 ): Promise<{ jsonString: string; detectedDocumentType?: string }> {
   const systemPrompt = getSystemPrompt(language);
   const schemaPrompt = customPrompt || getSchemaPrompt(documentType);
@@ -172,6 +234,7 @@ export async function mistralExtractJson(
       ],
       max_tokens: 4096,
     }),
+    signal,
   });
 
   if (!response.ok) {
@@ -181,7 +244,7 @@ export async function mistralExtractJson(
 
   const data = await response.json();
   const text: string = data.choices?.[0]?.message?.content ?? '';
-  const jsonString = extractJSON(text);
+  let jsonString = extractJSON(text);
 
   // Validate JSON
   const parsed = JSON.parse(jsonString);
@@ -189,12 +252,24 @@ export async function mistralExtractJson(
   let detectedDocumentType: string | undefined;
   if (documentType === 'auto' && parsed._documentType) {
     detectedDocumentType = parsed._documentType;
+    // Strip _documentType from the output data to keep it clean
+    delete parsed._documentType;
+    jsonString = JSON.stringify(parsed);
   }
 
   return { jsonString, detectedDocumentType };
 }
 
 // --- Combined: Image → OCR → JSON ---
+
+const VALID_DOC_TYPES = [
+  'invoice',
+  'prescription',
+  'receipt',
+  'purchase_order',
+  'delivery_note',
+  'certificate',
+];
 
 export interface MistralExtractionResult {
   documentType: string;
@@ -213,11 +288,12 @@ export async function extractWithMistral(
   documentType: string,
   language: string,
   customPrompt?: string,
+  signal?: AbortSignal,
 ): Promise<MistralExtractionResult> {
   const startTime = Date.now();
 
   // Step 1: Mistral OCR
-  const ocrText = await mistralOcr(apiKey, imageUri);
+  const ocrText = await mistralOcr(apiKey, imageUri, signal);
   const ocrTimeMs = Date.now() - startTime;
 
   // Step 2: Mistral Chat for JSON extraction
@@ -227,19 +303,54 @@ export async function extractWithMistral(
     documentType,
     language,
     customPrompt,
+    signal,
   );
 
   const processingTimeMs = Date.now() - startTime;
-  const resolvedType = result.detectedDocumentType ?? documentType;
+  let resolvedType = result.detectedDocumentType ?? documentType;
+
+  // Validate resolved type — fall back to 'invoice' for unknown/invalid types
+  if (!VALID_DOC_TYPES.includes(resolvedType)) {
+    resolvedType = 'invoice';
+  }
+
+  // Compute dynamic confidence based on JSON parse success and field count
+  const confidence = computeMistralConfidence(result.jsonString);
 
   return {
     documentType: resolvedType,
     data: result.jsonString,
     rawText: ocrText,
-    confidence: 0.9,
+    confidence,
     extractionMethod: 'mistral',
     processingTimeMs,
     ocrTimeMs,
     warnings: [],
   };
+}
+
+export function computeMistralConfidence(jsonString: string): number {
+  try {
+    const parsed = JSON.parse(jsonString);
+    if (!parsed || typeof parsed !== 'object') return 0.5;
+
+    // Count non-empty fields
+    const fields = Object.keys(parsed);
+    let filledCount = 0;
+    for (const key of fields) {
+      const val = parsed[key];
+      if (val === '' || val === 0 || val === null || val === undefined) continue;
+      if (Array.isArray(val) && val.length === 0) continue;
+      filledCount++;
+    }
+
+    if (fields.length === 0) return 0.5;
+
+    const fillRatio = filledCount / fields.length;
+    // Base confidence 0.7, scaled up by fill ratio to max 0.95
+    return Math.min(0.95, 0.7 + fillRatio * 0.25);
+  } catch {
+    // JSON parse failed — low confidence
+    return 0.4;
+  }
 }

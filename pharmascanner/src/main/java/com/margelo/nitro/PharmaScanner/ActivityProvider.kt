@@ -2,17 +2,28 @@ package com.margelo.nitro.PharmaScanner
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import java.lang.ref.WeakReference
 
 object ActivityProvider {
 
     private var activityRef: WeakReference<Activity>? = null
+    private var appContext: Context? = null
 
     val currentActivity: Activity?
         get() = activityRef?.get()
 
+    /**
+     * Application context — always available after init().
+     * Use this for filesystem operations (filesDir, cacheDir, etc.)
+     * that don't require an Activity.
+     */
+    val applicationContext: Context
+        get() = appContext ?: throw IllegalStateException("ActivityProvider not initialized. Call init() from Application.onCreate().")
+
     fun init(application: Application) {
+        appContext = application.applicationContext
         application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) {
                 activityRef = WeakReference(activity)

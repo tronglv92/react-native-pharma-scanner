@@ -27,7 +27,8 @@ android {
     externalNativeBuild {
       cmake {
         cppFlags "-std=c++20"
-        arguments "-DANDROID_STL=c++_shared"  // required — ReactAndroid uses shared STL
+        arguments "-DANDROID_STL=c++_shared",  // required — ReactAndroid uses shared STL
+                  "-DCMAKE_BUILD_TYPE=Release"  // optimized builds for LLM inference
       }
     }
   }

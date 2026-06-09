@@ -5,7 +5,7 @@ set(PACKAGE_NAME PharmaScannerCxx)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 20)
 
-# ── llama.cpp (static lib, CPU-only for Android) ────────────────────────────
+# ── llama.cpp (CPU-only for Android) ─────────────────────────────────────────
 set(GGML_OPENMP           OFF CACHE BOOL "" FORCE)
 set(GGML_VULKAN           OFF CACHE BOOL "" FORCE)
 set(GGML_NATIVE           OFF CACHE BOOL "" FORCE)
@@ -13,7 +13,13 @@ set(LLAMA_BUILD_EXAMPLES  OFF CACHE BOOL "" FORCE)
 set(LLAMA_BUILD_TESTS     OFF CACHE BOOL "" FORCE)
 set(LLAMA_BUILD_SERVER    OFF CACHE BOOL "" FORCE)
 set(LLAMA_BUILD_COMMON    OFF CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS     OFF CACHE BOOL "" FORCE)
+
+# Build backends as dynamic libraries so the best CPU variant is selected at runtime.
+# GGML_CPU_ALL_VARIANTS builds ARM-optimized variants (DOTPROD, MATMUL_INT8, SVE2, etc.)
+# that are auto-selected based on the device's CPU capabilities.
+set(BUILD_SHARED_LIBS      ON  CACHE BOOL "" FORCE)
+set(GGML_BACKEND_DL       ON  CACHE BOOL "" FORCE)
+set(GGML_CPU_ALL_VARIANTS ON  CACHE BOOL "" FORCE)
 
 add_subdirectory(src/main/cpp/llama.cpp)
 
@@ -29,6 +35,7 @@ add_library(llama_bridge SHARED
 
 target_include_directories(llama_bridge PRIVATE
     src/main/cpp/llama.cpp/include
+    src/main/cpp/llama.cpp/ggml/include
 )
 
 target_link_libraries(llama_bridge

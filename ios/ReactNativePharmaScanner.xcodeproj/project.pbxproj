@@ -12,6 +12,7 @@
 		2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A716E113414FA5DEA3CC16 /* Func_void_DocumentExtractionResult.swift */; };
 		5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */; };
 		5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */; };
+		5BAD769388735C897E08C1E7 /* ImageQualityAssessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73974AB6D34BEF6F68844800 /* ImageQualityAssessor.swift */; };
 		5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707302FAD77FFB83376B730C /* ExtractionOptions.swift */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -92,6 +93,7 @@
 		707302FAD77FFB83376B730C /* ExtractionOptions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExtractionOptions.swift; sourceTree = "<group>"; };
 		73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentExtractor.swift; sourceTree = "<group>"; };
 		73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DocumentOcrProcessor.swift; sourceTree = "<group>"; };
+		73974AB6D34BEF6F68844800 /* ImageQualityAssessor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageQualityAssessor.swift; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativePharmaScanner/AppDelegate.swift; sourceTree = "<group>"; };
 		7AD78BD8C712D41EC7128809 /* llama.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = llama.xcframework; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativePharmaScanner/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				FA600001600000000000BB01 /* DocumentScannerManager.swift */,
 				73974AB6D34BEF6F688447FE /* DocumentExtractor.swift */,
 				73974AB6D34BEF6F688447FF /* DocumentOcrProcessor.swift */,
+				73974AB6D34BEF6F68844800 /* ImageQualityAssessor.swift */,
 				20636B26A9D77C0855547E2E /* LlamaCppManager.swift */,
 			);
 			name = ReactNativePharmaScanner;
@@ -669,6 +672,7 @@
 				FA600001600000000000AA01 /* DocumentScannerManager.swift in Sources */,
 				5BAD769388735C897E08C1E5 /* DocumentExtractor.swift in Sources */,
 				5BAD769388735C897E08C1E6 /* DocumentOcrProcessor.swift in Sources */,
+				5BAD769388735C897E08C1E7 /* ImageQualityAssessor.swift in Sources */,
 				5E47F938C0AF9B3C498B6449 /* ExtractionOptions.swift in Sources */,
 				B4FA82798F0DAC1B3250398A /* DocumentExtractionResult.swift in Sources */,
 				2656F9011B78705BCDB9C491 /* Func_void_DocumentExtractionResult.swift in Sources */,

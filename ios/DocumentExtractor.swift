@@ -24,22 +24,90 @@ final class DocumentExtractor {
   ) async throws -> DocumentExtractionResult {
     let startTime = CFAbsoluteTimeGetCurrent()
 
+    // Assess image quality before processing
+    let qualityWarnings = assessImageQuality(imageUri: imageUri)
+
     // Local LLM path (Qwen3-1.7B via llama.cpp)
     if customPrompt == "__local_llm__" {
-      return try await localLlmExtraction(
+      var result = try await localLlmExtraction(
         imageUri: imageUri,
         documentType: documentType,
         startTime: startTime
       )
+      result = appendWarnings(result, qualityWarnings)
+      return result
     }
 
     // All other extraction (Mistral) is handled in JS.
     // Native fallback: return raw OCR text.
-    return try await ocrFallback(
+    var result = try await ocrFallback(
       imageUri: imageUri,
       documentType: documentType,
       startTime: startTime
     )
+    result = appendWarnings(result, qualityWarnings)
+    return result
+  }
+
+  // MARK: - Image Quality Assessment
+
+  private func assessImageQuality(imageUri: String) -> [String] {
+    guard let quality = try? ImageQualityAssessor.assess(imageUri: imageUri) else {
+      return []
+    }
+    var warnings = quality.warnings
+    if quality.rating == "poor" {
+      warnings.append("IMAGE_QUALITY:poor - results may be unreliable")
+    }
+    return warnings
+  }
+
+  private func appendWarnings(_ result: DocumentExtractionResult, _ extra: [String]) -> DocumentExtractionResult {
+    guard !extra.isEmpty else { return result }
+    var allWarnings = Array(result.warnings)
+    allWarnings.append(contentsOf: extra)
+    return DocumentExtractionResult(
+      documentType: result.documentType,
+      data: result.data,
+      rawText: result.rawText,
+      confidence: result.confidence,
+      extractionMethod: result.extractionMethod,
+      processingTimeMs: result.processingTimeMs,
+      ocrTimeMs: result.ocrTimeMs,
+      warnings: allWarnings
+    )
+  }
+
+  // MARK: - Confidence Scoring
+
+  private func computeAggregateConfidence(ocrResult: OcrResult) -> Double {
+    var totalWeight: Double = 0
+    var weightedSum: Double = 0
+
+    for block in ocrResult.blocks {
+      for line in block.lines {
+        let weight = Double(line.text.count)
+        weightedSum += line.confidence * weight
+        totalWeight += weight
+      }
+    }
+
+    guard totalWeight > 0 else { return 0.5 }
+    return weightedSum / totalWeight
+  }
+
+  private func lowConfidenceWarnings(ocrResult: OcrResult) -> [String] {
+    var warnings: [String] = []
+    for block in ocrResult.blocks {
+      for line in block.lines {
+        if line.confidence < 0.7 && !line.text.isEmpty {
+          let pct = Int(line.confidence * 100)
+          let truncated = String(line.text.prefix(50))
+          warnings.append("LOW_OCR_CONFIDENCE:\(truncated) (\(pct)%)")
+        }
+      }
+    }
+    return warnings
   }
 
   // MARK: - Local LLM extraction (Qwen3 via llama.cpp)
@@ -82,15 +150,20 @@ final class DocumentExtractor {
     let jsonString = extractJSON(from: rawOutput) ?? "{}"
     let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
 
+    // 7. Compute confidence from OCR quality
+    let ocrConfidence = computeAggregateConfidence(ocrResult: ocrResult)
+    let confidence = min(ocrConfidence, 0.90)
+    let warnings = lowConfidenceWarnings(ocrResult: ocrResult)
+
     return DocumentExtractionResult(
       documentType: documentType == "auto" ? "invoice" : documentType,
       data: jsonString,
       rawText: ocrText,
-      confidence: 0.80,
+      confidence: confidence,
       extractionMethod: "local_llm",
       processingTimeMs: elapsed,
       ocrTimeMs: ocrTimeMs,
-      warnings: []
+      warnings: warnings
     )
   }
 
@@ -221,19 +294,26 @@ final class DocumentExtractor {
     let lines = ocrText.components(separatedBy: "\n")
       .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
       .filter { !$0.isEmpty }
-    let data: [String: Any] = ["_documentType": documentType, "content": ["lines": lines]]
+    let resolvedType = (documentType == "auto") ? "invoice" : documentType
+    let data: [String: Any] = ["_documentType": resolvedType, "content": ["lines": lines]]
     let jsonString = (try? JSONSerialization.data(withJSONObject: data, options: [.sortedKeys]))
       .flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
 
+    // Compute confidence from OCR quality, scaled down for fallback mode
+    let ocrConfidence = computeAggregateConfidence(ocrResult: ocrResult)
+    let confidence = ocrConfidence * 0.3
+    var warnings = ["Use Mistral mode for structured extraction."]
+    warnings.append(contentsOf: lowConfidenceWarnings(ocrResult: ocrResult))
+
     return DocumentExtractionResult(
-      documentType: documentType,
+      documentType: resolvedType,
       data: jsonString,
       rawText: ocrText,
-      confidence: 0.1,
+      confidence: confidence,
       extractionMethod: "ocr_only",
       processingTimeMs: elapsed,
       ocrTimeMs: ocrTimeMs,
-      warnings: ["Use Mistral mode for structured extraction."]
+      warnings: warnings
     )
   }
 }
