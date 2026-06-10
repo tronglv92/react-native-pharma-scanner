@@ -1,12 +1,14 @@
 package com.margelo.nitro.PharmaScanner
 
 import android.content.Context
+import android.net.Uri
 import android.os.PowerManager
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.json.JSONObject
+import java.io.File
 
 object DocumentExtractor {
     private const val TAG = "DocumentExtractor"
@@ -30,7 +32,7 @@ object DocumentExtractor {
         val qualityWarnings = assessImageQuality(imageUri)
         Log.d(TAG, "Image quality assessed: ${qualityWarnings.size} warnings")
 
-        // Local LLM path (Qwen3 via llama.cpp)
+        // Local VLM path (Qwen2.5-VL via llama.cpp)
         if (customPrompt == "__local_llm__") {
             val wakeLock = acquireInferenceWakeLock()
             // Start foreground service to prevent Samsung/OEM from freezing the process
@@ -147,71 +149,99 @@ object DocumentExtractor {
         return warnings
     }
 
-    // --- Local LLM extraction (Qwen3 via llama.cpp) ---
+    // --- Local VLM extraction (Qwen2.5-VL via llama.cpp) ---
 
     private suspend fun localLlmExtraction(
         imageUri: String,
         documentType: String,
         startTime: Long
     ): DocumentExtractionResult {
-        // 1. Run OCR via existing OcrManager
-        Log.d(TAG, "LocalLLM [1/5] Starting OCR...")
-        val ocrStart = System.currentTimeMillis()
-        val ocrResult = OcrManager.recognizeText(imageUri)
-        val ocrText = ocrResult.text
-        val ocrTimeMs = (System.currentTimeMillis() - ocrStart).toDouble()
-        Log.d(TAG, "LocalLLM [1/5] OCR done: ${ocrTimeMs.toLong()}ms, ${ocrText.length} chars")
+        // 1. Resolve image URI to filesystem path (C++ fopen can't read content:// URIs)
+        Log.d(TAG, "LocalVLM [1/4] Resolving image path...")
+        val imagePath = resolveImagePath(imageUri)
+        Log.d(TAG, "LocalVLM [1/4] Image path: $imagePath")
 
-        if (ocrText.isBlank()) {
-            throw IllegalStateException("No text recognized in the image.")
-        }
-
-        // 2. Check model availability
+        // 2. Check model availability & load if needed
         if (!LlamaCppManager.isModelDownloaded) {
-            throw IllegalStateException("Local LLM model not downloaded. Please download the model first.")
+            throw IllegalStateException("Local VLM model not downloaded. Please download the model first.")
         }
 
-        // 3. Load model if not already loaded (on IO thread to avoid blocking main thread)
         if (!LlamaCppManager.isModelLoaded) {
-            Log.d(TAG, "LocalLLM [2/5] Loading model into memory...")
+            Log.d(TAG, "LocalVLM [2/4] Loading model into memory...")
             withContext(Dispatchers.IO) {
                 LlamaCppManager.loadModel()
             }
-            Log.d(TAG, "LocalLLM [2/5] Model loaded")
+            Log.d(TAG, "LocalVLM [2/4] Model loaded")
         } else {
-            Log.d(TAG, "LocalLLM [2/5] Model already in memory")
+            Log.d(TAG, "LocalVLM [2/4] Model already in memory")
         }
 
-        // 4. Build prompt with JSON schema for document type
+        // 3. Build vision prompt with JSON schema
         val schema = schemaForDocumentType(documentType)
-        val prompt = LlamaCppManager.buildPrompt(ocrText, schema)
-        Log.d(TAG, "LocalLLM [3/5] Prompt built: ${prompt.length} chars")
+        val prompt = LlamaCppManager.buildVisionPrompt(documentType, schema)
+        Log.d(TAG, "LocalVLM [3/4] Prompt built: ${prompt.length} chars")
 
-        // 5. Generate structured JSON (runs on Dispatchers.Default inside LlamaCppManager)
-        Log.d(TAG, "LocalLLM [4/5] Generating structured JSON...")
-        val rawOutput = LlamaCppManager.generate(prompt)
-        Log.d(TAG, "LocalLLM [4/5] Generation done: ${rawOutput.length} chars")
+        // 4. Generate structured JSON from image (runs on Dispatchers.Default)
+        Log.d(TAG, "LocalVLM [3/4] Generating structured JSON from image...")
+        val rawOutput: String
+        try {
+            rawOutput = LlamaCppManager.generateFromImage(prompt, imagePath)
+        } finally {
+            // Clean up temp file if we created one from a content:// URI
+            cleanupTempImageFile(imagePath)
+        }
+        Log.d(TAG, "LocalVLM [3/4] Generation done: ${rawOutput.length} chars")
 
-        // 6. Extract JSON from output
+        // 5. Extract JSON from output
         val jsonString = extractJSON(rawOutput) ?: "{}"
         val elapsed = (System.currentTimeMillis() - startTime).toDouble()
-        Log.d(TAG, "LocalLLM [5/5] Complete: ${elapsed.toLong()}ms total")
-
-        // 7. Compute confidence from OCR quality
-        val ocrConfidence = computeAggregateConfidence(ocrResult)
-        val confidence = minOf(ocrConfidence, 0.90)
-        val warnings = lowConfidenceWarnings(ocrResult)
+        Log.d(TAG, "LocalVLM [4/4] Complete: ${elapsed.toLong()}ms total")
 
         return DocumentExtractionResult(
             documentType = if (documentType == "auto") "invoice" else documentType,
             data = jsonString,
-            rawText = ocrText,
-            confidence = confidence,
-            extractionMethod = "local_llm",
+            rawText = rawOutput,
+            confidence = 0.85,
+            extractionMethod = "local_vlm",
             processingTimeMs = elapsed,
-            ocrTimeMs = ocrTimeMs,
-            warnings = warnings.toTypedArray()
+            ocrTimeMs = 0.0,
+            warnings = emptyArray()
         )
+    }
+
+    /**
+     * Resolve an image URI to a filesystem path that C++ fopen can read.
+     * - content:// URIs: copy to a temp file via ContentResolver
+     * - file:// URIs: strip the scheme
+     * - Raw paths: use directly
+     */
+    private fun resolveImagePath(imageUri: String): String {
+        if (imageUri.startsWith("content://")) {
+            val context = ActivityProvider.applicationContext
+            val uri = Uri.parse(imageUri)
+            val tempFile = File(context.cacheDir, "vlm_input_${System.currentTimeMillis()}.jpg")
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                tempFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            } ?: throw IllegalStateException("Failed to open content URI: $imageUri")
+            return tempFile.absolutePath
+        }
+        if (imageUri.startsWith("file://")) {
+            return imageUri.removePrefix("file://")
+        }
+        return imageUri
+    }
+
+    private fun cleanupTempImageFile(imagePath: String) {
+        val context = ActivityProvider.applicationContext
+        if (imagePath.startsWith(context.cacheDir.absolutePath) && imagePath.contains("vlm_input_")) {
+            try {
+                File(imagePath).delete()
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to clean up temp image file", e)
+            }
+        }
     }
 
     private suspend fun ocrFallback(

@@ -23,12 +23,74 @@ set(GGML_CPU_ALL_VARIANTS ON  CACHE BOOL "" FORCE)
 
 add_subdirectory(src/main/cpp/llama.cpp)
 
+# ── mtmd (multimodal) library ────────────────────────────────────────────────
+# Cannot use add_subdirectory because the mtmd CMakeLists.txt unconditionally
+# builds CLI executables that depend on llama-common (which we have disabled).
+# Instead, define a custom library target with the mtmd source files directly.
+set(MTMD_DIR src/main/cpp/llama.cpp/tools/mtmd)
+
+add_library(mtmd SHARED
+    ${MTMD_DIR}/mtmd.cpp
+    ${MTMD_DIR}/mtmd-audio.cpp
+    ${MTMD_DIR}/mtmd-image.cpp
+    ${MTMD_DIR}/mtmd-helper.cpp
+    ${MTMD_DIR}/clip.cpp
+    ${MTMD_DIR}/models/cogvlm.cpp
+    ${MTMD_DIR}/models/conformer.cpp
+    ${MTMD_DIR}/models/dotsocr.cpp
+    ${MTMD_DIR}/models/exaone4_5.cpp
+    ${MTMD_DIR}/models/gemma4a.cpp
+    ${MTMD_DIR}/models/gemma4v.cpp
+    ${MTMD_DIR}/models/gemma4ua.cpp
+    ${MTMD_DIR}/models/gemma4uv.cpp
+    ${MTMD_DIR}/models/glm4v.cpp
+    ${MTMD_DIR}/models/granite-speech.cpp
+    ${MTMD_DIR}/models/hunyuanvl.cpp
+    ${MTMD_DIR}/models/internvl.cpp
+    ${MTMD_DIR}/models/kimivl.cpp
+    ${MTMD_DIR}/models/kimik25.cpp
+    ${MTMD_DIR}/models/nemotron-v2-vl.cpp
+    ${MTMD_DIR}/models/llama4.cpp
+    ${MTMD_DIR}/models/llava.cpp
+    ${MTMD_DIR}/models/minicpmv.cpp
+    ${MTMD_DIR}/models/paddleocr.cpp
+    ${MTMD_DIR}/models/pixtral.cpp
+    ${MTMD_DIR}/models/qwen2vl.cpp
+    ${MTMD_DIR}/models/qwen3vl.cpp
+    ${MTMD_DIR}/models/mimovl.cpp
+    ${MTMD_DIR}/models/qwen3a.cpp
+    ${MTMD_DIR}/models/step3vl.cpp
+    ${MTMD_DIR}/models/siglip.cpp
+    ${MTMD_DIR}/models/whisper-enc.cpp
+    ${MTMD_DIR}/models/deepseekocr.cpp
+    ${MTMD_DIR}/models/deepseekocr2.cpp
+    ${MTMD_DIR}/models/mobilenetv5.cpp
+    ${MTMD_DIR}/models/youtuvl.cpp
+    ${MTMD_DIR}/models/yasa2.cpp
+)
+
+target_include_directories(mtmd PUBLIC  ${MTMD_DIR})
+target_include_directories(mtmd PRIVATE src/main/cpp/llama.cpp)
+target_include_directories(mtmd PRIVATE src/main/cpp/llama.cpp/vendor)
+target_link_libraries(mtmd PUBLIC ggml llama)
+target_compile_features(mtmd PRIVATE cxx_std_17)
+set_target_properties(mtmd PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_definitions(mtmd PRIVATE LLAMA_BUILD)
+target_compile_definitions(mtmd PUBLIC  LLAMA_SHARED)
+
+if (NOT MSVC)
+    target_compile_options(mtmd PRIVATE -Wno-cast-qual)
+endif()
+if (ANDROID)
+    target_compile_options(mtmd PRIVATE -Wno-missing-prototypes)
+endif()
+
 # ── Main shared library ─────────────────────────────────────────────────────
 add_library(${PACKAGE_NAME} SHARED
     src/main/cpp/cpp-adapter.cpp
 )
 
-# llama_bridge — separate static lib so it links llama headers + symbols
+# llama_bridge — separate shared lib so it links llama + mtmd headers + symbols
 add_library(llama_bridge SHARED
     src/main/cpp/llama_bridge.cpp
 )
@@ -36,11 +98,13 @@ add_library(llama_bridge SHARED
 target_include_directories(llama_bridge PRIVATE
     src/main/cpp/llama.cpp/include
     src/main/cpp/llama.cpp/ggml/include
+    ${MTMD_DIR}
 )
 
 target_link_libraries(llama_bridge
     llama
     ggml
+    mtmd
     log
 )
 

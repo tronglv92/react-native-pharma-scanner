@@ -11,9 +11,15 @@ import java.net.URL
 object LlamaCppManager {
     private const val TAG = "LlamaCppManager"
 
-    private const val MODEL_FILE_NAME = "Qwen3-0.6B-Q4_K_M.gguf"
+    private const val MODEL_FILE_NAME = "Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf"
+    private const val MMPROJ_FILE_NAME = "mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf"
     private const val MODEL_DOWNLOAD_URL =
-        "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"
+        "https://huggingface.co/ggml-org/Qwen2.5-VL-3B-Instruct-GGUF/resolve/main/Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf"
+    private const val MMPROJ_DOWNLOAD_URL =
+        "https://huggingface.co/ggml-org/Qwen2.5-VL-3B-Instruct-GGUF/resolve/main/mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf"
+
+    // Old model file to clean up on first run
+    private const val OLD_MODEL_FILE_NAME = "Qwen3-0.6B-Q4_K_M.gguf"
 
     // N_GPU_LAYERS: 0 for Android (CPU-only, no Metal)
     private const val N_GPU_LAYERS = 0
@@ -26,6 +32,7 @@ object LlamaCppManager {
             System.loadLibrary("ggml-base")
             System.loadLibrary("ggml")
             System.loadLibrary("llama")
+            System.loadLibrary("mtmd")
             System.loadLibrary("llama_bridge")
             // Initialize backend with path to native .so files so the best
             // CPU variant (DOTPROD, SVE2, etc.) is auto-selected at runtime
@@ -39,8 +46,8 @@ object LlamaCppManager {
 
     // JNI native methods
     private external fun nativeInitBackend(nativeLibDir: String)
-    private external fun nativeLoadModel(modelPath: String, nGpuLayers: Int): Boolean
-    private external fun nativeGenerate(prompt: String, maxTokens: Int): String
+    private external fun nativeLoadModel(modelPath: String, mmprojPath: String, nGpuLayers: Int): Boolean
+    private external fun nativeGenerateFromImage(prompt: String, imagePath: String, maxTokens: Int): String
     private external fun nativeUnloadModel()
     private external fun nativeIsLoaded(): Boolean
 
@@ -54,11 +61,12 @@ object LlamaCppManager {
     }
 
     private fun modelFile(): File = File(modelsDir(), MODEL_FILE_NAME)
+    private fun mmprojFile(): File = File(modelsDir(), MMPROJ_FILE_NAME)
 
     // --- Public API ---
 
     val isModelDownloaded: Boolean
-        get() = modelFile().exists()
+        get() = modelFile().exists() && mmprojFile().exists()
 
     val isModelLoaded: Boolean
         get() {
@@ -70,21 +78,21 @@ object LlamaCppManager {
         ensureNativeLib()
         if (isModelLoaded) return
         if (!isModelDownloaded) {
-            throw IllegalStateException("Model file not found. Please download the model first.")
+            throw IllegalStateException("Model files not found. Please download the model first.")
         }
-        val success = nativeLoadModel(modelFile().absolutePath, N_GPU_LAYERS)
+        val success = nativeLoadModel(modelFile().absolutePath, mmprojFile().absolutePath, N_GPU_LAYERS)
         if (!success) {
-            throw RuntimeException("Failed to load the GGUF model file.")
+            throw RuntimeException("Failed to load the vision model files.")
         }
-        Log.i(TAG, "Model loaded successfully")
+        Log.i(TAG, "Vision model loaded successfully")
     }
 
-    suspend fun generate(prompt: String): String = withContext(Dispatchers.Default) {
+    suspend fun generateFromImage(prompt: String, imagePath: String): String = withContext(Dispatchers.Default) {
         ensureNativeLib()
         if (!nativeIsLoaded()) {
             throw IllegalStateException("Model is not loaded. Call loadModel() first.")
         }
-        val result = nativeGenerate(prompt, 1024)
+        val result = nativeGenerateFromImage(prompt, imagePath, 1024)
         result
     }
 
@@ -100,27 +108,67 @@ object LlamaCppManager {
             return@withContext
         }
 
-        // Check if model was side-loaded to the Download folder
-        val sideLoaded = findSideLoadedModel()
-        if (sideLoaded != null) {
-            Log.i(TAG, "Found side-loaded model at: ${sideLoaded.absolutePath}")
-            val finalFile = modelFile()
-            if (finalFile.exists()) finalFile.delete()
-            sideLoaded.copyTo(finalFile, overwrite = true)
+        // One-time cleanup: delete old Qwen3 model file if present
+        cleanupOldModel()
+
+        // Check if both files were side-loaded to the Download folder
+        val sideLoadedModel = findSideLoadedFile(MODEL_FILE_NAME)
+        val sideLoadedMmproj = findSideLoadedFile(MMPROJ_FILE_NAME)
+        if (sideLoadedModel != null && sideLoadedMmproj != null) {
+            Log.i(TAG, "Found side-loaded model files")
+            val finalModel = modelFile()
+            val finalMmproj = mmprojFile()
+            if (finalModel.exists()) finalModel.delete()
+            if (finalMmproj.exists()) finalMmproj.delete()
+            sideLoadedModel.copyTo(finalModel, overwrite = true)
+            sideLoadedMmproj.copyTo(finalMmproj, overwrite = true)
             onProgress(1.0)
-            Log.i(TAG, "Side-loaded model installed successfully")
+            Log.i(TAG, "Side-loaded model files installed successfully")
             return@withContext
         }
 
+        // Download text model (59% of total progress — 1.93 GB / 3.27 GB)
+        if (!modelFile().exists()) {
+            downloadFile(MODEL_DOWNLOAD_URL, MODEL_FILE_NAME) { fileProgress ->
+                onProgress(fileProgress * 0.59)
+            }
+        } else {
+            onProgress(0.59)
+        }
+
+        // Download mmproj (41% of total progress — 1.34 GB / 3.27 GB)
+        if (!mmprojFile().exists()) {
+            downloadFile(MMPROJ_DOWNLOAD_URL, MMPROJ_FILE_NAME) { fileProgress ->
+                onProgress(0.59 + fileProgress * 0.41)
+            }
+        } else {
+            onProgress(1.0)
+        }
+    }
+
+    private fun cleanupOldModel() {
+        val oldFile = File(modelsDir(), OLD_MODEL_FILE_NAME)
+        if (oldFile.exists()) {
+            Log.i(TAG, "Deleting old model file: ${oldFile.name}")
+            oldFile.delete()
+        }
+        // Also clean up any old temp files
+        val oldTemp = File(modelsDir(), "$OLD_MODEL_FILE_NAME.tmp")
+        if (oldTemp.exists()) {
+            oldTemp.delete()
+        }
+    }
+
+    private fun downloadFile(downloadUrl: String, fileName: String, onProgress: (Double) -> Unit) {
         val dir = modelsDir()
-        val tempFile = File(dir, "$MODEL_FILE_NAME.tmp")
-        val finalFile = modelFile()
+        val tempFile = File(dir, "$fileName.tmp")
+        val finalFile = File(dir, fileName)
 
         try {
             // Resume support: check existing partial download
             val existingBytes = if (tempFile.exists()) tempFile.length() else 0L
 
-            val url = URL(MODEL_DOWNLOAD_URL)
+            val url = URL(downloadUrl)
             val connection = url.openConnection() as HttpURLConnection
             connection.connectTimeout = 30_000
             connection.readTimeout = 60_000
@@ -130,7 +178,7 @@ object LlamaCppManager {
             // Request range if we have a partial download
             if (existingBytes > 0) {
                 connection.setRequestProperty("Range", "bytes=$existingBytes-")
-                Log.i(TAG, "Resuming download from byte $existingBytes")
+                Log.i(TAG, "Resuming download of $fileName from byte $existingBytes")
             }
 
             connection.connect()
@@ -145,7 +193,7 @@ object LlamaCppManager {
             val startOffset = if (isResume) existingBytes else 0L
             val contentLength = connection.contentLengthLong
             val totalBytes = if (isResume) startOffset + contentLength else contentLength
-            Log.i(TAG, "Downloading model: totalBytes=$totalBytes, offset=$startOffset")
+            Log.i(TAG, "Downloading $fileName: totalBytes=$totalBytes, offset=$startOffset")
 
             if (startOffset > 0) {
                 onProgress(startOffset.toDouble() / totalBytes.toDouble())
@@ -171,13 +219,13 @@ object LlamaCppManager {
             // Move temp file to final location
             if (finalFile.exists()) finalFile.delete()
             tempFile.renameTo(finalFile)
-            Log.i(TAG, "Model downloaded successfully")
+            Log.i(TAG, "$fileName downloaded successfully")
         } catch (e: Exception) {
             // Keep partial download for resume — don't delete tempFile
-            Log.w(TAG, "Download interrupted (${tempFile.length()} bytes saved for resume)", e)
+            Log.w(TAG, "Download of $fileName interrupted (${tempFile.length()} bytes saved for resume)", e)
             val friendlyMsg = when {
                 e is java.net.UnknownHostException ->
-                    "No internet connection. Copy $MODEL_FILE_NAME to device Download folder and retry, or connect to a network."
+                    "No internet connection. Copy $MODEL_FILE_NAME and $MMPROJ_FILE_NAME to device Download folder and retry, or connect to a network."
                 e is java.net.SocketTimeoutException ->
                     "Download timed out. Tap Download to resume from where it left off."
                 e is java.io.IOException ->
@@ -189,10 +237,10 @@ object LlamaCppManager {
     }
 
     /**
-     * Check common side-load locations for the model file.
-     * Users can copy the GGUF file via ADB: adb push model.gguf /sdcard/Download/
+     * Check common side-load locations for a model file.
+     * Users can copy GGUF files via ADB: adb push *.gguf /sdcard/Download/
      */
-    private fun findSideLoadedModel(): File? {
+    private fun findSideLoadedFile(fileName: String): File? {
         val searchDirs = listOf(
             "/sdcard/Download",
             "/sdcard/Downloads",
@@ -200,7 +248,7 @@ object LlamaCppManager {
             "/storage/emulated/0/Downloads",
         )
         for (dir in searchDirs) {
-            val file = File(dir, MODEL_FILE_NAME)
+            val file = File(dir, fileName)
             if (file.exists() && file.length() > 1_000_000) {
                 return file
             }
@@ -210,15 +258,13 @@ object LlamaCppManager {
 
     // --- Prompt building ---
 
-    fun buildPrompt(ocrText: String, jsonSchema: String): String {
+    fun buildVisionPrompt(documentType: String, jsonSchema: String): String {
         return """<|im_start|>system
-You are a precise document data extraction assistant. Extract structured data from OCR text. Return ONLY compact JSON (no newlines, no extra spaces) matching the schema. Do not wrap in markdown. Do not explain./no_think<|im_end|>
+You are a precise document data extraction assistant. Extract structured data from the document image. Return ONLY compact JSON (no newlines, no extra spaces) matching the schema. Do not wrap in markdown. Do not explain.<|im_end|>
 <|im_start|>user
+<__media__>
 Extract data matching this JSON schema:
-$jsonSchema
-
-OCR TEXT:
-$ocrText<|im_end|>
+$jsonSchema<|im_end|>
 <|im_start|>assistant
 """
     }
