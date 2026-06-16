@@ -1,99 +1,276 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
-
-# Getting Started
-
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
-
-## Step 1: Start Metro
-
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
 # react-native-pharma-scanner
-# react-native-pharma-scanner
+
+React Native document scanning library with pluggable AI providers for structured data extraction. Supports document detection, OCR, barcode scanning, and AI-powered data extraction from invoices, prescriptions, receipts, and more.
+
+## Features
+
+- Document detection and auto-capture with perspective correction
+- OCR text recognition (ML Kit on Android, Vision on iOS)
+- Barcode/QR code scanning (QR_CODE, CODE_128, PDF_417, DATA_MATRIX, EAN_13, EAN_8)
+- AI-powered structured data extraction with pluggable providers (Mistral, OpenAI, Claude, Local LLM)
+- On-device LLM inference via llama.cpp (no API key required)
+- Custom document schema support
+- Built with [Nitro Modules](https://github.com/nicklockwood/react-native-nitro-modules) for high-performance native bridging
+
+## Requirements
+
+- React Native >= 0.73.0
+- React >= 18.0.0
+- react-native-nitro-modules >= 0.35.0
+- iOS 15.1+
+- Android API 24+
+
+## Installation
+
+### Step 1: Install the package
+
+```bash
+npm install react-native-pharma-scanner react-native-nitro-modules
+# or
+yarn add react-native-pharma-scanner react-native-nitro-modules
+```
+
+### Step 2: Install iOS dependencies
+
+```bash
+cd ios && pod install && cd ..
+```
+
+### Step 3: Android setup
+
+No additional setup is required. The library auto-links via React Native CLI.
+
+For local LLM support, the llama.cpp native code is compiled automatically during the Android Gradle build.
+
+## Usage
+
+### Basic setup
+
+```typescript
+import { scanner } from 'react-native-pharma-scanner';
+
+// Verify the module is loaded
+console.log(scanner.ping());
+console.log(scanner.getVersion());
+```
+
+### Camera and document scanning
+
+```typescript
+import { scanner } from 'react-native-pharma-scanner';
+
+// Start camera
+scanner.startCamera();
+
+// Capture a photo
+const image = await scanner.capturePhoto();
+console.log(image.uri, image.width, image.height);
+
+// Scan a document (auto-detect edges, crop, and correct perspective)
+const pages = await scanner.scanDocument();
+
+// Control flash and zoom
+scanner.setFlash('auto'); // 'auto' | 'on' | 'off'
+scanner.setZoom(1.5);
+
+// Stop camera when done
+scanner.stopCamera();
+```
+
+### Document detection
+
+```typescript
+import { scanner } from 'react-native-pharma-scanner';
+
+// One-shot detection
+const detection = await scanner.detectDocument(imageUri);
+if (detection.detected) {
+  console.log('Corners:', detection.corners);
+  console.log('Confidence:', detection.confidence);
+}
+
+// Crop and correct perspective
+const corrected = await scanner.cropAndCorrect(imageUri, detection.corners);
+
+// Continuous detection callback
+scanner.setOnDocumentDetected((detection) => {
+  if (detection.isStable) {
+    // Document is stable, ready to capture
+  }
+});
+```
+
+### Barcode scanning
+
+```typescript
+import { scanner } from 'react-native-pharma-scanner';
+
+// One-shot scan
+const barcodes = await scanner.scanBarcodes({
+  imageUri: 'file:///path/to/image.jpg',
+  formats: ['QR_CODE', 'CODE_128', 'EAN_13'],
+});
+
+barcodes.forEach((code) => {
+  console.log(code.format, code.value);
+});
+
+// Continuous scanning
+scanner.startContinuousScan(['QR_CODE', 'EAN_13'], (codes) => {
+  codes.forEach((code) => console.log(code.value));
+});
+
+// Stop when done
+scanner.stopContinuousScan();
+```
+
+### OCR (Text Recognition)
+
+```typescript
+import { scanner } from 'react-native-pharma-scanner';
+
+const result = await scanner.recognizeText(imageUri);
+console.log(result.text);
+console.log(`Processed in ${result.processingTimeMs}ms`);
+
+// Access detailed structure
+result.blocks.forEach((block) => {
+  block.lines.forEach((line) => {
+    console.log(line.text, `confidence: ${line.confidence}`);
+  });
+});
+```
+
+### AI-powered document extraction
+
+#### Using cloud providers
+
+```typescript
+import {
+  extractDocument,
+  MistralProvider,
+  OpenAIProvider,
+  ClaudeProvider,
+} from 'react-native-pharma-scanner';
+
+// Choose a provider
+const provider = new MistralProvider({ apiKey: 'your-mistral-api-key' });
+// or
+const provider = new OpenAIProvider({ apiKey: 'your-openai-api-key' });
+// or
+const provider = new ClaudeProvider({ apiKey: 'your-anthropic-api-key' });
+
+// Extract structured data from a document image
+const result = await extractDocument(provider, imageUri, {
+  documentType: 'invoice', // 'invoice' | 'prescription' | 'receipt' | 'purchase_order' | 'delivery_note' | 'certificate' | 'auto'
+  language: 'en', // 'en' | 'vi'
+});
+
+console.log(result.documentType);
+console.log(result.confidence);
+console.log(JSON.parse(result.data)); // structured extracted data
+```
+
+#### Using local LLM (on-device, no API key needed)
+
+```typescript
+import { scanner, LocalLlmProvider, extractDocument } from 'react-native-pharma-scanner';
+
+// Check if model is already downloaded
+if (!scanner.isLocalLlmModelReady()) {
+  await scanner.downloadLocalLlmModel((progress) => {
+    console.log(`Download: ${(progress * 100).toFixed(1)}%`);
+  });
+}
+
+const provider = new LocalLlmProvider();
+
+const result = await extractDocument(provider, imageUri, {
+  documentType: 'auto',
+  language: 'en',
+});
+
+// Unload model when done to free memory
+scanner.unloadLocalLlmModel();
+```
+
+### Custom document schemas
+
+```typescript
+import { registerSchema, extractDocument } from 'react-native-pharma-scanner';
+
+// Register a custom schema
+registerSchema({
+  type: 'lab_report',
+  displayName: 'Lab Report',
+  fields: [
+    { name: 'patientName', type: 'string', required: true },
+    { name: 'testDate', type: 'string', required: true },
+    { name: 'results', type: 'array', required: true },
+  ],
+});
+
+// Use it for extraction
+const result = await extractDocument(provider, imageUri, {
+  documentType: 'lab_report',
+});
+```
+
+### Validation
+
+```typescript
+import { validateDocumentData } from 'react-native-pharma-scanner';
+
+const validation = validateDocumentData('invoice', extractedData);
+if (validation.isValid) {
+  console.log('All fields valid');
+} else {
+  validation.issues.forEach((issue) => {
+    console.warn(`${issue.severity}: ${issue.message}`);
+  });
+}
+```
+
+## API Reference
+
+### Native scanner methods
+
+| Method | Description |
+|--------|-------------|
+| `ping()` | Health check, returns a string |
+| `getVersion()` | Returns library version |
+| `startCamera()` | Start the camera session |
+| `stopCamera()` | Stop the camera session |
+| `capturePhoto()` | Capture a photo, returns `CapturedImage` |
+| `setFlash(mode)` | Set flash mode: `'auto'`, `'on'`, `'off'` |
+| `setZoom(factor)` | Set camera zoom factor |
+| `detectDocument(imageUri)` | Detect document edges in an image |
+| `cropAndCorrect(imageUri, corners)` | Crop and perspective-correct a document |
+| `scanDocument()` | Full document scan flow (detect + capture + correct) |
+| `scanBarcodes(options)` | Scan barcodes from an image |
+| `startContinuousScan(formats, callback)` | Start continuous barcode scanning |
+| `stopContinuousScan()` | Stop continuous barcode scanning |
+| `recognizeText(imageUri)` | Run OCR on an image |
+| `extractDocument(imageUri, options)` | Extract structured data (native) |
+| `isLocalLlmModelReady()` | Check if on-device LLM model is downloaded |
+| `downloadLocalLlmModel(onProgress)` | Download the on-device LLM model |
+| `unloadLocalLlmModel()` | Unload LLM model from memory |
+
+### AI Providers
+
+| Provider | Description |
+|----------|-------------|
+| `MistralProvider` | Mistral AI vision models |
+| `OpenAIProvider` | OpenAI GPT-4 vision models |
+| `ClaudeProvider` | Anthropic Claude vision models |
+| `LocalLlmProvider` | On-device LLM via llama.cpp |
+
+### Document types
+
+Built-in: `invoice`, `prescription`, `receipt`, `purchase_order`, `delivery_note`, `certificate`, `auto`
+
+Custom types can be registered via `registerSchema()`.
+
+## License
+
+MIT
