@@ -58,6 +58,7 @@ yarn-error.log
 
 # Ruby / CocoaPods
 **/Pods/
+**/Podfile.lock
 /vendor/bundle/
 
 # Temporary files created by Metro to check the health of the file watcher
@@ -79,3 +80,6 @@ docs
 .env
 .env.local
 .env.production
+
+# Library build output
+lib/

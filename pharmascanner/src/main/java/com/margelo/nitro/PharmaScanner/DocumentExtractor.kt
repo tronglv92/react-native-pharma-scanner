@@ -42,13 +42,13 @@ object DocumentExtractor {
                 Log.w(TAG, "Failed to start foreground service", e)
             }
             try {
-                val result = withTimeout(180_000L) {
+                val result = withTimeout(600_000L) {
                     localLlmExtraction(imageUri, documentType, startTime)
                 }
                 return appendWarnings(result, qualityWarnings)
             } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
                 throw IllegalStateException(
-                    "Document extraction timed out. The device may be too slow for local LLM processing."
+                    "Document extraction timed out after 10 minutes."
                 )
             } finally {
                 wakeLock?.let {
@@ -77,7 +77,7 @@ object DocumentExtractor {
                 PowerManager.PARTIAL_WAKE_LOCK,
                 "PharmaScanner:LlmInference"
             )
-            lock.acquire(5 * 60 * 1000L) // 5 minute timeout
+            lock.acquire(12 * 60 * 1000L) // 12 minute timeout
             Log.d(TAG, "Inference WakeLock acquired")
             lock
         } catch (e: Exception) {

@@ -24,7 +24,7 @@ jest.mock('../src/QRScannerScreen', () => {
   };
 });
 
-import App from '../App';
+import App from '../example/App';
 
 test('renders correctly', async () => {
   await ReactTestRenderer.act(() => {

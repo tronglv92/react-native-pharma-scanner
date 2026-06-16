@@ -89,14 +89,14 @@ Java_com_margelo_nitro_PharmaScanner_LlamaCppManager_nativeLoadModel(
     LOGI("[Load 1/4] Text model loaded in %.1f ms", model_load_ms);
 
     // Context params — vision needs larger context for image tokens + prompt + generation
-    LOGI("[Load 2/4] Creating llama context (n_ctx=4096)...");
+    LOGI("[Load 2/4] Creating llama context (n_ctx=2048)...");
     auto ctx_params = llama_context_default_params();
-    ctx_params.n_ctx   = 4096;
-    ctx_params.n_batch = 512;
+    ctx_params.n_ctx   = 2048;
+    ctx_params.n_batch = 1024;
 
-    // Use available CPU cores (capped at 4 to reduce thermal throttling)
+    // Use available CPU cores (capped at 6 — high-perf cores on modern SoCs)
     unsigned int hw_threads = std::thread::hardware_concurrency();
-    int n_threads = static_cast<int>(std::min(hw_threads, 4u));
+    int n_threads = static_cast<int>(std::min(hw_threads, 6u));
     if (n_threads < 1) n_threads = 2;
     ctx_params.n_threads       = n_threads;
     ctx_params.n_threads_batch = n_threads;
@@ -115,13 +115,13 @@ Java_com_margelo_nitro_PharmaScanner_LlamaCppManager_nativeLoadModel(
     LOGI("[Load 2/4] Context created in %.1f ms", ctx_ms);
 
     // Initialize mtmd (multimodal) context for vision
-    LOGI("[Load 3/4] Initializing mtmd vision context (image_max_tokens=768)...");
+    LOGI("[Load 3/4] Initializing mtmd vision context (image_max_tokens=512)...");
     mtmd_context_params mparams = mtmd_context_params_default();
     mparams.use_gpu          = false;  // CPU only on Android
     mparams.print_timings    = true;
     mparams.n_threads        = n_threads;
     mparams.warmup           = false;
-    mparams.image_max_tokens = 768;    // Limit vision tokens to reduce compute/heat (default ~1600)
+    mparams.image_max_tokens = 512;    // Limit vision tokens for faster prefill (fewer image embeddings)
 
     g_mtmd_ctx = mtmd_init_from_file(mmproj, g_model, mparams);
     env->ReleaseStringUTFChars(mmprojPath, mmproj);
@@ -257,7 +257,7 @@ Java_com_margelo_nitro_PharmaScanner_LlamaCppManager_nativeGenerateFromImage(
         LOGI("[Step 4/5] Evaluating chunk %zu/%zu (type=%s, tokens=%zu)...", ci + 1, n_chunks, type_str, ctokens);
 
         auto t_chunk_start = std::chrono::steady_clock::now();
-        int32_t eval_ret = mtmd_helper_eval_chunk_single(g_mtmd_ctx, g_context, chunk, n_past, 0, 512, is_last, &n_past);
+        int32_t eval_ret = mtmd_helper_eval_chunk_single(g_mtmd_ctx, g_context, chunk, n_past, 0, 1024, is_last, &n_past);
 
         if (eval_ret != 0) {
             LOGE("[Step 4/5] Chunk %zu eval FAILED: %d", ci, eval_ret);

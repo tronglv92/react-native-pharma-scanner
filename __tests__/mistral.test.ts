@@ -1,4 +1,5 @@
-import { extractJSON, computeMistralConfidence } from '../src/mistral';
+import { extractJSON } from '../src/utils/json';
+import { computeConfidence } from '../src/utils/confidence';
 
 describe('extractJSON', () => {
   it('returns direct JSON string as-is', () => {
@@ -40,7 +41,7 @@ describe('extractJSON', () => {
   });
 });
 
-describe('computeMistralConfidence', () => {
+describe('computeConfidence', () => {
   it('returns ~0.95 for valid JSON with all fields filled', () => {
     const json = JSON.stringify({
       seller: 'Company A',
@@ -49,7 +50,7 @@ describe('computeMistralConfidence', () => {
       items: [{ name: 'Item 1' }],
       total: 1000,
     });
-    const confidence = computeMistralConfidence(json);
+    const confidence = computeConfidence(json);
     expect(confidence).toBeCloseTo(0.95, 1);
   });
 
@@ -64,7 +65,7 @@ describe('computeMistralConfidence', () => {
     });
     // 2 filled out of 6 fields => fillRatio = 2/6 ≈ 0.333
     // confidence = 0.7 + 0.333 * 0.25 ≈ 0.783
-    const confidence = computeMistralConfidence(json);
+    const confidence = computeConfidence(json);
     expect(confidence).toBeGreaterThanOrEqual(0.75);
     expect(confidence).toBeLessThanOrEqual(0.85);
   });
@@ -76,22 +77,22 @@ describe('computeMistralConfidence', () => {
       date: '',
       total: 0,
     });
-    const confidence = computeMistralConfidence(json);
+    const confidence = computeConfidence(json);
     expect(confidence).toBe(0.7);
   });
 
   it('returns 0.4 for invalid JSON', () => {
-    const confidence = computeMistralConfidence('not valid json {{{');
+    const confidence = computeConfidence('not valid json {{{');
     expect(confidence).toBe(0.4);
   });
 
   it('returns 0.5 for empty object {}', () => {
-    const confidence = computeMistralConfidence('{}');
+    const confidence = computeConfidence('{}');
     expect(confidence).toBe(0.5);
   });
 
   it('returns 0.5 for non-object parsed value', () => {
-    const confidence = computeMistralConfidence('"just a string"');
+    const confidence = computeConfidence('"just a string"');
     expect(confidence).toBe(0.5);
   });
 
@@ -100,7 +101,7 @@ describe('computeMistralConfidence', () => {
     for (let i = 0; i < 50; i++) {
       obj[`field${i}`] = `value${i}`;
     }
-    const confidence = computeMistralConfidence(JSON.stringify(obj));
+    const confidence = computeConfidence(JSON.stringify(obj));
     expect(confidence).toBe(0.95);
   });
 });

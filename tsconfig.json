@@ -4,5 +4,5 @@
     "types": ["jest"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods", "pharmascanner/src/main/cpp/llama.cpp"]
+  "exclude": ["**/node_modules", "**/Pods", "pharmascanner/src/main/cpp/llama.cpp", "lib"]
 }

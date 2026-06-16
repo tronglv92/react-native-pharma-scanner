@@ -92,7 +92,7 @@ object LlamaCppManager {
         if (!nativeIsLoaded()) {
             throw IllegalStateException("Model is not loaded. Call loadModel() first.")
         }
-        val result = nativeGenerateFromImage(prompt, imagePath, 1024)
+        val result = nativeGenerateFromImage(prompt, imagePath, 512)
         result
     }
 
