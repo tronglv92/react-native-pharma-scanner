@@ -1,6 +1,6 @@
 {
   "name": "react-native-pharma-scanner",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native document scanning library with pluggable AI providers for structured data extraction",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",
@@ -43,7 +43,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/user/react-native-pharma-scanner"
+    "url": "git+https://github.com/tronglv92/react-native-pharma-scanner.git"
+  },
+  "homepage": "https://github.com/tronglv92/react-native-pharma-scanner#readme",
+  "bugs": {
+    "url": "https://github.com/tronglv92/react-native-pharma-scanner/issues"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -105,7 +109,12 @@
           "copyFlow": false
         }
       ],
-      ["typescript", { "project": "tsconfig.build.json" }]
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
     ]
   }
 }
