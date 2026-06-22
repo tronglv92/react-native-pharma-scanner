@@ -1,5 +1,9 @@
 # react-native-pharma-scanner
 
+[![npm version](https://img.shields.io/npm/v/react-native-pharma-scanner.svg)](https://www.npmjs.com/package/react-native-pharma-scanner)
+[![npm downloads](https://img.shields.io/npm/dm/react-native-pharma-scanner.svg)](https://www.npmjs.com/package/react-native-pharma-scanner)
+[![license](https://img.shields.io/npm/l/react-native-pharma-scanner.svg)](https://github.com/tronglv92/react-native-pharma-scanner/blob/main/LICENSE)
+
 React Native document scanning library with pluggable AI providers for structured data extraction. Supports document detection, OCR, barcode scanning, and AI-powered data extraction from invoices, prescriptions, receipts, and more.
 
 ## Features
